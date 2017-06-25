@@ -1,0 +1,15 @@
+{
+  "generator-bigdatr-startr": {
+    "promptValues": {
+      "name": "react-elearning-tools",
+      "description": "React Elearning Tools",
+      "version": "0.0.0",
+      "license": "UNLICENSED",
+      "private": false,
+      "author": "Allan Hortle",
+      "username": "blueflag",
+      "nameConstant": "REACT_ELEARNING_TOOLS",
+      "example": false
+    }
+  }
+}
