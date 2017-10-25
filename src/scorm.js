@@ -19,14 +19,24 @@ export function get(key: string): any {
 //
 // Predefined Methods
 
+export function score(value: string): boolean {
+    return Perhaps(SCORM.set('cmi.core.score.raw', value))
+}
+
 export function status(): string {
     return Perhaps(SCORM.get('cmi.core.lesson_status'));
 }
 
-export function complete(): boolean {
-    return Perhaps(SCORM.set('cmi.core.lesson_status', 'completed'));
+export function setStatus(value: string): string {
+    return Perhaps(SCORM.set('cmi.core.lesson_status', value));
 }
 
-export function fail(): boolean {
-    return Perhaps(SCORM.set('cmi.core.lesson_status', 'failed'));
+export function complete(value: string): boolean {
+    return setStatus('completed')
+        .flatMap(() => score(value));
+}
+
+export function fail(value: string): boolean {
+    return setStatus('failed')
+        .flatMap(() => score(value));
 }

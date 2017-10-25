@@ -47,6 +47,8 @@
     "jsdonk": "0.4.18",
     "nyc": "^10.0.0",
     "proxyquire": "^1.7.10",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "sinon": "^2.1.0"
   },
   "ava": {
@@ -93,6 +95,11 @@
   "dependencies": {
     "fronads": "^0.6.4",
     "pipwerks-scorm-api-wrapper": "^0.1.2",
-    "stampy": "^0.31.1"
+    "react-pdf": "^2.1.7",
+    "stampy": "^0.33.0"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   }
 }
