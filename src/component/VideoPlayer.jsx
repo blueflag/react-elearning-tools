@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PlayerHock from '../hock/PlayerHock';
 import PureComponent from '../util/PureComponent';
-import {SpruceClassName} from 'stampy';
+import {SpruceClassName, Button} from 'stampy';
 import ProgressBar from './ProgressBar';
 
 class VideoPlayer extends React.PureComponent {
@@ -29,12 +29,12 @@ class VideoPlayer extends React.PureComponent {
     }
 
     static defaultProps = {
-        iconFullscreen: () => <button>F</button>,
-        iconMute: () => <button>M</button>,
-        iconPause: () => <button>||</button>,
-        iconPlay: () => <button>|></button>,
-        iconUnfullscreen: () => <button>UF</button>,
-        iconUnmute: () => <button>UM</button>
+        iconFullscreen: () => <Button spruceName="VideoPlayer_button">⇱</Button>,
+        iconMute: () => <Button spruceName="VideoPlayer_button">⊗</Button>,
+        iconPause: () => <Button spruceName="VideoPlayer_button">‖</Button>,
+        iconPlay: () => <Button spruceName="VideoPlayer_button">▶︎</Button>,
+        iconUnfullscreen: () => <Button spruceName="VideoPlayer_button">↘︎</Button>,
+        iconUnmute: () => <Button spruceName="VideoPlayer_button">⊙</Button>
     }
 
     render(): React.Element<any> {
@@ -110,10 +110,8 @@ class VideoPlayer extends React.PureComponent {
                 Sorry, your browser does not support embedded videos. <a href={src}>Download Instead</a>
             </video>
             <div className="VideoPlayer_controls">
-                <div className="floatRight paddingRight">
-                    {this.renderControl(onMute, muted, IconMute, IconUnmute)}
-                    {this.renderControl(onFullscreen, fullscreen, IconUnfullscreen, IconFullscreen)}
-                </div>
+                {this.renderControl(onMute, muted, IconMute, IconUnmute, 'right')}
+                {this.renderControl(onFullscreen, fullscreen, IconUnfullscreen, IconFullscreen, 'right')}
                 {this.renderControl(onPlayPause, paused, IconPlay, IconPause)}
                 <span className="VideoPlayer_control">{durationString}</span>
                 <ProgressBar
@@ -127,8 +125,8 @@ class VideoPlayer extends React.PureComponent {
             </div>
         </div>;
     }
-    renderControl(onClick: Function, bool: boolean, TrueIcon: Object, FalseIcon: Object): React.Element<any> {
-        return <div className="VideoPlayer_control" onClick={onClick}>{bool ? <TrueIcon/> : <FalseIcon/>}</div>;
+    renderControl(onClick: Function, bool: boolean, TrueIcon: Object, FalseIcon: Object, modifier?: string): React.Element<any> {
+        return <div className={SpruceClassName({name: "VideoPlayer_control", modifier})} onClick={onClick}>{bool ? <TrueIcon/> : <FalseIcon/>}</div>;
     }
     renderTime(duration: Object): string {
         return this.renderPadded(duration.minutes()) + ':' + this.renderPadded(duration.seconds());

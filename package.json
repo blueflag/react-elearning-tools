@@ -49,6 +49,7 @@
     "proxyquire": "^1.7.10",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "redux": "^3.7.2",
     "sinon": "^2.1.0"
   },
   "ava": {
@@ -94,9 +95,13 @@
   },
   "dependencies": {
     "fronads": "^0.6.4",
+    "obtuse": "^0.6.1",
     "pipwerks-scorm-api-wrapper": "^0.1.2",
+    "react-markdown-quiz": "^0.3.0",
     "react-pdf": "^2.1.7",
-    "stampy": "^0.33.0"
+    "react-redux": "^5.0.6",
+    "redux-actions": "^2.2.1",
+    "stampy": "^0.33.1"
   },
   "peerDependencies": {
     "react": "^16.0.0",

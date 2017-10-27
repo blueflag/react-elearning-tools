@@ -158,7 +158,6 @@ export default ConfigureHock(
         }
 
         render: Function = () => {
-            console.log('render!');
             return (
                 <Component
                     {...this.props}
