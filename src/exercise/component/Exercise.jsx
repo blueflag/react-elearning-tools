@@ -61,10 +61,15 @@ class ModuleSteps extends React.Component {
                 }
             };
 
+            const renderableStep = this.props.steps[value.step];
+            if(!renderableStep.render) {
+                console.log('No render method found on', renderableStep);
+            }
+
             return <Box>
                 <Navigation {...childProps} />
                 <Box modifier="paddingTopMega">
-                    {this.props.steps[value.step].render(childProps)}
+                    {renderableStep.render(childProps)}
                 </Box>
             </Box>
         }
