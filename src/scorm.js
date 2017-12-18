@@ -1,6 +1,6 @@
 //@flow
 import {SCORM} from 'pipwerks-scorm-api-wrapper';
-import {Perhaps} from 'fronads';
+import {Perhaps, Maybe} from 'fronads';
 
 export function initialize(): boolean {
     return Perhaps(SCORM.init());
@@ -27,16 +27,21 @@ export function status(): string {
     return Perhaps(SCORM.get('cmi.core.lesson_status'));
 }
 
-export function setStatus(value: string): string {
+export function setStatus(value: string): Maybe<string> {
     return Perhaps(SCORM.set('cmi.core.lesson_status', value));
 }
 
-export function complete(value: string): boolean {
-    return setStatus('completed')
-        .flatMap(() => score(value));
+export function complete(value: string): string {
+    if(value === 0) {
+        return setStatus('completed').value();
+    }
+    return setStatus('passed')
+        .flatMap(() => score(value))
+        .value();
 }
 
-export function fail(value: string): boolean {
+export function fail(value: string): string {
     return setStatus('failed')
-        .flatMap(() => score(value));
+        .flatMap(() => score(value))
+        .value();
 }

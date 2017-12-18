@@ -95,11 +95,13 @@
   },
   "dependencies": {
     "fronads": "^0.6.4",
+    "goose-css": "^0.11.0",
     "obtuse": "^0.6.1",
     "pipwerks-scorm-api-wrapper": "^0.1.2",
     "react-markdown-quiz": "^0.3.0",
     "react-pdf": "^2.1.7",
     "react-redux": "^5.0.6",
+    "react-showdown": "^1.6.0",
     "redux-actions": "^2.2.1",
     "stampy": "^0.33.1"
   },

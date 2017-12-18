@@ -15,7 +15,6 @@ export default function ElearningReducer(state, {type, payload}) {
         case 'EXERCISE/INTERACTION/SCORE':
             return state
                 .setIn(currentStep.concat('score'), payload)
-                .updateIn(currentStep, (step) => step.set('pass', payload >= step.passRate))
             ;
 
         case 'EXERCISE/NAVIGATION/NEXT_STEP':

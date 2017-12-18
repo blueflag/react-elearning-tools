@@ -2,6 +2,7 @@ import React from 'react';
 import VideoPlayer from '../../component/VideoPlayer';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import {Box} from 'obtuse';
+import {Wrapper} from 'obtuse';
 import {Button} from 'stampy';
 
 export default class QuizStep extends React.Component {
@@ -37,9 +38,11 @@ export default class QuizStep extends React.Component {
             <Button modifier="sizeMega primary" disabled={disabled} onClick={this.onClick}>Submit Answers</Button>
         </Box>;
 
-        return <Box className="Document">
-            <Quiz onChange={this.onChange} quiz={quiz} />
-            {nextButton(answeredCount !== quiz.length)}
-        </Box>
+        return <Wrapper>
+            <Box className="Document">
+                <Quiz onChange={this.onChange} quiz={quiz} />
+                {nextButton(answeredCount !== quiz.length)}
+            </Box>
+        </Wrapper>;
     }
 }

@@ -26,7 +26,6 @@ export default class PdfStep extends React.Component {
         </Box>;
 
         return <div className="Document">
-            {loaded && nextButton}
             <Document
               file={file}
               onLoadSuccess={this.onDocumentLoad}
