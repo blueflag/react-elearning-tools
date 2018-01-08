@@ -27,7 +27,7 @@ export default function ExerciseModule(props: Object) {
                 return (childProps) => <QuizStep {...childProps} quiz={file}/>;
 
             case 'cover':
-                return (childProps) => <CoverStep {...childProps} title={step.title} description={step.description} />;
+                return (childProps) => <CoverStep {...childProps} title={step.title} description={step.description} file={file} />;
 
             case 'assessment':
                 return (childProps) => <EndStep
