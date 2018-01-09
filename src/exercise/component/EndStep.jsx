@@ -12,14 +12,17 @@ import {TableCell} from 'goose-css';
 class End extends React.Component {
     constructor(props) {
         super(props);
-        const {value, passRate, actions} = props;
+        const {value, actions} = props;
         actions.onProgress(100);
-        actions.onFinish(this.didPass(), value.score);
     }
-    didPass = () => {
-        const {value} = this.props;
-        const {passRate} = this.props;
-        const {masteryScore = 100} = this.props;
+    componentWillReceiveProps(nextProps) {
+        const {value, actions} = nextProps;
+        actions.onFinish(this.didPass(nextProps), value.score);
+    }
+    didPass = (props) => {
+        const {value} = props;
+        const {passRate} = props;
+        const {masteryScore = 100} = props;
 
         const assessableSteps = value.steps.filter(ii => ii.assess);
         const passableSteps = assessableSteps.filter(ii => ii.passRate > 0);
@@ -45,7 +48,7 @@ class End extends React.Component {
 
         return <Wrapper modifier="small">
             <Box modifier="marginTopGiga">
-                <Text modifier="block center sizeGiga marginGiga">{this.didPass() ? description : failDescription}</Text>
+                <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props) ? description : failDescription}</Text>
             </Box>
             <table className="Table">
                 <tbody>

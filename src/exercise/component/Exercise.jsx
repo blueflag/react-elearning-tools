@@ -22,11 +22,6 @@ class ModuleSteps extends React.Component {
         super(props);
         const {addSteps, steps, value} = props;
 
-        if(process.env.NODE_ENV !== 'production') {
-            ScormDevelopmentRuntime();
-            ScormLogger();
-        }
-
         scorm.initialize();
         scorm.status();
 
