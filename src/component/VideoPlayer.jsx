@@ -104,7 +104,6 @@ class VideoPlayer extends React.PureComponent {
                 id={this.props.id}
                 onClick={onPlayPause}
                 src={src}
-                muted={true}
                 poster={poster}
                 controls={false}
                 style={videoStyle}

@@ -1,36 +1,49 @@
 /* @flow */
 import React from 'react';
 import {Wrapper} from 'obtuse';
-import Exercise from './Exercise';
+import CoverStep from './CoverStep';
 import EndStep from './EndStep';
+import Exercise from './Exercise';
+import MarkdownStep from './MarkdownStep';
 import PdfStep from './PdfStep';
-import VideoStep from './VideoStep';
 import QuizStep from './QuizStep';
+import VideoStep from './VideoStep';
 
 
-export default function ExerciseModule(props) {
+export default function ExerciseModule(props: Object) {
+
     function getRender(step, file) {
         switch (step.type) {
             case 'video':
-                return (props) => <VideoStep {...props} file={file}/>;
+                return (childProps) => <VideoStep {...childProps} file={file}/>;
 
             case 'document':
-                return (props) => <PdfStep {...props} file={file}/>;
+                return (childProps) => <PdfStep {...childProps} file={file}/>;
+
+            case 'markdown':
+                return (childProps) => <MarkdownStep {...childProps} file={file}/>;
 
             case 'quiz':
-                return (props) => <Wrapper>
-                    <QuizStep {...props} quiz={file}/>
-                </Wrapper>;
+                return (childProps) => <QuizStep {...childProps} quiz={file}/>;
+
+            case 'cover':
+                return (childProps) => <CoverStep {...childProps} title={step.title} description={step.description} file={file} />;
 
             case 'assessment':
-                return (props) => <EndStep {...props} passRate={step.passRate} />;
+                return (childProps) => <EndStep
+                    {...childProps}
+                    masteryScore={props.scorm.masteryScore}
+                    passRate={step.passRate}
+                    description={step.description}
+                    failDescription={step.failDescription}
+                />;
 
             default:
                 if(props[step.type]) {
                     const Component = props[step.type];
                     return (props) => <Component {...props} {...step} />
                 } else {
-                    console.warn('No render method found for', step.type);
+                    console.error('No render method found for', step.type);
                 }
 
         }
