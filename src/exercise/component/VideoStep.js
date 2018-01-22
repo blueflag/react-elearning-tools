@@ -1,6 +1,9 @@
 import React from 'react';
 import VideoPlayer from '../../component/VideoPlayer';
-import {Button, Box} from 'obtuse';
+import {Button} from 'goose-css';
+import {Box} from 'goose-css';
+import {Overlay} from 'goose-css';
+import {OverlayContent} from 'goose-css';
 
 export default class VideoStep extends React.Component {
     state = {
@@ -16,9 +19,16 @@ export default class VideoStep extends React.Component {
         }
     }
 
-    onClick = () => {
+    onNext = () => {
         const {actions} = this.props;
         actions.onNext();
+    }
+
+    onReset = () => {
+        const {actions} = this.props;
+        var video = document.getElementById("VideoPlayer_id");
+        video.load();
+        this.setState({complete: false});
     }
 
     onChange = ({currentPercentage}) => {
@@ -38,13 +48,16 @@ export default class VideoStep extends React.Component {
     render() {
         const {file, actions} = this.props;
 
-        const nextButton = <Box modifier="marginMega">
-            <Button modifier="sizeMega primary" onClick={this.onClick}>Continue</Button>
-        </Box>;
+        const nextButton = <Overlay modifier="marginMega">
+            <OverlayContent className="VideoStep_overlayContent">
+                <Button modifier="sizeMega primary" className="VideoStep_button" onClick={this.onReset}>Watch Again</Button>
+                <Button modifier="sizeMega primary" className="VideoStep_button" onClick={this.onNext}>Continue</Button>
+            </OverlayContent>
+        </Overlay>;
 
         return <Box className="Document">
             {this.state.complete && nextButton}
-            <VideoPlayer autoPlay className="VideoModule" src={file} onChange={this.onChange}/>
+            <VideoPlayer autoPlay className="VideoStep_videoPlayer" id="VideoPlayer_id" src={file} onChange={this.onChange}/>
         </Box>
     }
 }

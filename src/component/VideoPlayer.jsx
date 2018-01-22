@@ -101,8 +101,10 @@ class VideoPlayer extends React.PureComponent {
                 autoPlay={autoPlay}
                 className="VideoPlayer_video"
                 ref={this.props.videoRef}
+                id={this.props.id}
                 onClick={onPlayPause}
                 src={src}
+                muted={true}
                 poster={poster}
                 controls={false}
                 style={videoStyle}
