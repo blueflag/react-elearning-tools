@@ -26,8 +26,6 @@ export default class VideoStep extends React.Component {
 
     onReset = () => {
         const {actions} = this.props;
-        var video = document.getElementById("VideoPlayer_id");
-        video.load();
         this.setState({complete: false});
     }
 
@@ -57,7 +55,7 @@ export default class VideoStep extends React.Component {
 
         return <Box className="Document">
             {this.state.complete && nextButton}
-            <VideoPlayer autoPlay className="VideoStep_videoPlayer" id="VideoPlayer_id" src={file} onChange={this.onChange}/>
+            <VideoPlayer autoPlay className="VideoStep_videoPlayer" ref="VideoPlayer_id" src={file} onChange={this.onChange}/>
         </Box>
     }
 }
