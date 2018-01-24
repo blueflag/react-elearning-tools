@@ -95,7 +95,7 @@ class VideoPlayer extends React.PureComponent {
 
         const playIcon = <IconPlay/>;
         const pauseIcon = <IconPause/>;
-
+        
         return <div className={classes} tabIndex="0">
             <video
                 autoPlay={autoPlay}

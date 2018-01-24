@@ -43,6 +43,7 @@ export default ConfigureHock(
         }
         getVideoRef = (player) => {
             if(player) {
+                this.props.videoRef && this.props.videoRef(player)
                 this.setState({player}, this.startBuffer)
             }
         }
