@@ -55,17 +55,11 @@ export function setInteractionLatency({num, time}): Maybe<string> {
     return Perhaps(SCORM.set('cmi.interactions.'+num+'.latency', time));
 }
 
-export function complete(value: string): string {
-    if(value === 0) {
-        return setStatus('completed').value();
-    }
-    return setStatus('passed')
-        .flatMap(() => score(value))
-        .value();
+export function complete(): string {
+    return setStatus('completed');
+
 }
 
-export function fail(value: string): string {
+export function fail(): string {
     return setStatus('failed')
-        .flatMap(() => score(value))
-        .value();
 }

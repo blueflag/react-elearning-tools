@@ -15,7 +15,7 @@ export default createActions({
             ANSWER: (payload) => {
                 payload.answers.map((item, key) => {
                     var count = scorm.interaction();
-                    var result = item.result ? "correct" : "wrong";
+                    var result = item.correct ? "correct" : "wrong";
                     
                     var batch = {
                         num: count,
@@ -33,11 +33,9 @@ export default createActions({
                     scorm.setInteractionLatency(batch);
                 });
             },
-            FINISH: (pass, score) => {
-                const status = pass ? scorm.complete(score) : scorm.fail(score);
-                return {
-                    status, score
-                }
+            FINISH: (pass) => {
+                const status = pass ? scorm.complete() : scorm.fail();
+                return status
             }
         },
         NAVIGATION: {

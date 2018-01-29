@@ -15,8 +15,12 @@ class End extends React.Component {
         actions.onProgress(100);
     }
     componentWillMount() {
-        const {value, actions} = this.props;
-        actions.onFinish(this.didPass(this.props), value.score);
+        this.props.actions.onFinish(this.didPass(this.props));
+    }
+    componentDidUpdate(prevProps) {
+        if(prevProps !== this.props){
+            this.props.actions.onFinish(this.didPass(this.props));
+        }
     }
     didPass = (props) => {
         const {value} = props;
@@ -35,7 +39,7 @@ class End extends React.Component {
         if(passableSteps.size === 0) {
             return completed;
         }
-        
+
         return completed && passed;
     }
     render() {

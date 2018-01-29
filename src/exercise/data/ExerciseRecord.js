@@ -7,7 +7,6 @@ function toStepRecord(item) {
 
 export default class ExerciseRecord extends Record({
     pathname: null,
-    score: 0,
     step: 0,
     steps: List()
 }) {
