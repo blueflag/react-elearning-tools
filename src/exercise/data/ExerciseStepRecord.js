@@ -15,6 +15,7 @@ export default class ExerciseStepRecord extends Record({
         return this;
         // return this.set('pass', this.score >= this.passRate);
     }
+
     pass() {
         return this.score >= this.passRate;
     }

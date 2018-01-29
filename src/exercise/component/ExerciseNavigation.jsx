@@ -12,7 +12,8 @@ class ExerciseNavigation extends React.Component {
         return <Box spruceName="ExerciseNavigation">
             {value.steps
                 .map((step, index) => {
-                    const complete = step.progress === 100;
+                    const {progress, name, passRate, score} = step;
+                    const complete = (passRate > 0) ? step.pass() : progress === 100;
                     const previousComplete = value.steps.getIn([index - 1, 'progress']) === 100 || index < value.step;
 
                     const modifier = String()

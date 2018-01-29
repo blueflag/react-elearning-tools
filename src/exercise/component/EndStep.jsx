@@ -15,9 +15,9 @@ class End extends React.Component {
         const {value, actions} = props;
         actions.onProgress(100);
     }
-    componentWillReceiveProps(nextProps) {
-        const {value, actions} = nextProps;
-        actions.onFinish(this.didPass(nextProps), value.score);
+    componentWillMount() {
+        const {value, actions} = this.props;
+        actions.onFinish(this.didPass(this.props), value.score);
     }
     didPass = (props) => {
         const {value} = props;
@@ -36,30 +36,32 @@ class End extends React.Component {
         if(passableSteps.size === 0) {
             return completed;
         }
-
+        
         return completed && passed;
     }
     render() {
         const {value} = this.props;
         const {title} = this.props;
-        const {description = 'Congratulations! You have passed the learning Module.'} = this.props;
-        const {failDescription = 'Unfortunately you have not passed all the requirements of this training. Please reattempt this module.'} = this.props;
+        const {description = 'You have passed the learning Module.'} = this.props;
+        const {failDescription = 'Unfortunately, you have not passed all the requirements of this training. Please reattempt this module.'} = this.props;
         const assessableSteps = value.steps.filter(ii => ii.assess);
 
         return <Wrapper modifier="small">
             <Box modifier="marginTopGiga">
-                <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props) ? description : failDescription}</Text>
+                <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props) ? "Congratulations!" : "Too Bad"}</Text>
+                <Text modifier="block center marginGiga">{this.didPass(this.props) ? description : failDescription}</Text>
             </Box>
             <table className="Table">
                 <tbody>
                     {assessableSteps
-                        .map(({progress, name, pass, passRate, score}, key) => {
-                            const complete = (passRate > 0) ? pass : progress === 100;
+                        .map((step, key) => {
+                            const {progress, name, passRate, score} = step;
+                            const complete = (passRate > 0) ? step.pass() : progress === 100;
 
                             const completeModifier = complete ? 'boundedPositive' : 'boundedNegative';
 
                             return <tr className="Table_row" key={key}>
-                                <TableCell modifier="padding">{name} </TableCell>
+                                <TableCell modifier="padding header">{name} </TableCell>
                                 <TableCell modifier="padding">{passRate > 0 && <span><Text numberFormat="0.0">{score}</Text> / {passRate}</span>}</TableCell>
                                 {passRate > 0
                                     ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>

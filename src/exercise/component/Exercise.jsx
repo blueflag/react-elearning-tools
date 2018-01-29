@@ -38,6 +38,7 @@ class ModuleSteps extends React.Component {
             onPrevious,
             onProgress,
             onScore,
+            onAnswer,
             value,
         } = this.props;
 
@@ -47,6 +48,7 @@ class ModuleSteps extends React.Component {
                 value,
                 step,
                 actions: {
+                    onAnswer,
                     onFinish,
                     onGoto,
                     onNext,
@@ -78,6 +80,7 @@ export default Some(ModuleSteps)
         (value) => ({value}),
         {
             addSteps: meta.addSteps,
+            onAnswer: interaction.answer,
             onNext: navigation.nextStep,
             onScore: interaction.score,
             onFinish: interaction.finish,

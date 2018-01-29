@@ -31,6 +31,30 @@ export function setStatus(value: string): Maybe<string> {
     return Perhaps(SCORM.set('cmi.core.lesson_status', value));
 }
 
+export function interaction(): string {
+    return SCORM.get('cmi.interactions._count') || 0;
+}
+
+export function setInteractionID({num, title}): Maybe<string> {
+    return Perhaps(SCORM.set('cmi.interactions.'+num+'.id', title));
+}
+
+export function setInteractionStudentResponse({num, answer}): Maybe<string> {
+    return Perhaps(SCORM.set('cmi.interactions.'+num+'.student_response', answer));
+}
+
+export function setInteractionResult({num, result}): Maybe<string> {
+    return Perhaps(SCORM.set('cmi.interactions.'+num+'.result', result));
+}
+
+export function setInteractionCorrectResponse({num, correctAnswer}): Maybe<string> {
+    return Perhaps(SCORM.set('cmi.interactions.'+num+'.correct_responses.0.pattern', correctAnswer));
+}
+
+export function setInteractionLatency({num, time}): Maybe<string> {
+    return Perhaps(SCORM.set('cmi.interactions.'+num+'.latency', time));
+}
+
 export function complete(value: string): string {
     if(value === 0) {
         return setStatus('completed').value();

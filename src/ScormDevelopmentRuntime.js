@@ -6,7 +6,8 @@ class ScormDevelopmentRuntime {
         window.API = this;
         this.data = {
             'cmi.core.lesson_status': 'incomplete',
-            'cmi.core.student_name': 'Derek Tibbs'
+            'cmi.core.student_name': 'Derek Tibbs',
+            'cmi.interactions._count' : "0",
         };
         this.LMSGetValue = this.LMSGetValue.bind(this);
         this.LMSSetValue = this.LMSSetValue.bind(this);
