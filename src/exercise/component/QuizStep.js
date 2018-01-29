@@ -10,12 +10,10 @@ import moment from 'moment';
 export default class QuizStep extends React.Component {
     constructor(props) {
         super(props);
-        var lessonStatus = props.actions.onLessonStatus().payload;
         this.state = {
             answeredCount: 0,
             score: 0,
             payload: null,
-            lessonStatus: lessonStatus === "completed" || lessonStatus === "passed",
             timer: new Stopwatch()
         }
     }
@@ -24,8 +22,8 @@ export default class QuizStep extends React.Component {
     }
 
     onChange = (payload) => {
-        if(!this.state.lessonStatus){
-            const {quiz, actions} = this.props;
+        const {quiz, actions,step} = this.props;
+        if(!step.sumbitable){
             const answeredCount = payload.reduce((count, item) => item.answer ? count + 1 : count, 0);
             const score = (100 / quiz.length) * payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
 
@@ -37,14 +35,19 @@ export default class QuizStep extends React.Component {
                 payload
             });
         }
+
     }
     onClick = () => {
-        const {quiz,actions} = this.props;
+        const {quiz,actions,step} = this.props;
+        const {passRate,score} = step;
         this.state.timer.stop;
         var time = moment(this.state.timer.ms).format("mm:ss")
         var batch = {
             answers: this.state.payload,
             time: time
+        }
+        if(score >= passRate){
+            actions.onSetSubmitable(false);
         }
         actions.onAnswer(batch);
         actions.onProgress(100);
@@ -62,7 +65,7 @@ export default class QuizStep extends React.Component {
     }
 
     renderNextButton(disabled) {
-        if(!this.state.lessonStatus){
+        if(!this.props.step.sumbitable){
             return <Box modifier="marginMega">
                 <Button modifier="sizeMega primary" disabled={disabled} onClick={this.onClick}>Submit Answers</Button>
             </Box>

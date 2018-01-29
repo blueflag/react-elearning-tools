@@ -11,7 +11,7 @@ import {Box} from 'obtuse';
 
 import ExerciseActions from '../data/ExerciseActions';
 import ExerciseNavigation from './ExerciseNavigation';
-const {meta, navigation, interaction} = ExerciseActions.exercise;
+const {meta, navigation, interaction, step} = ExerciseActions.exercise;
 
 
 class ModuleSteps extends React.Component {
@@ -39,7 +39,7 @@ class ModuleSteps extends React.Component {
             onProgress,
             onScore,
             onAnswer,
-            onLessonStatus,
+            onSetSubmitable,
             value,
         } = this.props;
 
@@ -50,7 +50,7 @@ class ModuleSteps extends React.Component {
                 step,
                 actions: {
                     onAnswer,
-                    onLessonStatus,
+                    onSetSubmitable,
                     onFinish,
                     onGoto,
                     onNext,
@@ -83,7 +83,7 @@ export default Some(ModuleSteps)
         {
             addSteps: meta.addSteps,
             onAnswer: interaction.answer,
-            onLessonStatus: interaction.lessonstatus,
+            onSetSubmitable: step.setSubmitable,
             onNext: navigation.nextStep,
             onScore: interaction.score,
             onFinish: interaction.finish,

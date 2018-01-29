@@ -7,6 +7,9 @@ export default createActions({
         META: {
             ADD_STEPS: undefined,
         },
+        STEP: {
+            SET_SUBMITABLE: undefined,
+        },
         INTERACTION: {
             SCORE: undefined,
             ANSWER: (payload) => {
@@ -29,9 +32,6 @@ export default createActions({
                     scorm.setInteractionCorrectResponse(batch);
                     scorm.setInteractionLatency(batch);
                 });
-            },
-            LESSONSTATUS: () => {
-                return scorm.status().val;
             },
             FINISH: (pass, score) => {
                 const status = pass ? scorm.complete(score) : scorm.fail(score);

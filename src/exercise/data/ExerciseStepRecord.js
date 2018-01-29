@@ -8,6 +8,7 @@ export default class ExerciseStepRecord extends Record({
     assess: true,
     progress: 0,
     score: 0,
+    sumbitable: true,
     passRate: 0
 }) {
     constructor(props) {
