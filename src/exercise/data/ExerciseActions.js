@@ -9,9 +9,8 @@ export default createActions({
         },
         INTERACTION: {
             SCORE: undefined,
-            ANSWER: (payload,time) => {
-                payload.map((item, key) => {
-
+            ANSWER: (payload) => {
+                payload.answers.map((item, key) => {
                     var count = scorm.interaction();
                     var result = item.result ? "correct" : "wrong";
                     
@@ -21,7 +20,7 @@ export default createActions({
                         answer: item.answer,
                         result: result,
                         correctAnswer: item.correctAnswer,
-                        time: time
+                        time: payload.time
                     };
 
                     scorm.setInteractionID(batch);
@@ -30,8 +29,10 @@ export default createActions({
                     scorm.setInteractionCorrectResponse(batch);
                     scorm.setInteractionLatency(batch);
                 });
-                
-            }, 
+            },
+            LESSONSTATUS: () => {
+                return scorm.status().val;
+            },
             FINISH: (pass, score) => {
                 const status = pass ? scorm.complete(score) : scorm.fail(score);
                 return {

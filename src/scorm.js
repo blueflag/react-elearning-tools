@@ -20,7 +20,7 @@ export function get(key: string): any {
 // Predefined Methods
 
 export function score(value: string): boolean {
-    return Perhaps(SCORM.set('cmi.core.score.raw', value))
+    return Perhaps(SCORM.set('cmi.core.score.raw', value));
 }
 
 export function status(): string {

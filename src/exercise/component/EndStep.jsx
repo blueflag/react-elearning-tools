@@ -4,7 +4,6 @@ import {List, Map} from 'immutable';
 import {Record} from 'immutable';
 import ScormDevelopmentRuntime from '../../ScormDevelopmentRuntime';
 import ScormLogger from '../../ScormLogger';
-import * as scorm from '../../scorm';
 
 import {Text, Badge, Box, Wrapper} from 'obtuse';
 import {TableCell} from 'goose-css';

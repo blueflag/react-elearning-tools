@@ -6,16 +6,16 @@ import {Wrapper} from 'obtuse';
 import {Button} from 'stampy';
 import Stopwatch from 'timer-stopwatch';
 import moment from 'moment';
-import * as scorm from '../../scorm';
 
 export default class QuizStep extends React.Component {
     constructor(props) {
         super(props);
+        var lessonStatus = props.actions.onLessonStatus().payload;
         this.state = {
             answeredCount: 0,
             score: 0,
             payload: null,
-            lessonStatus: scorm.status().val === "completed" || scorm.status().val === "passed",
+            lessonStatus: lessonStatus === "completed" || lessonStatus === "passed",
             timer: new Stopwatch()
         }
     }
@@ -42,7 +42,11 @@ export default class QuizStep extends React.Component {
         const {quiz,actions} = this.props;
         this.state.timer.stop;
         var time = moment(this.state.timer.ms).format("mm:ss")
-        actions.onAnswer(this.state.payload,time);
+        var batch = {
+            answers: this.state.payload,
+            time: time
+        }
+        actions.onAnswer(batch);
         actions.onProgress(100);
         actions.onNext()
     }
