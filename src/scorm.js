@@ -35,27 +35,27 @@ export function interaction(): string {
     return SCORM.get('cmi.interactions._count') || 0;
 }
 
-export function setInteractionID({num, title}): Maybe<string> {
+export function setInteractionID({num, title}: Object): Maybe<string> {
     return Perhaps(SCORM.set('cmi.interactions.'+num+'.id', title));
 }
 
-export function setInteractionStudentResponse({num, answer}): Maybe<string> {
+export function setInteractionStudentResponse({num, answer}: Object): Maybe<string> {
     return Perhaps(SCORM.set('cmi.interactions.'+num+'.student_response', answer));
 }
 
-export function setInteractionResult({num, result}): Maybe<string> {
+export function setInteractionResult({num, result}: Object): Maybe<string> {
     return Perhaps(SCORM.set('cmi.interactions.'+num+'.result', result));
 }
 
-export function setInteractionCorrectResponse({num, correctAnswer}): Maybe<string> {
+export function setInteractionCorrectResponse({num, correctAnswer}: Object): Maybe<string> {
     return Perhaps(SCORM.set('cmi.interactions.'+num+'.correct_responses.0.pattern', correctAnswer));
 }
 
-export function setInteractionLatency({num, time}): Maybe<string> {
+export function setInteractionLatency({num, time}: Object): Maybe<string> {
     return Perhaps(SCORM.set('cmi.interactions.'+num+'.latency', time));
 }
 
-export function complete(value): string {
+export function complete(value: ?string): string {
     if(value === null) {
         return setStatus('completed').value();
     }
@@ -64,7 +64,7 @@ export function complete(value): string {
         .value();
 }
 
-export function fail(value): string {
+export function fail(value: string): string {
     return setStatus('failed')
         .flatMap(() => score(value.toString()))
         .value();

@@ -1,7 +1,6 @@
 //@flow
 import {createActions} from 'redux-actions';
 import * as scorm from '../../scorm';
-import {Map} from 'immutable';
 
 export default createActions({
     EXERCISE: {
@@ -9,12 +8,12 @@ export default createActions({
             ADD_STEPS: undefined
         },
         STEP: {
-            SET_SUBMITABLE: undefined,
+            SET_SUBMITABLE: undefined
         },
         INTERACTION: {
             SCORE: undefined,
-            ANSWER: (payload) => {
-                payload.answers.map((item, key) => {
+            ANSWER: (payload: Object) => {
+                payload.answers.map((item: Object) => {
                     var count = scorm.interaction();
                     var result = item.correct ? "correct" : "wrong";
                     
@@ -34,7 +33,7 @@ export default createActions({
                     scorm.setInteractionLatency(batch);
                 });
             },
-            FINISH: (payload) => {
+            FINISH: (payload: Object): Object => {
                 const {result,score} = payload;
                 const status = result ? scorm.complete(score) : scorm.fail(score);
                 var batch = {

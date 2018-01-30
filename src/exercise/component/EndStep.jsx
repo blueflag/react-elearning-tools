@@ -14,6 +14,9 @@ class End extends React.Component<Object> {
         const {actions} = nextProps;
         actions.onFinish(this.didPass(nextProps));
     }
+    componentWillMount() {
+        this.props.actions.onFinish(this.didPass(this.props));
+    }
     didPass = (props: Object): Object => {
         const {value} = props;
         const {masteryScore = 100} = props;
@@ -32,7 +35,8 @@ class End extends React.Component<Object> {
         var scoreFilter = [];
         scoreSteps.map((item: Object) => {
             scoreFilter.push(item.score);
-        })
+        });
+
         const add = (a, b) => a + b;
 
         var result = completed;
