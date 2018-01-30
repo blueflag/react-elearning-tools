@@ -1,5 +1,5 @@
+//@flow
 import React from 'react';
-import VideoPlayer from '../../component/VideoPlayer';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import {Box} from 'obtuse';
 import {Wrapper} from 'obtuse';

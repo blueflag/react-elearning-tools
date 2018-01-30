@@ -48,7 +48,7 @@ class ModuleSteps extends React.Component<Object> {
                     onProgress,
                     onScore,
                     onAnswer,
-                    onSetSubmitable,
+                    onSetSubmitable
                 }
             };
 

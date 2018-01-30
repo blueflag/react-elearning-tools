@@ -11,10 +11,10 @@ class End extends React.Component<Object> {
         actions.onProgress(100);
     }
     componentWillReceiveProps(nextProps: Object) {
-        const {value, actions} = nextProps;
+        const {actions} = nextProps;
         actions.onFinish(this.didPass(nextProps));
     }
-    didPass = (props: Object) => {
+    didPass = (props: Object): Object => {
         const {value} = props;
         const {masteryScore = 100} = props;
 
@@ -30,10 +30,10 @@ class End extends React.Component<Object> {
 
         // SCORE
         var scoreFilter = [];
-        scoreSteps.map((item) => {
-            scoreFilter.push(item.score)            
+        scoreSteps.map((item: Object) => {
+            scoreFilter.push(item.score);
         })
-        const add = (a, b) => a + b
+        const add = (a, b) => a + b;
 
         var result = completed;
         var score = null;
@@ -46,7 +46,7 @@ class End extends React.Component<Object> {
         var batch = {
             result: result,
             score: score
-        }
+        };
 
         return batch;
     }
