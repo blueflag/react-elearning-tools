@@ -1,32 +1,41 @@
 // @flow
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import type {Element} from 'react';
 import moment from 'moment';
 import PlayerHock from '../hock/PlayerHock';
-import PureComponent from '../util/PureComponent';
 import {SpruceClassName, Button} from 'stampy';
 import ProgressBar from './ProgressBar';
 
-class VideoPlayer extends React.PureComponent {
-    static propTypes = {
-        autoPlay: PropTypes.bool,
-        buffered: PropTypes.number,
-        className: PropTypes.string,
-        component: PropTypes.object,
-        currentPercentage: PropTypes.number,
-        currentTime: PropTypes.number,
-        duration: PropTypes.number,
-        fullscreen: PropTypes.bool,
-        muted: PropTypes.bool,
-        onFullscreen: PropTypes.func,
-        onMute: PropTypes.func,
-        onPlayPause: PropTypes.func,
-        onScrub: PropTypes.func,
-        paused: PropTypes.bool,
-        player: PropTypes.object,
-        poster: PropTypes.string,
-        src: PropTypes.string.isRequired
-    }
+type Props = {
+    autoPlay?: boolean,
+    buffered: number,
+    className?: string,
+    component?: Object,
+    currentPercentage: number,
+    currentTime: number,
+    duration?: number,
+    fullscreen?: boolean,
+    iconFullscreen: *,
+    iconMute: *,
+    iconPause: *,
+    iconPlay: *,
+    iconUnfullscreen: *,
+    iconUnmute: *,
+    muted?: boolean,
+    mainRef: Function,
+    videoRef: Function,
+    progressRef: Function,
+    onFullscreen?: Function,
+    onMute?: Function,
+    onPlayPause?: Function,
+    onScrub: Function,
+    paused?: boolean,
+    player?: Object,
+    poster?: string,
+    src: string
+};
+
+class VideoPlayer extends React.PureComponent<Props> {
 
     static defaultProps = {
         iconFullscreen: () => <Button spruceName="VideoPlayer_button">⇱</Button>,
@@ -37,7 +46,7 @@ class VideoPlayer extends React.PureComponent {
         iconUnmute: () => <Button spruceName="VideoPlayer_button">⊙</Button>
     }
 
-    render(): React.Element<any> {
+    render(): Element<*> {
         const {
             autoPlay,
             buffered,
@@ -93,10 +102,7 @@ class VideoPlayer extends React.PureComponent {
             }
         }
 
-        const playIcon = <IconPlay/>;
-        const pauseIcon = <IconPause/>;
-        
-        return <div className={classes} tabIndex="0">
+        return <div ref={this.props.mainRef} className={classes} tabIndex="0">
             <video
                 autoPlay={autoPlay}
                 className="VideoPlayer_video"
@@ -115,7 +121,7 @@ class VideoPlayer extends React.PureComponent {
                 {this.renderControl(onPlayPause, paused, IconPlay, IconPause)}
                 <span className="VideoPlayer_control">{durationString}</span>
                 <ProgressBar
-                    ref={this.props.progressRef}
+                    progressRef={this.props.progressRef}
                     onScrub={onScrub}
                     bars={[
                         {color: '#9c9c9c', value: buffered / 100},
@@ -125,7 +131,7 @@ class VideoPlayer extends React.PureComponent {
             </div>
         </div>;
     }
-    renderControl(onClick: Function, bool: boolean, TrueIcon: Object, FalseIcon: Object, modifier?: string): React.Element<any> {
+    renderControl(onClick?: Function, bool?: boolean, TrueIcon: Object, FalseIcon: Object, modifier?: string): Element<*> {
         return <div className={SpruceClassName({name: "VideoPlayer_control", modifier})} onClick={onClick}>{bool ? <TrueIcon/> : <FalseIcon/>}</div>;
     }
     renderTime(duration: Object): string {

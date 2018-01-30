@@ -1,7 +1,8 @@
+//@flow
 
-export function loadState(key) {
+export function loadState(key: string): * {
     try {
-        const state = localStorage.getItem(key);
+        const state = localStorage.getItem(key) || '';
         if(state === null) {
             return undefined;
         }
@@ -11,7 +12,7 @@ export function loadState(key) {
     }
 }
 
-export function saveState(key, value) {
+export function saveState(key: string, value: *) {
     try {
         const state = JSON.stringify(value);
         localStorage.setItem(key, state);
