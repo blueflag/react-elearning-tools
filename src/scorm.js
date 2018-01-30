@@ -31,6 +31,15 @@ export function setStatus(value: string): Maybe<string> {
     return Perhaps(SCORM.set('cmi.core.lesson_status', value));
 }
 
+export function suspendData(): Object {
+    return Perhaps(SCORM.get('cmi.suspend_data'))
+        .map(JSON.parse).value({});
+}
+
+export function setSuspendData(value: *): Maybe<string> {
+    return Perhaps(SCORM.set('cmi.suspend_data', JSON.stringify(value)));
+}
+
 export function interaction(): string {
     return SCORM.get('cmi.interactions._count') || "0";
 }
