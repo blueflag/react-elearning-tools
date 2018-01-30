@@ -1,35 +1,27 @@
+//@flow
 import React from 'react';
+import type {Element} from 'react';
 import {connect} from 'react-redux';
-import {List} from 'immutable';
-import {Record} from 'immutable';
-import ScormDevelopmentRuntime from '../../ScormDevelopmentRuntime';
-import ScormLogger from '../../ScormLogger';
-import * as scorm from '../../scorm';
 import {Some} from 'fronads';
 import {Box} from 'obtuse';
-
 
 import ExerciseActions from '../data/ExerciseActions';
 import ExerciseNavigation from './ExerciseNavigation';
 const {meta, navigation, interaction, step} = ExerciseActions.exercise;
 
-
-class ModuleSteps extends React.Component {
+class ModuleSteps extends React.Component<Object> {
     static defaultProps = {
         navigation: ExerciseNavigation
     }
-    constructor(props) {
+    constructor(props: Object) {
         super(props);
         const {addSteps, steps, value} = props;
-
-        scorm.initialize();
-        scorm.status();
 
         if(value.steps.size === 0) {
             addSteps(steps);
         }
     }
-    render() {
+    render(): ?Element<*> {
         const {
             navigation: Navigation,
             onFinish,
@@ -40,7 +32,7 @@ class ModuleSteps extends React.Component {
             onScore,
             onAnswer,
             onSetSubmitable,
-            value,
+            value
         } = this.props;
 
         if(value.steps.size) {
@@ -49,14 +41,14 @@ class ModuleSteps extends React.Component {
                 value,
                 step,
                 actions: {
-                    onAnswer,
-                    onSetSubmitable,
                     onFinish,
                     onGoto,
                     onNext,
                     onPrevious,
                     onProgress,
                     onScore,
+                    onAnswer,
+                    onSetSubmitable,
                 }
             };
 
@@ -70,7 +62,7 @@ class ModuleSteps extends React.Component {
                 <Box modifier="paddingTopMega">
                     {renderableStep.render(childProps)}
                 </Box>
-            </Box>
+            </Box>;
         }
 
         return null;
@@ -82,13 +74,13 @@ export default Some(ModuleSteps)
         (value) => ({value}),
         {
             addSteps: meta.addSteps,
-            onAnswer: interaction.answer,
-            onSetSubmitable: step.setSubmitable,
             onNext: navigation.nextStep,
             onScore: interaction.score,
             onFinish: interaction.finish,
             onPrevious: navigation.previousStep,
             onGoto: navigation.gotoStep,
+            onAnswer: interaction.answer,
+            onSetSubmitable: step.setSubmitable,
             onProgress: navigation.progressStep
         }
     ))

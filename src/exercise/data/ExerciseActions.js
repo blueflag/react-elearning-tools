@@ -1,3 +1,4 @@
+//@flow
 import {createActions} from 'redux-actions';
 import * as scorm from '../../scorm';
 import {Map} from 'immutable';
@@ -5,7 +6,7 @@ import {Map} from 'immutable';
 export default createActions({
     EXERCISE: {
         META: {
-            ADD_STEPS: undefined,
+            ADD_STEPS: undefined
         },
         STEP: {
             SET_SUBMITABLE: undefined,
@@ -34,10 +35,15 @@ export default createActions({
                 });
             },
             FINISH: (payload) => {
-                const {result,score} = payload
+                const {result,score} = payload;
                 const status = result ? scorm.complete(score) : scorm.fail(score);
-                return status
+                var batch = {
+                    status: status,
+                    score: score
+                };
+                return batch;
             }
+
         },
         NAVIGATION: {
             NEXT_STEP: undefined,
@@ -46,4 +52,4 @@ export default createActions({
             PROGRESS_STEP: undefined
         }
     }
-})
+});

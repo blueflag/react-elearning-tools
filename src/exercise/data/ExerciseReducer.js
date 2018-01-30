@@ -1,5 +1,7 @@
+//@flow
+import ExerciseRecord from './ExerciseRecord';
 
-export default function ElearningReducer(state, {type, payload}) {
+export default function ElearningReducer(state: ExerciseRecord, {type, payload}: Object): ExerciseRecord {
     const currentStep = ['steps', state.step];
 
     switch (type) {

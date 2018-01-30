@@ -1,30 +1,21 @@
+//@flow
 import React from 'react';
-import {connect} from 'react-redux';
-import {List, Map} from 'immutable';
-import {Record} from 'immutable';
-import ScormDevelopmentRuntime from '../../ScormDevelopmentRuntime';
-import ScormLogger from '../../ScormLogger';
-
+import type {Element} from 'react';
 import {Text, Badge, Box, Wrapper} from 'obtuse';
 import {TableCell} from 'goose-css';
 
-class End extends React.Component {
-    constructor(props) {
+class End extends React.Component<Object> {
+    constructor(props: Object) {
         super(props);
-        const {value, actions} = props;
+        const {actions} = props;
         actions.onProgress(100);
     }
-    componentWillMount() {
-        this.props.actions.onFinish(this.didPass(this.props));
+    componentWillReceiveProps(nextProps: Object) {
+        const {value, actions} = nextProps;
+        actions.onFinish(this.didPass(nextProps));
     }
-    componentDidUpdate(prevProps) {
-        if(prevProps !== this.props){
-            this.props.actions.onFinish(this.didPass(this.props));
-        }
-    }
-    didPass = (props) => {
+    didPass = (props: Object) => {
         const {value} = props;
-        const {passRate} = props;
         const {masteryScore = 100} = props;
 
         const assessableSteps = value.steps.filter(ii => ii.assess);
@@ -59,9 +50,8 @@ class End extends React.Component {
 
         return batch;
     }
-    render() {
+    render(): Element<*> {
         const {value} = this.props;
-        const {title} = this.props;
         const {description = 'You have passed the learning Module.'} = this.props;
         const {failDescription = 'Unfortunately, you have not passed all the requirements of this training. Please reattempt this module.'} = this.props;
         const assessableSteps = value.steps.filter(ii => ii.assess);
@@ -74,9 +64,8 @@ class End extends React.Component {
             <table className="Table">
                 <tbody>
                     {assessableSteps
-                        .map((step, key) => {
-                            const {progress, name, passRate, score} = step;
-                            const complete = (passRate > 0) ? step.pass() : progress === 100;
+                        .map(({progress, name, pass, passRate, score}: Object, key: number): Element<"tr"> => {
+                            const complete = (passRate > 0) ? pass : progress === 100;
 
                             const completeModifier = complete ? 'boundedPositive' : 'boundedNegative';
 
@@ -87,7 +76,7 @@ class End extends React.Component {
                                     ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
                                     : <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
                                 }
-                            </tr>
+                            </tr>;
                         })
                         .toJS()}
                 </tbody>

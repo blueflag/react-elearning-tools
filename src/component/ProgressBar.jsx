@@ -1,22 +1,30 @@
+//@flow
 import React from 'react';
+import type {Element} from 'react';
 
 const StyleProgressBar = {
     backgroundColor: '#ccc',
     height: '1rem',
     position: 'relative',
     width: '100%'
-}
+};
 
 const StyleProgressBar_bar = {
     height: '100%',
     position: 'absolute',
     transition: '160ms'
-}
+};
 
-export default class ProgressBar extends React.Component {
-    render(props: Object): React.Element<any> {
-        const {onScrub, bars} = this.props;
-        return <div className="ProgressBar" onMouseDown={onScrub} style={StyleProgressBar}>
+type Props = {
+    progressRef: Function,
+    onScrub: Function,
+    bars: Array<Object>
+};
+
+export default class ProgressBar extends React.Component<Props> {
+    render(): Element<"div"> {
+        const {onScrub, bars, progressRef} = this.props;
+        return <div ref={progressRef} className="ProgressBar" onMouseDown={onScrub} style={StyleProgressBar}>
             {bars.map((bar, key) => <div
                 key={key}
                 className="ProgressBar_bar"
@@ -28,9 +36,3 @@ export default class ProgressBar extends React.Component {
         </div>;
     }
 }
-
-ProgressBar.defaultProps = {
-    spruceName: 'ProgressBar'
-};
-
-

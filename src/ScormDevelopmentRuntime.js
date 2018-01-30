@@ -1,43 +1,46 @@
 //@flow
 
-
 class ScormDevelopmentRuntime {
+    data: Object;
+    LMSGetValue: Function;
+    LMSSetValue: Function;
     constructor() {
         window.API = this;
         this.data = {
             'cmi.core.lesson_status': 'incomplete',
             'cmi.core.student_name': 'Derek Tibbs',
             'cmi.interactions._count' : "0",
+            'cmi.core.student_id': '1234'
         };
         this.LMSGetValue = this.LMSGetValue.bind(this);
         this.LMSSetValue = this.LMSSetValue.bind(this);
     }
-    version() {
+    version(): string {
         return '1.2';
     }
-    LMSInitialize() {
+    LMSInitialize(): boolean {
         return true;
     }
-    LMSFinish() {
+    LMSFinish(): boolean {
         return true;
     }
-    LMSGetValue(key) {
+    LMSGetValue(key: string): string {
         return this.data[key];
     }
-    LMSSetValue(key, value) {
+    LMSSetValue(key: string, value: *): boolean {
         this.data[key] = value;
         return true;
     }
-    LMSCommit() {
+    LMSCommit(): boolean {
         return true;
     }
-    LMSGetLastError() {
+    LMSGetLastError(): number {
         return 0;
     }
-    LMSGetErrorString() {
+    LMSGetErrorString(): string {
         return 'No Error';
     }
-    LMSGetDiagnostic() {
+    LMSGetDiagnostic(): string {
         return 'There are no errors in the development runtime';
     }
 }

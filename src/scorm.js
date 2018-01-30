@@ -11,7 +11,7 @@ export function terminate(): boolean {
 }
 
 
-export function get(key: string): any {
+export function get(key: string): Maybe<any> {
     return Perhaps(SCORM.get(key));
 }
 
@@ -19,7 +19,7 @@ export function get(key: string): any {
 //
 // Predefined Methods
 
-export function score(value: string): boolean {
+export function score(value: string): Maybe<boolean> {
     return Perhaps(SCORM.set('cmi.core.score.raw', value));
 }
 
@@ -55,17 +55,17 @@ export function setInteractionLatency({num, time}): Maybe<string> {
     return Perhaps(SCORM.set('cmi.interactions.'+num+'.latency', time));
 }
 
-export function complete(value: string): string {
-    if(value === 0) {
+export function complete(value): string {
+    if(value === null) {
         return setStatus('completed').value();
     }
     return setStatus('passed')
-        .flatMap(() => score(value))
+        .flatMap(() => score(value.toString()))
         .value();
 }
 
-export function fail(value: string): string {
+export function fail(value): string {
     return setStatus('failed')
-        .flatMap(() => score(value))
+        .flatMap(() => score(value.toString()))
         .value();
 }

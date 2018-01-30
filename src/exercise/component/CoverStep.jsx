@@ -1,22 +1,28 @@
+//@flow
 import React from 'react';
-import {connect} from 'react-redux';
-import {List, Map} from 'immutable';
-import {Record} from 'immutable';
-import {Text, Badge, Box, Wrapper} from 'obtuse';
+import type {Element} from 'react';
+import {Text} from 'goose-css';
+import {Box} from 'goose-css';
+import {Wrapper} from 'goose-css';
 import {Button} from 'goose-css';
 
-class CoverStep extends React.Component {
+type Props = {
+    actions: Object,
+    description?: string,
+    file?: string,
+    title?: string
+};
+
+class CoverStep extends React.Component<Props> {
     onClick = () => {
         const {actions} = this.props;
         actions.onProgress(100);
         actions.onNext();
     }
-    render() {
-        const {value} = this.props;
-        const {title} = this.props;
+    render(): Element<*> {
         const {description} = this.props;
         const {file} = this.props;
-        const {actions} = this.props;
+        const {title} = this.props;
 
         return <Wrapper modifier="small">
             <Box modifier="paddingRowMega">

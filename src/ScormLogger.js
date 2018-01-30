@@ -12,11 +12,11 @@ const methods = [
     'LMSGetDiagnostic'
 ];
 
-function Logger(...args) {
+function Logger(...args: *) {
     console.log('%c[Scorm]:', 'color: #9a55da;', ...args);
 }
 
-export default function ScormLogger() {
+export default function ScormLogger(): * {
     if(!window.API) {
         Logger('Warning. No window.API was found');
         return false;
@@ -24,7 +24,7 @@ export default function ScormLogger() {
 
     methods.reduce((win: Object, method: string): Object => {
         const oldMethod = win[method];
-        win[method] = (...args) => {
+        win[method] = (...args: *): * => {
             var returnValue;
             // console.log(oldAPI, oldMethod);
             if(oldMethod) {

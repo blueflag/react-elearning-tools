@@ -1,5 +1,5 @@
-import {Record, List} from 'immutable';
-
+//@flow
+import {Record} from 'immutable';
 
 export default class ExerciseStepRecord extends Record({
     render: null,
@@ -11,13 +11,11 @@ export default class ExerciseStepRecord extends Record({
     submitable: true,
     passRate: 0
 }) {
-    constructor(props) {
+    constructor(props: Object): ExerciseStepRecord {
         super(props);
         return this;
-        // return this.set('pass', this.score >= this.passRate);
     }
-
-    pass() {
+    pass(): boolean {
         return this.score >= this.passRate;
     }
 }
