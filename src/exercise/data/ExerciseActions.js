@@ -1,18 +1,19 @@
+//@flow
 import {createActions} from 'redux-actions';
 import * as scorm from '../../scorm';
 
 export default createActions({
     EXERCISE: {
         META: {
-            ADD_STEPS: undefined,
+            ADD_STEPS: undefined
         },
         INTERACTION: {
             SCORE: undefined,
-            FINISH: (pass, score) => {
+            FINISH: (pass: boolean, score: number): Object => {
                 const status = pass ? scorm.complete(score) : scorm.fail(score);
                 return {
                     status, score
-                }
+                };
             }
         },
         NAVIGATION: {
@@ -22,4 +23,4 @@ export default createActions({
             PROGRESS_STEP: undefined
         }
     }
-})
+});

@@ -1,6 +1,6 @@
-/* @flow */
+//@flow
 import React from 'react';
-import {Wrapper} from 'obtuse';
+import type {Element} from 'react';
 import CoverStep from './CoverStep';
 import EndStep from './EndStep';
 import Exercise from './Exercise';
@@ -9,10 +9,18 @@ import PdfStep from './PdfStep';
 import QuizStep from './QuizStep';
 import VideoStep from './VideoStep';
 
+type Props = {
+    steps: Array<Object>,
+    context: Function,
+    scorm: {
+        masteryScore: number
+    },
+    [key: string]: *
+};
 
-export default function ExerciseModule(props: Object) {
+export default function ExerciseModule(props: Props): Element<*> {
 
-    function getRender(step, file) {
+    function getRender(step: Object, file: *): * {
         switch (step.type) {
             case 'video':
                 return (childProps) => <VideoStep {...childProps} file={file}/>;
@@ -41,7 +49,7 @@ export default function ExerciseModule(props: Object) {
             default:
                 if(props[step.type]) {
                     const Component = props[step.type];
-                    return (props) => <Component {...props} {...step} />
+                    return (props) => <Component {...props} {...step} />;
                 } else {
                     console.error('No render method found for', step.type);
                 }
@@ -50,15 +58,15 @@ export default function ExerciseModule(props: Object) {
     }
 
     const steps = props.steps
-        .map(step => {
+        .map((step: Object): Object => {
             let file;
             if(step.file) {
                 file = props.context(`./${step.file}`);
             }
-            step.render = getRender(step, file)
+            step.render = getRender(step, file);
             return step;
         });
 
 
     return <Exercise steps={steps} />;
-};
+}

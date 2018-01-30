@@ -1,15 +1,17 @@
+//@flow
 import React from 'react';
+import type {Element} from 'react';
 import {Markdown} from 'react-showdown';
-import {Text, Badge, Box, Wrapper} from 'obtuse';
+import {Box, Wrapper} from 'obtuse';
 import {Button} from 'goose-css';
 
-class MarkdownStep extends React.Component {
+class MarkdownStep extends React.Component<Object> {
     onClick = () => {
         const {actions} = this.props;
         actions.onProgress(100);
         actions.onNext();
     }
-    render() {
+    render(): Element<*> {
         const {file} = this.props;
 
         return <Wrapper modifier="small">

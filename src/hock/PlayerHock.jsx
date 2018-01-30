@@ -1,32 +1,53 @@
+//@flow
 import {ConfigureHock} from 'stampy';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+import type {ElementRef} from 'react';
+import type {Element} from 'react';
 import Fullscreen from '../util/Fullscreen';
-import PureComponent from '../util/PureComponent';
 
 
-function toPercentage(a, b) {
+function toPercentage(a: number, b: number): number {
     return 100 * a / b;
 }
 
-function toFraction(a, b) {
+function toFraction(a: number, b: number): number {
     return b * a / 100;
 }
 
-function round(num, place) {
+function round(num: number, place: number): number {
+    //$FlowFixMe
     return Number(Math.round(num + `e${place}`) + `e-${place}`);
 }
 
+type Props = {
+    autoPlay?: boolean,
+    bufferInterval: number,
+    videoRef?: Function,
+    onChange?: Function
+};
+
+type State = {
+    player: ?ElementRef<*>,
+    progress: ?ElementRef<*>,
+    component: *,
+    fullscreen?: boolean,
+    muted?: boolean,
+    dragging?: boolean,
+    paused: boolean,
+    buffered?: number,
+    duration: number,
+    currentPercentage?: number,
+    currentTime?: number
+};
+
 export default ConfigureHock(
-    (config) => (Component) => class PlayerHock extends React.PureComponent {
-        static propTypes = {
-            bufferInterval: PropTypes.number
-        }
-        constructor(props) {
+    () => (Component) => class PlayerHock extends React.PureComponent<Props, State> {
+        bufferInterval: *;
+        constructor(props: Props) {
             super(props);
             this.bufferInterval;
             this.state = {
+                duration: 0,
                 player: null,
                 component: null,
                 progress: null,
@@ -36,20 +57,20 @@ export default ConfigureHock(
         componentWillUnmount() {
             clearInterval(this.bufferInterval);
         }
-        getProgressRef = (progress) => {
+        getProgressRef = (progress: ElementRef<*>) => {
             if(progress){
-                this.setState({progress: ReactDOM.findDOMNode(progress)}, this.startBuffer)
+                this.setState({progress}, this.startBuffer);
             }
         }
-        getVideoRef = (player) => {
+        getVideoRef = (player: ElementRef<*>) => {
             if(player) {
-                this.props.videoRef && this.props.videoRef(player)
-                this.setState({player}, this.startBuffer)
+                this.props.videoRef && this.props.videoRef(player);
+                this.setState({player}, this.startBuffer);
             }
         }
-        getMainRef = (component) => {
+        getMainRef = (component: ElementRef<*>) => {
             if(component) {
-                this.setState({component: ReactDOM.findDOMNode(component)}, this.startBuffer)
+                this.setState({component}, this.startBuffer);
             }
         }
         startBuffer = () => {
@@ -58,17 +79,16 @@ export default ConfigureHock(
                 player.addEventListener('loadedmetadata', this.onLoadMetaData);
             }
         }
-        onLoadMetaData = (ee) => {
+        onLoadMetaData = () => {
             // update buffer
             this.bufferInterval = setInterval(this.onBuffer, this.props.bufferInterval || 150);
         }
-        onBuffer: Function = () => {
+        onBuffer = () => {
             var {player} = this.state;
-            if (player.buffered.length > 0) {
+            if (player && player.buffered.length > 0) {
                 const currentBuffer = player.buffered.end(0);
                 const perc = toPercentage(currentBuffer, player.duration);
                 const timePercentage = toPercentage(player.currentTime, player.duration);
-
                 if (!this.state.dragging) {
                     this.setState({
                         buffered: perc,
@@ -78,7 +98,7 @@ export default ConfigureHock(
                     });
                 }
             }
-            if(!this.state.paused && this.props.onChange) {
+            if(player && !this.state.paused && this.props.onChange) {
                 if(this.state.currentPercentage === 100) {
                     this.setState({paused: true});
                 }
@@ -88,82 +108,92 @@ export default ConfigureHock(
                 });
             }
         }
-        onPlay: Function = () => {
-            if(this.state.paused) {
+        onPlay = () => {
+            if(this.state.paused && this.state.player) {
                 this.state.player.play();
             }
             this.setState({paused: false});
         }
-        onPause: Function = () => {
-            this.state.player.pause();
+        onPause = () => {
+            this.state.player && this.state.player.pause();
             this.setState({paused: true});
         }
-        onPlayPause: Function = () => {
+        onPlayPause = () => {
             this.state.paused ? this.onPlay() : this.onPause();
         }
-        onMute: Function = () => {
-            this.state.player.muted = !this.state.player.muted;
-            this.setState({muted: this.state.player.muted});
+        onMute = () => {
+            const {player} = this.state;
+            if(player) {
+                player.muted = !player.muted;
+                this.setState({muted: player.muted});
+            }
         }
-        onScrub: Function = (e) => {
-            var rect = this.state.progress.getBoundingClientRect();
-            this.setState({dragging: true});
-            this.onUpdatePosition(e.clientX -  rect.left);
+        onScrub = (ee: Object) => {
+            if(this.state.progress) {
+                var rect = this.state.progress.getBoundingClientRect();
+                this.setState({dragging: true});
+                this.onUpdatePosition(ee.clientX -  rect.left);
 
-            document.addEventListener('mousemove', this.onScrubDrag, false);
-            document.addEventListener('mouseup', this.onScrubEnd, false);
+                document.addEventListener('mousemove', this.onScrubDrag, false);
+                document.addEventListener('mouseup', this.onScrubEnd, false);
+            }
         }
-        onScrubDrag: Function = (e) => {
-            var rect = this.state.progress.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            var width = this.state.progress.offsetWidth;
+        onScrubDrag = (ee: Object) => {
+            const {progress} = this.state;
+            if(progress) {
+                var rect = progress.getBoundingClientRect();
+                var x = ee.clientX - rect.left;
+                var width = progress.offsetWidth;
 
-            // Stay within video bounds
-            if (x >= 0 && x <= width) {
-                this.onUpdatePosition(x);
-            }
-            // Over
-            else if (x >= width) {
-                this.onUpdatePosition(width);
-            }
-            // Under
-            else {
-                this.onUpdatePosition(0);
+                // Stay within video bounds
+                if (x >= 0 && x <= width) {
+                    this.onUpdatePosition(x);
+                }
+                // Over
+                else if (x >= width) {
+                    this.onUpdatePosition(width);
+                }
+                // Under
+                else {
+                    this.onUpdatePosition(0);
+                }
             }
         }
-        onScrubEnd: Function = () => {
+        onScrubEnd = () => {
             this.setState({dragging: false});
             this.onPlay();
             document.removeEventListener('mousemove', this.onScrubDrag);
             document.removeEventListener('mouseup', this.onScrubEnd);
         }
-        onUpdatePosition: Function = (xPos) => {
-            var perc = toPercentage(xPos, this.state.progress.offsetWidth);
-            this.setState({
-                currentPercentage: perc,
-                currentTime: toFraction(perc, this.state.duration)
-            });
-
-            this.state.player.currentTime = toFraction(perc, this.state.duration);
+        onUpdatePosition = (xPos: number) => {
+            const {player, progress, duration} = this.state;
+            if(player && progress) {
+                const currentPercentage = toPercentage(xPos, progress.offsetWidth);
+                const currentTime = toFraction(currentPercentage, duration);
+                this.setState({currentPercentage, currentTime});
+                player.currentTime = currentTime;
+            }
         }
-        onFullscreen: Function = () => {
+        onFullscreen = () => {
             if (Fullscreen.enabled) {
                 if (Fullscreen.active()) {
                     Fullscreen.exit();
                     this.setState({fullscreen: false});
                 } else {
-                    Fullscreen.request(this.state.component);
-                    this.setState({fullscreen: true});
+                    if(this.state.component) {
+                        Fullscreen.request(this.state.component);
+                        this.setState({fullscreen: true});
+                    }
                 }
             }
         }
 
-        render: Function = () => {
+        render = (): Element<*> => {
             return (
                 <Component
                     {...this.props}
                     {...this.state}
-                    ref={this.getMainRef}
+                    mainRef={this.getMainRef}
                     videoRef={this.getVideoRef}
                     progressRef={this.getProgressRef}
                     onPlayPause={this.onPlayPause}

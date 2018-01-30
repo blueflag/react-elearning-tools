@@ -1,38 +1,33 @@
-general:
-  branches:
-    ignore:
-      - gh-pages
-
-machine:
-  pre:
-    - mkdir ~/.yarn-cache
-  node:
-    version: stable
-  environment:
-    YARN_VERSION: 0.19.1
-    PATH: "${PATH}:${HOME}/.yarn/bin"
-
-dependencies:
-  pre:
-    - |
-      if [[ ! -e ~/.yarn/bin/yarn || $(yarn --version) != "${YARN_VERSION}" ]]; then
-          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version $YARN_VERSION
-      fi
-  cache_directories:
-    - ~/.yarn
-    - ~/.yarn-cache
-  override:
-    - yarn install
-
-test:
-  override:
-    - yarn run test-all
-
-deployment:
-  master:
-    branch: master
-    owner: bigdatr
-    commands:
-      - git config --global user.email Allan Hortle
-      - git config --global user.name Allan Hortle
-      - yarn run deploy-to-gh-pages
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: blueflag/circle-node:0.0.4
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "yarn.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      # Add blueflag npm registry
+      - run: echo "@blueflag:registry=https://$BLUEFLAG_NPM_REGISTRY_URL" >> ~/.npmrc
+      - run: echo "always-auth=true" >> ~/.npmrc
+      - run: echo "//$BLUEFLAG_NPM_REGISTRY_URL:_authToken=$BLUEFLAG_NPM_AUTH_TOKEN" >> ~/.npmrc
+      - run: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+      # run tests!
+      - run: yarn test-all
+      - run: git --no-pager diff && test -z "$(git status --porcelain)"
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          context: org-global

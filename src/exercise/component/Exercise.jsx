@@ -1,35 +1,27 @@
+//@flow
 import React from 'react';
+import type {Element} from 'react';
 import {connect} from 'react-redux';
-import {List} from 'immutable';
-import {Record} from 'immutable';
-import ScormDevelopmentRuntime from '../../ScormDevelopmentRuntime';
-import ScormLogger from '../../ScormLogger';
-import * as scorm from '../../scorm';
 import {Some} from 'fronads';
 import {Box} from 'obtuse';
-
 
 import ExerciseActions from '../data/ExerciseActions';
 import ExerciseNavigation from './ExerciseNavigation';
 const {meta, navigation, interaction} = ExerciseActions.exercise;
 
-
-class ModuleSteps extends React.Component {
+class ModuleSteps extends React.Component<Object> {
     static defaultProps = {
         navigation: ExerciseNavigation
     }
-    constructor(props) {
+    constructor(props: Object) {
         super(props);
         const {addSteps, steps, value} = props;
-
-        scorm.initialize();
-        scorm.status();
 
         if(value.steps.size === 0) {
             addSteps(steps);
         }
     }
-    render() {
+    render(): ?Element<*> {
         const {
             navigation: Navigation,
             onFinish,
@@ -38,7 +30,7 @@ class ModuleSteps extends React.Component {
             onPrevious,
             onProgress,
             onScore,
-            value,
+            value
         } = this.props;
 
         if(value.steps.size) {
@@ -52,7 +44,7 @@ class ModuleSteps extends React.Component {
                     onNext,
                     onPrevious,
                     onProgress,
-                    onScore,
+                    onScore
                 }
             };
 
@@ -66,7 +58,7 @@ class ModuleSteps extends React.Component {
                 <Box modifier="paddingTopMega">
                     {renderableStep.render(childProps)}
                 </Box>
-            </Box>
+            </Box>;
         }
 
         return null;
