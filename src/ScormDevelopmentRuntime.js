@@ -1,5 +1,5 @@
 //@flow
-import {loadState, saveState} from 'util/LocalStorage';
+import {loadState, saveState} from './util/LocalStorage';
 
 class ScormDevelopmentRuntime {
     data: Object;
