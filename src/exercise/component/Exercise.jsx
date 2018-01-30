@@ -7,7 +7,7 @@ import {Box} from 'obtuse';
 
 import ExerciseActions from '../data/ExerciseActions';
 import ExerciseNavigation from './ExerciseNavigation';
-const {meta, navigation, interaction} = ExerciseActions.exercise;
+const {meta, navigation, interaction, step} = ExerciseActions.exercise;
 
 class ModuleSteps extends React.Component<Object> {
     static defaultProps = {
@@ -30,6 +30,8 @@ class ModuleSteps extends React.Component<Object> {
             onPrevious,
             onProgress,
             onScore,
+            onAnswer,
+            onSetSubmitable,
             value
         } = this.props;
 
@@ -44,7 +46,9 @@ class ModuleSteps extends React.Component<Object> {
                     onNext,
                     onPrevious,
                     onProgress,
-                    onScore
+                    onScore,
+                    onAnswer,
+                    onSetSubmitable
                 }
             };
 
@@ -75,6 +79,8 @@ export default Some(ModuleSteps)
             onFinish: interaction.finish,
             onPrevious: navigation.previousStep,
             onGoto: navigation.gotoStep,
+            onAnswer: interaction.answer,
+            onSetSubmitable: step.setSubmitable,
             onProgress: navigation.progressStep
         }
     ))

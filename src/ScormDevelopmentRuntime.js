@@ -9,6 +9,7 @@ class ScormDevelopmentRuntime {
         this.data = {
             'cmi.core.lesson_status': 'incomplete',
             'cmi.core.student_name': 'Derek Tibbs',
+            'cmi.interactions._count' : "0",
             'cmi.core.student_id': '1234'
         };
         this.LMSGetValue = this.LMSGetValue.bind(this);

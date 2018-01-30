@@ -7,7 +7,8 @@ export default class ExerciseStepRecord extends Record({
     pathname: null,
     assess: true,
     progress: 0,
-    score: 0,
+    score: null,
+    submitable: true,
     passRate: 0
 }) {
     constructor(props: Object): ExerciseStepRecord {
