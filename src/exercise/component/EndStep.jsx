@@ -29,6 +29,7 @@ class End extends React.Component {
 
         const assessableSteps = value.steps.filter(ii => ii.assess);
         const passableSteps = assessableSteps.filter(ii => ii.passRate > 0);
+        const scoreSteps = assessableSteps.filter(ii => ii.score !== null);
 
         // COMPLETED if all steps progress is 100%
         const completed = assessableSteps.reduce((count, item) => item.progress === 100 ? count + 1 : count, 0) === assessableSteps.size;
@@ -36,11 +37,27 @@ class End extends React.Component {
         // PASSED if steps passed as a percentage is greater than the mastery score
         const passed = (passableSteps.reduce((count, item) => item.pass() ? count + 1 : count, 0) / passableSteps.size * 100) >= masteryScore;
 
-        if(passableSteps.size === 0) {
-            return completed;
+        // SCORE
+        var scoreFilter = [];
+        scoreSteps.map((item) => {
+            scoreFilter.push(item.score)            
+        })
+        const add = (a, b) => a + b
+
+        var result = completed;
+        var score = null;
+
+        if(passableSteps.size !== 0) {
+            result = completed && passed;
+            score = scoreFilter.reduce(add);   
         }
 
-        return completed && passed;
+        var batch = {
+            result: result,
+            score: score
+        }
+
+        return batch;
     }
     render() {
         const {value} = this.props;
@@ -51,8 +68,8 @@ class End extends React.Component {
 
         return <Wrapper modifier="small">
             <Box modifier="marginTopGiga">
-                <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props) ? "Congratulations!" : "Too Bad"}</Text>
-                <Text modifier="block center marginGiga">{this.didPass(this.props) ? description : failDescription}</Text>
+                <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props).result ? "Congratulations!" : "Too Bad"}</Text>
+                <Text modifier="block center marginGiga">{this.didPass(this.props).result ? description : failDescription}</Text>
             </Box>
             <table className="Table">
                 <tbody>

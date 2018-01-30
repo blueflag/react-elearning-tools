@@ -33,8 +33,9 @@ export default createActions({
                     scorm.setInteractionLatency(batch);
                 });
             },
-            FINISH: (pass) => {
-                const status = pass ? scorm.complete() : scorm.fail();
+            FINISH: (payload) => {
+                const {result,score} = payload
+                const status = result ? scorm.complete(score) : scorm.fail(score);
                 return status
             }
         },
