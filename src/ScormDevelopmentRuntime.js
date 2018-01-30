@@ -1,4 +1,5 @@
 //@flow
+import {loadState, saveState} from './util/LocalStorage';
 
 class ScormDevelopmentRuntime {
     data: Object;
@@ -10,7 +11,8 @@ class ScormDevelopmentRuntime {
             'cmi.core.lesson_status': 'incomplete',
             'cmi.core.student_name': 'Derek Tibbs',
             'cmi.interactions._count' : "0",
-            'cmi.core.student_id': '1234'
+            'cmi.core.student_id': '1234',
+            'cmi.suspend_data': ''
         };
         this.LMSGetValue = this.LMSGetValue.bind(this);
         this.LMSSetValue = this.LMSSetValue.bind(this);
@@ -25,9 +27,15 @@ class ScormDevelopmentRuntime {
         return true;
     }
     LMSGetValue(key: string): string {
+        if(key === "cmi.suspend_data"){
+            return JSON.stringify(loadState(key));
+        }
         return this.data[key];
     }
     LMSSetValue(key: string, value: *): boolean {
+        if(key === "cmi.suspend_data"){
+            saveState(this.data['cmi.core.student_id'],value);
+        }
         this.data[key] = value;
         return true;
     }
