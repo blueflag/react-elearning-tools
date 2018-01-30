@@ -28,13 +28,13 @@ class ScormDevelopmentRuntime {
     }
     LMSGetValue(key: string): string {
         if(key === "cmi.suspend_data"){
-            return saveState;
+            return JSON.stringify(loadState(key));
         }
         return this.data[key];
     }
     LMSSetValue(key: string, value: *): boolean {
         if(key === "cmi.suspend_data"){
-            return loadState;
+            saveState(this.data['cmi.core.student_id'],value);
         }
         this.data[key] = value;
         return true;
