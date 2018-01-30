@@ -19,7 +19,7 @@ export function get(key: string): Maybe<any> {
 //
 // Predefined Methods
 
-export function score(value: string): Maybe<boolean> {
+export function score(value: string): Maybe<string> {
     return Perhaps(SCORM.set('cmi.core.score.raw', value));
 }
 
@@ -32,7 +32,7 @@ export function setStatus(value: string): Maybe<string> {
 }
 
 export function interaction(): string {
-    return SCORM.get('cmi.interactions._count') || 0;
+    return SCORM.get('cmi.interactions._count') || "0";
 }
 
 export function setInteractionID({num, title}: Object): Maybe<string> {
@@ -55,17 +55,18 @@ export function setInteractionLatency({num, time}: Object): Maybe<string> {
     return Perhaps(SCORM.set('cmi.interactions.'+num+'.latency', time));
 }
 
-export function complete(value: ?string): string {
-    if(value === null) {
-        return setStatus('completed').value();
+export function complete(value?: string): string {
+    if(typeof value === "string") {
+        return setStatus('passed')
+            // $FlowFixMe: flow cant seem to work out that this value will never be null
+            .flatMap(() => score(value))
+            .value();
     }
-    return setStatus('passed')
-        .flatMap(() => score(value.toString()))
-        .value();
+    return setStatus('completed').value();
 }
 
 export function fail(value: string): string {
     return setStatus('failed')
-        .flatMap(() => score(value.toString()))
+        .flatMap(() => score(value))
         .value();
 }

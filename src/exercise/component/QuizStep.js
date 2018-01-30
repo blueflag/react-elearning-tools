@@ -1,5 +1,6 @@
 //@flow
 import React from 'react';
+import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import {Box} from 'obtuse';
 import {Wrapper} from 'obtuse';
