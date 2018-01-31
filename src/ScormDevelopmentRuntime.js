@@ -28,7 +28,7 @@ class ScormDevelopmentRuntime {
     }
     LMSGetValue(key: string): string {
         if(key === "cmi.suspend_data"){
-            return loadState(key);
+            return JSON.stringify(loadState(key));
         }
         return this.data[key];
     }

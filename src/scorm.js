@@ -34,7 +34,7 @@ export function setStatus(value: string): Maybe<string> {
 export function suspendData(): Object {
     let data = SCORM.get('cmi.suspend_data');
     try {
-        return JSON.parse(data)
+        return JSON.parse(data);
     } catch(e) {
         return {};
     }
