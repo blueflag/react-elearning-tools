@@ -68,7 +68,7 @@ export default class QuizStep extends React.Component<Object, Object> {
 
     renderNextButton = (disabled: boolean): ?Element<*> => {
         if(this.props.step.submitable){
-            return <Box modifier="marginMega">
+            return <Box modifier="marginMega button">
                 <Button modifier="sizeMega primary" disabled={disabled} onClick={this.onClick}>Submit Answers</Button>
             </Box>;
         }
