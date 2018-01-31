@@ -14,7 +14,7 @@ export function loadState(key: string): * {
 
 export function saveState(key: string, value: *) {
     try {
-        const state = JSON.stringify(value);
+        const state = JSON.stringify(value || {});
         localStorage.setItem(key, state);
     } catch (error) {
         console.error(error);

@@ -32,8 +32,12 @@ export function setStatus(value: string): Maybe<string> {
 }
 
 export function suspendData(): Object {
-    return Perhaps(SCORM.get('cmi.suspend_data'))
-        .map(JSON.parse).value({});
+    let data = SCORM.get('cmi.suspend_data');
+    try {
+        return JSON.parse(data);
+    } catch(e) {
+        return {};
+    }
 }
 
 export function setSuspendData(value: *): Maybe<string> {
