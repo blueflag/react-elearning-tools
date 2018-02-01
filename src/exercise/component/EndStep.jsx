@@ -68,8 +68,9 @@ class End extends React.Component<Object> {
             <table className="Table">
                 <tbody>
                     {assessableSteps
-                        .map(({progress, name, pass, passRate, score}: Object, key: number): Element<"tr"> => {
-                            const complete = (passRate > 0) ? pass : progress === 100;
+                        .map((item: Object, key: number): Element<"tr"> => {
+                            const {progress, name, passRate, score} = item;
+                            const complete = (passRate > 0) ? item.pass() : progress === 100;
 
                             const completeModifier = complete ? 'boundedPositive' : 'boundedNegative';
 
