@@ -13,7 +13,7 @@ class ExerciseNavigation extends React.Component<Object> {
         return <Box spruceName="ExerciseNavigation">
             {value.steps
                 .map((step: ExerciseStepRecord, index: number): Element<*> => {
-                    const complete = (step.passRate > 0) ? step.pass() : step.progress === 100;
+                    const complete = step.progress === 100;
                     const previousComplete = value.steps.getIn([index - 1, 'progress']) === 100 || index < value.step;
 
                     const modifier = String()
