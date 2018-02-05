@@ -3,6 +3,7 @@ import React from 'react';
 import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import {Box} from 'obtuse';
+import {Text} from 'obtuse';
 import {Wrapper} from 'obtuse';
 import {Button} from 'stampy';
 import Stopwatch from 'timer-stopwatch';
@@ -63,8 +64,8 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
 
     renderNextButton = (disabled: boolean): ?Element<*> => {
-        return <Box modifier="marginMega button">
-            <Button modifier="sizeMega primary" disabled={disabled} onClick={this.onClick}>{this.props.step.submitable ? "Submit Answers" : "Submitted"}</Button>
-        </Box>;
+        return <Text element="div" modifier="marginMega center">
+            <Button modifier="sizeMega primary " disabled={disabled} onClick={this.onClick}>{this.props.step.submitable ? "Submit Answers" : "Submitted"}</Button>
+        </Text>;
     }
 }
