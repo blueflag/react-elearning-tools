@@ -21,7 +21,6 @@ export default class QuizStep extends React.Component<Object, Object> {
     componentDidMount(){
         this.state.timer.start();
     }
-
     onChange = (payload: Object) => {
         const {quiz, actions, step} = this.props;
         if(step.submitable){
@@ -47,9 +46,7 @@ export default class QuizStep extends React.Component<Object, Object> {
             answers: this.state.payload,
             time: time
         };
-        if(this.state.score >= passRate){
-            actions.onSetSubmitable(false);
-        }
+        actions.onSetSubmitable(false);
         actions.onScore(this.state.score);
         actions.onAnswer(batch);
         actions.onProgress(100);
