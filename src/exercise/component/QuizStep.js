@@ -38,8 +38,7 @@ export default class QuizStep extends React.Component<Object, Object> {
 
     }
     onClick = () => {
-        const {actions,step} = this.props;
-        const {passRate} = step;
+        const {actions} = this.props;
         this.state.timer.stop;
         var time = moment(this.state.timer.ms).format("mm:ss");
         var batch = {
@@ -53,22 +52,19 @@ export default class QuizStep extends React.Component<Object, Object> {
         actions.onNext();
     }
     render(): Element<*> {
-        const {quiz} = this.props;
+        const {quiz, step} = this.props;
         const {answeredCount} = this.state;
         return <Wrapper>
             <Box className="Document">
                 <Quiz onChange={this.onChange} quiz={quiz} />
-                {this.renderNextButton(answeredCount !== quiz.length)}
+                {this.renderNextButton(answeredCount !== quiz.length || !step.submitable)}
             </Box>
         </Wrapper>;
     }
 
     renderNextButton = (disabled: boolean): ?Element<*> => {
-        if(this.props.step.submitable){
-            return <Box modifier="marginMega button">
-                <Button modifier="sizeMega primary" disabled={disabled} onClick={this.onClick}>Submit Answers</Button>
-            </Box>;
-        }
-        return null;
+        return <Box modifier="marginMega button">
+            <Button modifier="sizeMega primary" disabled={disabled} onClick={this.onClick}>{this.props.step.submitable ? "Submit Answers" : "Submitted"}</Button>
+        </Box>;
     }
 }
