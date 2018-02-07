@@ -55,5 +55,6 @@ class ScormDevelopmentRuntime {
 
 
 export default function ScormDevelopmentRuntimeFactory(): ScormDevelopmentRuntime {
+    console.warn('Warning: ScormDevelopmentRuntime is in use. Calls to window.API will not be working.');
     return new ScormDevelopmentRuntime();
 }
