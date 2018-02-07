@@ -9,26 +9,60 @@ import {Button} from 'stampy';
 import Stopwatch from 'timer-stopwatch';
 import moment from 'moment';
 
+function seedRandom(seed: number) {
+    var x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+}
+
 export default class QuizStep extends React.Component<Object, Object> {
     constructor(props: Object) {
         super(props);
         this.state = {
+            filteredQuiz: null,
             answeredCount: 0,
             score: 0,
             payload: null,
             timer: new Stopwatch()
         };
     }
-    componentDidMount(){
+    componentWillMount(){
+        var quizData = this.getQuizSample(this.props);
         this.state.timer.start();
+        this.setState({
+            filteredQuiz: quizData
+        });
+    }
+    componentWillReceiveProps(nextProps: Object) {
+        if(nextProps.quiz !== this.props.quiz) {
+            this.state.timer.start();
+            this.setState({
+                filteredQuiz: this.getQuizSample(nextProps)
+            });
+        }
+    }
+    getQuizSample = (data: Object) =>  {
+        const TODAY = (new Date()).getDate();
+        const {step, quiz} = data;
+        var number = step.questions ? step.questions : 10000;
+        return quiz
+            .map((value, index) => {
+                return {
+                    value: value,
+                    sorter: seedRandom(TODAY + seedRandom(TODAY + index))
+                }
+            })
+            .sort((a, bb) => a.sorter - bb.sorter)
+            .slice(0, number)
+            .map(index => index.value);
     }
     onChange = (payload: Object) => {
-        const {quiz, actions, step} = this.props;
+        const {actions, step} = this.props;
+        const {filteredQuiz} = this.state;
         if(step.submitable){
             const answeredCount = payload.reduce((count, item) => item.answer ? count + 1 : count, 0);
-            const score = (100 / quiz.length) * payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
+            const score = (100 / filteredQuiz.length) * payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
 
-            actions.onProgress(100 / quiz.length + 1 * answeredCount);
+            actions.onProgress(100 / filteredQuiz.length + 1 * answeredCount);
 
             this.setState({
                 answeredCount,
@@ -36,7 +70,6 @@ export default class QuizStep extends React.Component<Object, Object> {
                 payload
             });
         }
-
     }
     onClick = () => {
         const {actions} = this.props;
@@ -51,16 +84,19 @@ export default class QuizStep extends React.Component<Object, Object> {
         actions.onAnswer(batch);
         actions.onProgress(100);
         actions.onNext();
-    }
+    }  
     render(): Element<*> {
-        const {quiz, step} = this.props;
-        const {answeredCount} = this.state;
-        return <Wrapper>
-            <Box className="Document">
-                <Quiz onChange={this.onChange} quiz={quiz} />
-                {this.renderNextButton(answeredCount !== quiz.length || !step.submitable)}
-            </Box>
-        </Wrapper>;
+        const {step} = this.props;
+        const {answeredCount, filteredQuiz} = this.state;
+        if(filteredQuiz){
+            return <Wrapper>
+                <Box className="Document">
+                    <Quiz onChange={this.onChange} quiz={filteredQuiz} />
+                    {this.renderNextButton(answeredCount !== filteredQuiz.length || !step.submitable)}
+                </Box>
+            </Wrapper>;
+        }
+        return null
     }
 
     renderNextButton = (disabled: boolean): ?Element<*> => {
