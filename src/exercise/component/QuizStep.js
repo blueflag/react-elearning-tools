@@ -9,11 +9,6 @@ import {Button} from 'stampy';
 import Stopwatch from 'timer-stopwatch';
 import moment from 'moment';
 
-function seedRandom(seed: number) {
-    var x = Math.sin(seed++) * 10000;
-    return x - Math.floor(x);
-}
-
 export default class QuizStep extends React.Component<Object, Object> {
     constructor(props: Object) {
         super(props);
@@ -40,16 +35,20 @@ export default class QuizStep extends React.Component<Object, Object> {
             });
         }
     }
-    getQuizSample = (data: Object) =>  {
+    seedRandom = (seed: number): number => {
+        var x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+    }
+    getQuizSample = (data: Object): Object[] =>  {
         const TODAY = (new Date()).getDate();
         const {step, quiz} = data;
         var number = step.questions ? step.questions : 10000;
         return quiz
-            .map((value, index) => {
+            .map((value: Object, index: number): Object => {
                 return {
                     value: value,
-                    sorter: seedRandom(TODAY + seedRandom(TODAY + index))
-                }
+                    sorter: this.seedRandom(TODAY + this.seedRandom(TODAY + index))
+                };
             })
             .sort((a, bb) => a.sorter - bb.sorter)
             .slice(0, number)
@@ -88,15 +87,12 @@ export default class QuizStep extends React.Component<Object, Object> {
     render(): Element<*> {
         const {step} = this.props;
         const {answeredCount, filteredQuiz} = this.state;
-        if(filteredQuiz){
-            return <Wrapper>
-                <Box className="Document">
-                    <Quiz onChange={this.onChange} quiz={filteredQuiz} />
-                    {this.renderNextButton(answeredCount !== filteredQuiz.length || !step.submitable)}
-                </Box>
-            </Wrapper>;
-        }
-        return null
+        return <Wrapper>
+            <Box className="Document">
+                <Quiz onChange={this.onChange} quiz={filteredQuiz} />
+                {this.renderNextButton(answeredCount !== filteredQuiz.length || !step.submitable)}
+            </Box>
+        </Wrapper>;
     }
 
     renderNextButton = (disabled: boolean): ?Element<*> => {
