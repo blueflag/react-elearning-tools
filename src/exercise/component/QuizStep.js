@@ -13,17 +13,50 @@ export default class QuizStep extends React.Component<Object, Object> {
     constructor(props: Object) {
         super(props);
         this.state = {
+            quiz: null,
             answeredCount: 0,
             score: 0,
             payload: null,
             timer: new Stopwatch()
         };
     }
-    componentDidMount(){
+    componentWillMount(){
+        var quizData = this.getQuizSample(this.props);
         this.state.timer.start();
+        this.setState({
+            quiz: quizData
+        });
+    }
+    componentWillReceiveProps(nextProps: Object) {
+        if(nextProps.quiz !== this.props.quiz) {
+            this.state.timer.start();
+            this.setState({
+                quiz: this.getQuizSample(nextProps)
+            });
+        }
+    }
+    seedRandom = (seed: number): number => {
+        var x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+    }
+    getQuizSample = (data: Object): Object[] =>  {
+        const TODAY = (new Date()).getDate();
+        const {step, quiz} = data;
+        var number = step.questions ? step.questions : quiz.length;
+        return quiz
+            .map((value: Object, index: number): Object => {
+                return {
+                    value: value,
+                    sorter: this.seedRandom(TODAY + this.seedRandom(TODAY + index))
+                };
+            })
+            .sort((aa, bb) => aa.sorter - bb.sorter)
+            .slice(0, number)
+            .map(index => index.value);
     }
     onChange = (payload: Object) => {
-        const {quiz, actions, step} = this.props;
+        const {actions, step} = this.props;
+        const {quiz} = this.state;
         if(step.submitable){
             const answeredCount = payload.reduce((count, item) => item.answer ? count + 1 : count, 0);
             const score = (100 / quiz.length) * payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
@@ -36,7 +69,6 @@ export default class QuizStep extends React.Component<Object, Object> {
                 payload
             });
         }
-
     }
     onClick = () => {
         const {actions} = this.props;
@@ -51,10 +83,10 @@ export default class QuizStep extends React.Component<Object, Object> {
         actions.onAnswer(batch);
         actions.onProgress(100);
         actions.onNext();
-    }
+    }  
     render(): Element<*> {
-        const {quiz, step} = this.props;
-        const {answeredCount} = this.state;
+        const {step} = this.props;
+        const {answeredCount, quiz} = this.state;
         return <Wrapper>
             <Box className="Document">
                 <Quiz onChange={this.onChange} quiz={quiz} />
