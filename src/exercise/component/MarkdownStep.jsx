@@ -13,7 +13,6 @@ class MarkdownStep extends React.Component<Object> {
     }
     render(): Element<*> {
         const {file} = this.props;
-
         return <Wrapper modifier="small">
             <Box style={{paddingTop: '1rem'}} modifier="paddingMega marginRow" className="Typography">
                 <Markdown markup={file} />
