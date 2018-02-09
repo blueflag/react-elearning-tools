@@ -44,7 +44,7 @@
     "moment": "^2.20.1",
     "obtuse": "^0.6.1",
     "pipwerks-scorm-api-wrapper": "^0.1.2",
-    "react-markdown-quiz": "^0.3.0",
+    "react-markdown-quiz": "^0.4.0",
     "react-pdf": "^2.1.7",
     "react-redux": "^5.0.6",
     "react-showdown": "^1.6.0",

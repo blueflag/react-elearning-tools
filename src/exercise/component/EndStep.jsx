@@ -14,9 +14,6 @@ class End extends React.Component<Object> {
         const {actions} = nextProps;
         actions.onFinish(this.didPass(nextProps));
     }
-    componentWillMount() {
-        this.props.actions.onFinish(this.didPass(this.props));
-    }
     didPass = (props: Object): Object => {
         const {value} = props;
         const {masteryScore = 100} = props;
@@ -62,7 +59,7 @@ class End extends React.Component<Object> {
 
         return <Wrapper modifier="small">
             <Box modifier="marginTopGiga">
-                <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props).result ? "Congratulations!" : "Too Bad"}</Text>
+                <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props).result ? "Congratulations!" : "Module Failed"}</Text>
                 <Text modifier="block center marginGiga">{this.didPass(this.props).result ? description : failDescription}</Text>
             </Box>
             <table className="Table">
