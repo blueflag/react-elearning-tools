@@ -73,7 +73,7 @@ class End extends React.Component<Object> {
 
                             return <tr className="Table_row" key={key}>
                                 <TableCell modifier="padding header">{name} </TableCell>
-                                <TableCell modifier="padding">{passRate > 0 && <span><Text numberFormat="0.0">{score}</Text> / {passRate}</span>}</TableCell>
+                                <TableCell modifier="padding">{passRate > 0 && <span><Text>{score}%</Text></span>}</TableCell>
                                 {passRate > 0
                                     ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
                                     : <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
