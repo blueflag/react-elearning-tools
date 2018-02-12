@@ -57,6 +57,7 @@ export default function ExerciseModule(props: Props): Element<*> {
         }
     }
 
+
     const steps = props.steps
         .map((step: Object): Object => {
             let file;
@@ -67,6 +68,5 @@ export default function ExerciseModule(props: Props): Element<*> {
             return step;
         });
 
-
-    return <Exercise steps={steps} />;
+    return <Exercise steps={steps} loader={props.loader} />;
 }
