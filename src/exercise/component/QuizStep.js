@@ -2,6 +2,7 @@
 import React from 'react';
 import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
+import parseMarkdownQuiz from 'react-markdown-quiz/lib/parseMarkdownQuiz';
 import {Box} from 'obtuse';
 import {Text} from 'obtuse';
 import {Wrapper} from 'obtuse';
@@ -43,7 +44,8 @@ export default class QuizStep extends React.Component<Object, Object> {
         const TODAY = (new Date()).getDate();
         const {step, quiz} = data;
         var number = step.questions ? step.questions : quiz.length;
-        return quiz
+        var batch = parseMarkdownQuiz(quiz);
+        return batch
             .map((value: Object, index: number): Object => {
                 return {
                     value: value,
