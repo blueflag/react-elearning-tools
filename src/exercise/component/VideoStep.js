@@ -20,12 +20,22 @@ export default class VideoStep extends React.Component<Object, Object> {
             progress: props.step.progress
         };
     }
-
+    componentWillMount(){
+        this.setState({
+            complete: false
+        });
+    }
     onNext = () => {
         const {actions} = this.props;
         actions.onNext();
     }
-
+    componentWillReceiveProps(nextProps: Object) {
+        if(nextProps !== this.props) {
+            this.setState({
+                complete: false
+            });
+        }
+    }
     onReset = () => {
         this.videoLoad();
         this.setState({complete: false});
