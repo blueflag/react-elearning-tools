@@ -10,6 +10,7 @@ module.system.node.resolve_dirname=src
 <PROJECT_ROOT>/.nyc_output/.*
 <PROJECT_ROOT>/scripts/.*
 <PROJECT_ROOT>/dist/.*
+<PROJECT_ROOT>/node_modules/toyota-style/.*
 
 [libs]
 ./decls/
