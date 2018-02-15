@@ -70,15 +70,14 @@ class End extends React.Component<Object> {
                             const complete = (passRate > 0) ? item.pass() : progress === 100;
 
                             const completeModifier = complete ? 'boundedPositive' : 'boundedNegative';
-                            const cellModifier = (passRate > 0 && score < passRate) ? 'negative' : null;
 
                             return <tr className="Table_row"  key={key}>
-                                <TableCell modifier={`padding header ${cellModifier}`}>{name} </TableCell>
-                                <TableCell modifier={`padding ${cellModifier}`}>{passRate > 0 && <span>Your Score: {score}</span>}</TableCell>
-                                <TableCell modifier={`padding ${cellModifier}`}>{passRate > 0 && <span>Required: {passRate}</span>}</TableCell>
+                                <TableCell modifier="padding header">{name} </TableCell>
+                                <TableCell modifier="padding">{passRate > 0 && <span>Your Score: {score}</span>}</TableCell>
+                                <TableCell modifier="padding">{passRate > 0 && <span>Required: {passRate}</span>}</TableCell>
                                 {passRate > 0
-                                    ? <TableCell modifier={`padding ${cellModifier}`}><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
-                                    : <TableCell modifier={`padding ${cellModifier}`}><Badge modifier={`${completeModifier} solo`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
+                                    ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
+                                    : <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
                                 }
                             </tr>;
                         })
