@@ -103,6 +103,7 @@ class VideoPlayer extends React.PureComponent<Props> {
         }
 
         return <div ref={this.props.mainRef} className={classes} tabIndex="0">
+            {this.props.children}
             <video
                 autoPlay={autoPlay}
                 className="VideoPlayer_video"
