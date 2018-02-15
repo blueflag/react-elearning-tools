@@ -80,14 +80,9 @@ export default class QuizStep extends React.Component<Object, Object> {
             answers: this.state.payload,
             time: time
         };
-        var results = {
-            score: score,
-            length: quiz.length
-        };
 
         actions.onSetSubmitable(false);
         actions.onScore(this.state.score);
-        actions.onScoreString(results);
         actions.onAnswer(batch);
         actions.onProgress(100);
         actions.onNext();

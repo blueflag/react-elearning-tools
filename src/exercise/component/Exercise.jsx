@@ -30,7 +30,6 @@ class ModuleSteps extends React.Component<Object> {
             onPrevious,
             onProgress,
             onScore,
-            onScoreString,
             onAnswer,
             onSetSubmitable,
             value
@@ -48,7 +47,6 @@ class ModuleSteps extends React.Component<Object> {
                     onPrevious,
                     onProgress,
                     onScore,
-                    onScoreString,
                     onAnswer,
                     onSetSubmitable
                 }
@@ -78,7 +76,6 @@ export default Some(ModuleSteps)
             addSteps: meta.addSteps,
             onNext: navigation.nextStep,
             onScore: interaction.score,
-            onScoreString: interaction.scoreString,
             onFinish: interaction.finish,
             onPrevious: navigation.previousStep,
             onGoto: navigation.gotoStep,

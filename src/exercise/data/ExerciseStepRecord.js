@@ -10,7 +10,6 @@ export default class ExerciseStepRecord extends Record({
     score: null,
     submitable: true,
     file: null,
-    scoreString: null, //Step specific represenation of the score    
     type: null,
     passRate: 0
 }) {
