@@ -22,10 +22,9 @@ export default class QuizStep extends React.Component<Object, Object> {
         };
     }
     componentWillMount(){
-        var quizData = this.getQuizSample(this.props);
         this.state.timer.start();
         this.setState({
-            quiz: quizData
+            quiz: this.getQuizSample(this.props)
         });
     }
     componentWillReceiveProps(nextProps: Object) {
@@ -42,9 +41,9 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     getQuizSample = (data: Object): Object[] =>  {
         const TODAY = (new Date()).getDate();
-        const {step, quiz} = data;
-        var number = step.questions ? step.questions : quiz.length;
+        const {quiz, questions} = data;
         var batch = parseMarkdownQuiz(quiz);
+        var number = questions ? questions : batch.length;
         return batch
             .map((value: Object, index: number): Object => {
                 return {
@@ -61,7 +60,7 @@ export default class QuizStep extends React.Component<Object, Object> {
         const {quiz} = this.state;
         if(step.submitable){
             const answeredCount = payload.reduce((count, item) => item.answer ? count + 1 : count, 0);
-            const score = (100 / quiz.length) * payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
+            const score = payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
 
             actions.onProgress(100 / quiz.length + 1 * answeredCount);
 
@@ -74,14 +73,21 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     onClick = () => {
         const {actions} = this.props;
+        const {score,quiz} = this.state;
         this.state.timer.stop;
         var time = moment(this.state.timer.ms).format("mm:ss");
         var batch = {
             answers: this.state.payload,
             time: time
         };
+        var results = {
+            score: score,
+            length: quiz.length
+        };
+
         actions.onSetSubmitable(false);
         actions.onScore(this.state.score);
+        actions.onScoreString(results);
         actions.onAnswer(batch);
         actions.onProgress(100);
         actions.onNext();
@@ -90,6 +96,13 @@ export default class QuizStep extends React.Component<Object, Object> {
         const {step} = this.props;
         const {answeredCount, quiz} = this.state;
         return <Wrapper>
+            <Box className="Document">
+                <h3>Welcome To The Quiz.</h3>
+                <ul>
+                    <li>You must select an answer for each question before you can submit.</li>
+                    <li>{`Please note, you will need ${step.passRate} correct answers in order to pass this quiz. Good luck.`}</li>
+                </ul>
+            </Box>
             <Box className="Document">
                 <Quiz onChange={this.onChange} quiz={quiz} />
                 {this.renderNextButton(answeredCount !== quiz.length || !step.submitable)}

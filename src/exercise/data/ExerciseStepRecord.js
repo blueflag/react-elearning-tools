@@ -9,7 +9,9 @@ export default class ExerciseStepRecord extends Record({
     progress: 0,
     score: null,
     submitable: true,
-    questions: null,
+    file: null,
+    scoreString: null, //Step specific represenation of the score    
+    type: null,
     passRate: 0
 }) {
     constructor(props: Object): ExerciseStepRecord {

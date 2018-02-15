@@ -12,6 +12,7 @@ export default createActions({
         },
         INTERACTION: {
             SCORE: undefined,
+            SCORE_STRING: undefined,
             ANSWER: (payload: Object) => {
                 payload.answers.map((item: Object) => {
                     var count = scorm.interaction();

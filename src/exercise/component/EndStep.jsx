@@ -66,14 +66,15 @@ class End extends React.Component<Object> {
                 <tbody>
                     {assessableSteps
                         .map((item: Object, key: number): Element<"tr"> => {
-                            const {progress, name, passRate, score} = item;
+                            const {progress, name, passRate, scoreString} = item;
                             const complete = (passRate > 0) ? item.pass() : progress === 100;
 
                             const completeModifier = complete ? 'boundedPositive' : 'boundedNegative';
 
                             return <tr className="Table_row" key={key}>
                                 <TableCell modifier="padding header">{name} </TableCell>
-                                <TableCell modifier="padding">{passRate > 0 && <span><Text>{score}%</Text></span>}</TableCell>
+                                <TableCell modifier="padding">{passRate > 0 && <span>Your Score: {scoreString.score}/{scoreString.length}</span>}</TableCell>
+                                <TableCell modifier="padding">{passRate > 0 && <span>Required: {passRate}/{scoreString.length}</span>}</TableCell>
                                 {passRate > 0
                                     ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
                                     : <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
@@ -85,6 +86,7 @@ class End extends React.Component<Object> {
             </table>
         </Wrapper>;
     }
+
 }
 
 export default End;

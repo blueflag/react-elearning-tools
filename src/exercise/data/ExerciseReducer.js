@@ -14,9 +14,15 @@ export default function ElearningReducer(state: ExerciseRecord, {type, payload}:
                 // })
             ;
 
+
         case 'EXERCISE/INTERACTION/SCORE':
             return state
                 .setIn(currentStep.concat('score'), payload)
+            ;
+
+        case 'EXERCISE/INTERACTION/SCORE_STRING':
+            return state
+                .setIn(currentStep.concat('scoreString'), payload)
             ;
 
         case 'EXERCISE/NAVIGATION/NEXT_STEP':
