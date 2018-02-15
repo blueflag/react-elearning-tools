@@ -73,7 +73,6 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     onClick = () => {
         const {actions} = this.props;
-        const {score,quiz} = this.state;
         this.state.timer.stop;
         var time = moment(this.state.timer.ms).format("mm:ss");
         var batch = {
