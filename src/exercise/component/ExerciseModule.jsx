@@ -32,7 +32,7 @@ export default function ExerciseModule(props: Props): Element<*> {
                 return (childProps) => <MarkdownStep {...childProps} file={file}/>;
 
             case 'quiz':
-                return (childProps) => <QuizStep {...childProps} quiz={file}/>;
+                return (childProps) =>  <QuizStep {...childProps} quiz={file} questions={step.questions} />;
 
             case 'cover':
                 return (childProps) => <CoverStep {...childProps} title={step.title} description={step.description} file={file} />;
