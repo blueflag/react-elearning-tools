@@ -32,13 +32,15 @@ class ModuleSteps extends React.Component<Object> {
             onScore,
             onAnswer,
             onSetSubmitable,
-            value
+            value,
+            loader
         } = this.props;
 
         if(value.steps.size) {
             const step = value.getIn(['steps', value.step]);
             const childProps = {
                 value,
+                loader,
                 step,
                 actions: {
                     onFinish,
