@@ -69,7 +69,7 @@ class End extends React.Component<Object> {
                             const {progress, name, passRate, score} = item;
                             const complete = (passRate > 0) ? item.pass() : progress === 100;
 
-                            const completeModifier = complete ? 'boundedPositive' : 'boundedNegative';
+                            const completeModifier = complete ? 'positive' : 'negative';
 
                             return <tr className="Table_row"  key={key}>
                                 <TableCell modifier="padding header">{name} </TableCell>
