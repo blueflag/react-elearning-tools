@@ -46,7 +46,6 @@ export default class VideoStep extends React.Component<Object, Object> {
     }
 
     onChange = ({currentPercentage}: Object) => {
-        console.log(this.props)
         const {step, actions} = this.props;
         const progress = Math.floor(currentPercentage);
         if(progress !== this.state.progress) {
