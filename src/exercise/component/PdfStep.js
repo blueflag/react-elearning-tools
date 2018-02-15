@@ -45,20 +45,18 @@ export default class PdfStep extends React.Component<Object, Object> {
                     {Array.from(
                         new Array(numPages),
                         (el, index) => (
-                                <Page
-                                    key={`page_${index + 1}`}
-                                    className="Document_page"
-                                    pageNumber={index + 1}
-                                    scale={scale}
-                                >
+                            <Page key={`page_${index + 1}`}
+                                className="Document_page"
+                                pageNumber={index + 1}
+                                scale={scale}
+                            >
                                 {this.props.loader}
                             </Page>
-                                
                         ),
                     )}
                 </Document>
                 {loaded && nextButton}
             </Box>
-        </Box>
+        </Box>;
     }
 }

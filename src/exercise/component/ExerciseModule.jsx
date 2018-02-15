@@ -15,6 +15,7 @@ type Props = {
     scorm: {
         masteryScore: number
     },
+    loader: Element<*>,
     [key: string]: *
 };
 
