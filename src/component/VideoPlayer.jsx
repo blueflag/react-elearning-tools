@@ -11,6 +11,7 @@ type Props = {
     buffered: number,
     className?: string,
     component?: Object,
+    children?: *,
     currentPercentage: number,
     currentTime: number,
     duration?: number,
@@ -51,6 +52,7 @@ class VideoPlayer extends React.PureComponent<Props> {
             autoPlay,
             buffered,
             component,
+            children,
             currentPercentage,
             currentTime,
             className,
@@ -103,6 +105,7 @@ class VideoPlayer extends React.PureComponent<Props> {
         }
 
         return <div ref={this.props.mainRef} className={classes} tabIndex="0">
+            {children}
             <video
                 autoPlay={autoPlay}
                 className="VideoPlayer_video"

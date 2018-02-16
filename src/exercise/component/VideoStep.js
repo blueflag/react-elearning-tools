@@ -16,16 +16,21 @@ export default class VideoStep extends React.Component<Object, Object> {
     constructor(props: Object) {
         super(props);
         this.state = {
-            complete: props.step.progress === 100,
+            complete: false,
             progress: props.step.progress
         };
     }
-
     onNext = () => {
         const {actions} = this.props;
         actions.onNext();
     }
-
+    componentWillReceiveProps(nextProps: Object) {
+        if(nextProps.file !== this.props.file) {
+            this.setState({
+                complete: false
+            });
+        }
+    }
     onReset = () => {
         this.videoLoad();
         this.setState({complete: false});
@@ -60,8 +65,9 @@ export default class VideoStep extends React.Component<Object, Object> {
         </Overlay>;
 
         return <Box className="Document">
-            {this.state.complete && nextButton}
-            <VideoPlayer autoPlay className="VideoStep_videoPlayer" videoRef={(VideoPlayer: *) => { this.videoRef = VideoPlayer; }} src={file} onChange={this.onChange}/>
+            <VideoPlayer autoPlay className="VideoStep_videoPlayer" videoRef={(VideoPlayer: *) => { this.videoRef = VideoPlayer; }} src={file} onChange={this.onChange} complete={this.state.complete} >
+                {this.state.complete && nextButton}
+            </VideoPlayer>
         </Box>;
     }
 }
