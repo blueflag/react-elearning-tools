@@ -16,7 +16,7 @@ export default class VideoStep extends React.Component<Object, Object> {
     constructor(props: Object) {
         super(props);
         this.state = {
-            complete: props.step.progress === 100,
+            complete: false,
             progress: props.step.progress
         };
     }
@@ -30,7 +30,7 @@ export default class VideoStep extends React.Component<Object, Object> {
         actions.onNext();
     }
     componentWillReceiveProps(nextProps: Object) {
-        if(nextProps !== this.props) {
+        if(nextProps.file !== this.props.file) {
             this.setState({
                 complete: false
             });
