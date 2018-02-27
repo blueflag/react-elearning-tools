@@ -11,11 +11,11 @@ import VideoStep from './VideoStep';
 
 type Props = {
     steps: Array<Object>,
+    components?: Object,
     context: Function,
     scorm: {
         masteryScore: number
     },
-    loader: Element<*>,
     [key: string]: *
 };
 
@@ -69,5 +69,8 @@ export default function ExerciseModule(props: Props): Element<*> {
             return step;
         });
 
-    return <Exercise steps={steps} loader={props.loader} />;
+    return <Exercise
+        steps={steps}
+        components={props.components}
+    />;
 }

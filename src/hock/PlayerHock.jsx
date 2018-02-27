@@ -1,5 +1,5 @@
 //@flow
-import {ConfigureHock} from 'stampy';
+import Hock from 'stampy/lib/util/Hock';
 import React from 'react';
 import type {ElementRef} from 'react';
 import type {Element} from 'react';
@@ -40,8 +40,8 @@ type State = {
     currentTime?: number
 };
 
-export default ConfigureHock(
-    () => (Component) => class PlayerHock extends React.PureComponent<Props, State> {
+export default Hock({
+    hock: () => (Component) => class PlayerHock extends React.PureComponent<Props, State> {
         bufferInterval: *;
         constructor(props: Props) {
             super(props);
@@ -204,4 +204,4 @@ export default ConfigureHock(
             );
         }
     }
-);
+});

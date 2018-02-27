@@ -1,19 +1,38 @@
 //@flow
 import React from 'react';
 import type {Element} from 'react';
+import type {ComponentType} from 'react';
 import {connect} from 'react-redux';
 import {Some} from 'fronads';
 import {Box} from 'obtuse';
 
 import ExerciseActions from '../data/ExerciseActions';
+import ExerciseRecord from '../data/ExerciseRecord';
 import ExerciseNavigation from './ExerciseNavigation';
 const {meta, navigation, interaction, step} = ExerciseActions.exercise;
 
-class ModuleSteps extends React.Component<Object> {
+type Props = {
+    addSteps: Function,
+    actions: Actions,
+    components: Object,
+    navigation: ComponentType<*>,
+    onNext: Function,
+    onScore: Function,
+    onFinish: Function,
+    onPrevious: Function,
+    onGoto: Function,
+    onAnswer: Function,
+    onSetSubmitable: Function,
+    onProgress: Function,
+    steps: Object[],
+    value: ExerciseRecord
+};
+
+class ModuleSteps extends React.Component<Props> {
     static defaultProps = {
         navigation: ExerciseNavigation
     }
-    constructor(props: Object) {
+    constructor(props: Props) {
         super(props);
         const {addSteps, steps, value} = props;
 
@@ -22,52 +41,59 @@ class ModuleSteps extends React.Component<Object> {
         }
     }
     render(): ?Element<*> {
-        const {
+        let {
+            components = {},
             navigation: Navigation,
-            onFinish,
-            onGoto,
             onNext,
-            onPrevious,
-            onProgress,
             onScore,
+            onFinish,
+            onPrevious,
+            onGoto,
             onAnswer,
             onSetSubmitable,
-            value,
-            loader
+            onProgress,
+            value
         } = this.props;
 
-        if(value.steps.size) {
-            const step = value.getIn(['steps', value.step]);
-            const childProps = {
-                value,
-                loader,
-                step,
-                actions: {
-                    onFinish,
-                    onGoto,
-                    onNext,
-                    onPrevious,
-                    onProgress,
-                    onScore,
-                    onAnswer,
-                    onSetSubmitable
-                }
-            };
-
-            const renderableStep = this.props.steps[value.step];
-            if(!renderableStep.render) {
-                console.log('No render method found on', renderableStep);
-            }
-
-            return <Box>
-                <Navigation {...childProps} />
-                <Box modifier="paddingTopMega">
-                    {renderableStep.render(childProps)}
-                </Box>
-            </Box>;
+        if(!value.steps.size) {
+            return null;
         }
 
-        return null;
+        // default components
+        components = {
+            Loader: ({children}) => children || "Loading...",
+            Tick: () => "✔",
+            ...components
+        };
+
+        const step = value.getIn(['steps', value.step]);
+        const childProps = {
+            actions: {
+                onNext,
+                onScore,
+                onFinish,
+                onPrevious,
+                onGoto,
+                onAnswer,
+                onSetSubmitable,
+                onProgress
+            },
+            components,
+            step,
+            value
+        };
+
+        const renderableStep = this.props.steps[value.step];
+        if(!renderableStep.render) {
+            console.log('No render method found on', renderableStep);
+        }
+
+        return <Box>
+            <Navigation {...childProps} />
+            <Box modifier="paddingTopMega">
+                {renderableStep.render(childProps)}
+            </Box>
+        </Box>;
     }
 }
 

@@ -2,14 +2,20 @@
 import React from 'react';
 import type {Element} from 'react';
 
-import {Box} from 'obtuse';
-import {SpruceClassName} from 'stampy';
+import {Box, Text} from 'obtuse';
 import ExerciseStepRecord from '../data/ExerciseStepRecord';
 
+type Props = {
+    actions: Object,
+    components: Object,
+    value: Object
+};
 
-class ExerciseNavigation extends React.Component<Object> {
+export default class ExerciseNavigation extends React.Component<Props> {
     render(): Element<*> {
         const {value, actions} = this.props;
+        const {Tick} = this.props.components;
+
         return <Box spruceName="ExerciseNavigation">
             {value.steps
                 .map((step: ExerciseStepRecord, index: number): Element<*> => {
@@ -23,13 +29,15 @@ class ExerciseNavigation extends React.Component<Object> {
 
                     return <Box
                         key={index}
+                        modifier={modifier}
                         onClick={complete || previousComplete ? () => actions.onGoto(index) : null}
-                        className={SpruceClassName({name: "ExerciseNavigation_step", modifier})}
-                    >{step.name}</Box>;
+                        spruceName="ExerciseNavigation_step"
+                    >
+                        {step.name}
+                        {complete && <Text> <Tick /></Text>}
+                    </Box>;
                 })
                 .toJS()}
         </Box>;
     }
 }
-
-export default ExerciseNavigation;
