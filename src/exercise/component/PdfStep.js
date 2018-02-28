@@ -7,7 +7,7 @@ import {List, WindowScroller} from 'react-virtualized';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Page} from 'react-pdf';
 import {Button, Box, Text} from 'obtuse';
-import 'react-virtualized/styles.css'; // move this to sass file
+import 'react-virtualized/styles.css';
 
 type Props = {
     components: Object,
