@@ -13,7 +13,6 @@ const {meta, navigation, interaction, step} = ExerciseActions.exercise;
 
 type Props = {
     addSteps: Function,
-    actions: Actions,
     components: Object,
     navigation: ComponentType<*>,
     onNext: Function,

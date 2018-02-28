@@ -10,6 +10,7 @@ import {Button, Box, Text} from 'obtuse';
 import 'react-virtualized/styles.css';
 
 type Props = {
+    actions: Object,
     components: Object,
     eqWidth: ?number,
     file: string
@@ -17,8 +18,8 @@ type Props = {
 
 type State = {
     pdf: ?Object,
-    pageRatios?: Map,
-    pageRatiosTotal?: number,
+    pageRatios: Map<number, number>,
+    pageRatiosTotal: number,
     currentPage: number,
     initialWidth: number,
     loaded: boolean,
@@ -31,17 +32,19 @@ const PAGE_DEFAULT_MAX_WIDTH = 1000;
 
 class PdfStep extends React.PureComponent<Props, State> {
 
-    listHeight = 0;
-    scrollProgress = 0;
+    listHeight: number = 0;
+    scrollProgress: number = 0;
+    virtualizedListRef: *;
 
     constructor(props: Props) {
         super(props);
         this.state = {
             pdf: null,
-            pageRatios: null,
+            pageRatios: new Map(),
+            pageRatiosTotal: 0,
             currentPage: 0,
             loaded: false,
-            initialWidth: null,
+            initialWidth: 0,
             scale: 1
         };
     }
@@ -81,14 +84,12 @@ class PdfStep extends React.PureComponent<Props, State> {
             .from({length: pdf.numPages}, (vv, ii) => ii + 1)
             .map(pageNumber => pdf.getPage(pageNumber));
 
-        let setPdfState = (values: number|number[]) => {
-            let isSingle = !Array.isArray(values);
-            if(isSingle) {
-                values = [values];
-            }
+        let setPdfState = (inputValues: Object|Object[]) => {
+            let isSingle = !Array.isArray(inputValues);
+            let values: Object[] = [].concat(inputValues);
 
             let reduced = values.reduce(
-                (obj: Object, page: number): Map => {
+                (obj: Object, page: Object): Object => {
                     /* eslint-disable no-unused-vars */
                     let [x,y,w,h] = page.pageInfo.view;
                     let ratio = h/w;
@@ -102,15 +103,18 @@ class PdfStep extends React.PureComponent<Props, State> {
                 }
             );
 
+            let {pageRatios, pageRatiosTotal} = reduced;
+
             // if passed a single value, extrapolate pageRatiosTotal
             if(isSingle) {
-                reduced.pageRatiosTotal *= promises.length;
+                pageRatiosTotal *= promises.length;
             }
 
             this.setState({
                 pdf,
                 loaded: true,
-                ...reduced
+                pageRatios,
+                pageRatiosTotal
             });
         };
 
@@ -136,10 +140,14 @@ class PdfStep extends React.PureComponent<Props, State> {
                 scale
             },
             () => {
+                let {virtualizedListRef} = this;
+                if(!virtualizedListRef) {
+                    return;
+                }
                 // recompute row heights and retain scroll progress
-                this.virtualizedListRef.recomputeRowHeights();
+                virtualizedListRef.recomputeRowHeights();
                 let scrollTop = this.progressToScrollTop(this.scrollProgress);
-                this.virtualizedListRef.scrollToPosition(scrollTop);
+                virtualizedListRef.scrollToPosition(scrollTop);
             }
         );
     };
@@ -148,7 +156,7 @@ class PdfStep extends React.PureComponent<Props, State> {
         let {pageRatios, scale} = this.state;
         // pageRatios is filled async as pages are loaded
         // so use height of first page for any page that hasn't got a ratio yet
-        let pageRatio = pageRatios.get(index) || pageRatios.get(0);
+        let pageRatio: number = pageRatios.get(index) || pageRatios.get(0) || 0;
         return pageRatio * this.scaledWidth() * PAGE_MARGIN_RATIO;
     };
 
@@ -195,7 +203,7 @@ class PdfStep extends React.PureComponent<Props, State> {
         </Text>;
 
         return <Box spruceName="PdfStep">
-            {eqWidth >= 640 &&
+            {eqWidth && eqWidth >= 640 &&
                 <Box spruceName="PdfStep_zoom">
                     <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(1.2)}>+</Button>
                     <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(0.8)}>–</Button>
@@ -208,7 +216,7 @@ class PdfStep extends React.PureComponent<Props, State> {
                         loading={loading}
                         onLoadSuccess={this.onDocumentLoad}
                     >
-                        {loaded &&
+                        {loaded && pdf &&
                             <WindowScroller onScroll={this.onScroll}>
                                 {({height, isScrolling, onChildScroll, scrollTop}: Object): Element<*> => {
                                     // setting this.listHeight in render because WindowScroller.onResize() doesn't fire on initial render
