@@ -4,9 +4,9 @@ import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import parseMarkdownQuiz from 'react-markdown-quiz/lib/parseMarkdownQuiz';
 import {Box} from 'obtuse';
+import {Button} from 'obtuse';
 import {Text} from 'obtuse';
 import {Wrapper} from 'obtuse';
-import {Button} from 'stampy';
 import Stopwatch from 'timer-stopwatch';
 import moment from 'moment';
 
@@ -85,7 +85,7 @@ export default class QuizStep extends React.Component<Object, Object> {
         actions.onAnswer(batch);
         actions.onProgress(100);
         actions.onNext();
-    }  
+    }
     render(): Element<*> {
         const {step} = this.props;
         const {answeredCount, quiz} = this.state;

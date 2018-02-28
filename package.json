@@ -48,8 +48,9 @@
     "react-pdf": "^2.1.7",
     "react-redux": "^5.0.6",
     "react-showdown": "^1.6.0",
+    "react-virtualized": "^9.18.5",
     "redux-actions": "^2.2.1",
-    "stampy": "^0.33.1",
+    "stampy": "^0.37.2",
     "timer-stopwatch": "^0.2.0"
   },
   "peerDependencies": {

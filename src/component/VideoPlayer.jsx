@@ -3,7 +3,8 @@ import React from 'react';
 import type {Element} from 'react';
 import moment from 'moment';
 import PlayerHock from '../hock/PlayerHock';
-import {SpruceClassName, Button} from 'stampy';
+import {Button} from 'obtuse';
+import SpruceClassName from 'stampy/lib/util/SpruceClassName';
 import ProgressBar from './ProgressBar';
 
 type Props = {
