@@ -8,7 +8,8 @@ export default createActions({
             ADD_STEPS: undefined
         },
         STEP: {
-            SET_SUBMITABLE: undefined
+            SET_SUBMITABLE: undefined,
+            SET_STATE: undefined
         },
         INTERACTION: {
             SCORE: undefined,
@@ -16,7 +17,7 @@ export default createActions({
                 payload.answers.map((item: Object) => {
                     var count = scorm.interaction();
                     var result = item.correct ? "correct" : "wrong";
-                    
+
                     var batch = {
                         num: count,
                         title: item.title,

@@ -45,6 +45,11 @@ export default function ElearningReducer(state: ExerciseRecord, {type, payload}:
                 .setIn(currentStep.concat('submitable'), payload)
             ;
 
+        case 'EXERCISE/STEP/SET_STATE':
+            return state
+                .updateIn(currentStep.concat('state'), (existing) => ({...existing, ...payload}))
+            ;
+
         default:
             return state;
     }

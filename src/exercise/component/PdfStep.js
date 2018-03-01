@@ -3,9 +3,8 @@ import React from 'react';
 import type {Element} from 'react';
 
 import {Document} from 'react-pdf/build/entry.webpack';
-import {List, WindowScroller} from 'react-virtualized';
-import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Page} from 'react-pdf';
+import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Button, Box, Text} from 'obtuse';
 import 'react-virtualized/styles.css';
 
@@ -13,39 +12,48 @@ type Props = {
     actions: Object,
     components: Object,
     eqWidth: ?number,
-    file: string
+    file: string,
+    step: Object
 };
 
 type State = {
     pdf: ?Object,
-    pageRatios: Map<number, number>,
-    pageRatiosTotal: number,
-    currentPage: number,
+    pdfError: ?string,
     initialWidth: number,
-    loaded: boolean,
-    scale: number
+    loading: boolean,
+    scale: number,
+    pageRatios: Map<number,number>
 };
 
-const PAGE_MARGIN_RATIO = 1.1;
+const EnableButton = ({enabled, modifier = '', ...props}: Object): Element<*> => {
+    return <Button
+        modifier={enabled ? modifier : `${modifier} disabled`}
+        disabled={!enabled}
+        {...props}
+    />;
+};
+
 const PAGE_DEFAULT_COLUMN_MARGIN = 32;
-const PAGE_DEFAULT_MAX_WIDTH = 1000;
+const PAGE_DEFAULT_MAX_WIDTH = 1024;
 
 class PdfStep extends React.PureComponent<Props, State> {
 
-    listHeight: number = 0;
-    scrollProgress: number = 0;
-    virtualizedListRef: *;
-
     constructor(props: Props) {
         super(props);
+
+        let {page} = this.props.step.state;
+        props.actions.onStepSetState({
+            page: page || 1
+        });
+
         this.state = {
             pdf: null,
-            pageRatios: new Map(),
-            pageRatiosTotal: 0,
-            currentPage: 0,
-            loaded: false,
+            pdfError: null,
+            numPages: 0,
+            loading: true,
             initialWidth: 0,
-            scale: 1
+            scale: 1,
+            pageRatios: new Map()
         };
     }
 
@@ -59,62 +67,27 @@ class PdfStep extends React.PureComponent<Props, State> {
         }
     }
 
-    // gets the width of the pdf in pixels with the scale (zoom) applied
-    scaledWidth = (): number => {
-        return this.state.initialWidth * this.state.scale;
-    };
+    onLoadSuccess = (pdf: Object) => {
 
-    // gets the total height of the document in pixels including all margins
-    totalHeight = (): number => {
-        return this.state.pageRatiosTotal * this.scaledWidth() * PAGE_MARGIN_RATIO;
-    };
-
-    // converts scrollTop (pixels scrolled from top of page) to progress (number between 0 and 1 indicating how far through the scroll position is)
-    scrollTopToProgress = (scrollTop: number): number => {
-        return scrollTop / (this.totalHeight() - this.listHeight);
-    };
-
-    // converts progress (number between 0 and 1 indicating how far through the scroll position is) to scrollTop (pixels scrolled from top of page)
-    progressToScrollTop = (progress: number): number => {
-        return progress * (this.totalHeight() - this.listHeight);
-    };
-
-    onDocumentLoad = (pdf: Object) => {
         const promises = Array
             .from({length: pdf.numPages}, (vv, ii) => ii + 1)
             .map(pageNumber => pdf.getPage(pageNumber));
 
-        let setPdfState = (inputValues: Object|Object[]) => {
-            let isSingle = !Array.isArray(inputValues);
-            let values: Object[] = [].concat(inputValues);
-
-            let reduced = values.reduce(
-                (obj: Object, page: Object): Object => {
-                    /* eslint-disable no-unused-vars */
-                    let [x,y,w,h] = page.pageInfo.view;
-                    let ratio = h/w;
-                    obj.pageRatios.set(page.pageIndex, ratio);
-                    obj.pageRatiosTotal += ratio;
-                    return obj;
-                },
-                {
-                    pageRatios: new Map(),
-                    pageRatiosTotal: 0
-                }
-            );
-
-            let {pageRatios, pageRatiosTotal} = reduced;
-
-            // if passed a single value, extrapolate pageRatiosTotal
-            if(isSingle) {
-                pageRatiosTotal *= promises.length;
-            }
-
+        let setPdfState = (values: Object[]) => {
             this.setState({
                 pdf,
-                loaded: true,
-                pageRatios,
-                pageRatiosTotal
+                loading: false,
+                pageRatios: values
+                    .filter(ii => ii)
+                    .reduce(
+                        (pageRatios: Map<number,number>, page: Object): Map<number,number> => {
+                            /* eslint-disable no-unused-vars */
+                            let [x,y,w,h] = page.pageInfo.view;
+                            pageRatios.set(page.pageIndex + 1, h/w);
+                            return pageRatios;
+                        },
+                        new Map()
+                    )
             });
         };
 
@@ -122,85 +95,88 @@ class PdfStep extends React.PureComponent<Props, State> {
             return;
         }
 
-        // get first page and assume all pages have that height
-        // so we get some estimated values as soon as possible
-        promises[0]
-            .then(setPdfState);
-
-        // wait for all pages and calculate page heights properly
         Promise
             .all(promises)
-            .then(setPdfState);
-    }
+            .then(setPdfState)
+            .catch(() => {});
+    };
+
+    onLoadError = (error: Object) => {
+        this.setState({
+            pdfError: `Error while loading PDF: ${error.message}`,
+            loading: false
+        });
+    };
+
+    onSourceError = (error: Object) => {
+        this.setState({
+            pdfError: `Error while finding PDF: ${error.message}`,
+            loading: false
+        });
+    };
 
     zoom = (value: number) => () => {
         let scale = this.state.scale * value;
-        this.setState(
-            {
-                scale
-            },
-            () => {
-                let {virtualizedListRef} = this;
-                if(!virtualizedListRef) {
-                    return;
-                }
-                // recompute row heights and retain scroll progress
-                virtualizedListRef.recomputeRowHeights();
-                let scrollTop = this.progressToScrollTop(this.scrollProgress);
-                virtualizedListRef.scrollToPosition(scrollTop);
-            }
-        );
+        this.setState({
+            scale
+        });
     };
 
-    rowHeight = ({index}: Object): number => {
-        let {pageRatios, scale} = this.state;
-        // pageRatios is filled async as pages are loaded
-        // so use height of first page for any page that hasn't got a ratio yet
-        let pageRatio: number = pageRatios.get(index) || pageRatios.get(0) || 0;
-        return pageRatio * this.scaledWidth() * PAGE_MARGIN_RATIO;
+    scaledWidth = () => this.state.initialWidth * this.state.scale;
+
+    scaledHeight = (): number => {
+        let {
+            initialWidth,
+            pageRatios,
+            scale
+        } = this.state;
+
+        let {page} = this.props.step.state;
+        let ratio = pageRatios.get(page) || 1;
+        return initialWidth * scale * ratio;
     };
 
-    rowRenderer = ({key, index, style}: Object): Element<*> => {
-        let {components, eqWidth} = this.props;
-        let width = this.scaledWidth();
+    hasNextPage = () => this.state.pdf && this.props.step.state.page < this.state.pdf.numPages;
 
-        return <Box style={style} key={key}>
-            <Box style={{width}} spruceName="PdfStep_page">
-                <Page
-                    pdf={this.state.pdf}
-                    pageNumber={index + 1}
-                    width={width}
-                />
-            </Box>
-        </Box>;
+    hasPrevPage = () => this.state.pdf && this.props.step.state.page > 1;
+
+    onClickNextPage = () => {
+        if(!this.hasNextPage()) {
+            return;
+        }
+
+        const {page} = this.props.step.state;
+        this.props.actions.onStepSetState({
+            page: page + 1
+        });
     };
 
-    onRowsRendered = ({startIndex, stopIndex}: Object) => {
-        // callback that receives visible pages
-        // possible analytics opportunity goes here
+    onClickPrevPage = () => {
+        if(!this.hasPrevPage()) {
+            return;
+        }
+
+        const {page} = this.props.step.state;
+        this.props.actions.onStepSetState({
+            page: page - 1
+        });
     };
 
-    onScroll = ({scrollTop}: Object) => {
-        this.scrollProgress = this.scrollTopToProgress(scrollTop);
-    };
-
-    onClickNext = () => {
+    onClickNextStep = () => {
         const {actions} = this.props;
         actions.onProgress(100);
         actions.onNext();
     };
 
     render(): Element<*> {
-        const {pdf, loaded} = this.state;
+        const {loading, pdf, pdfError} = this.state;
         const {eqWidth, file} = this.props;
-        let scaledWidth = this.scaledWidth();
+        const {page} = this.props.step.state;
+
+        let width = this.scaledWidth();
+        let height = this.scaledHeight();
 
         let {Loader} = this.props.components;
-        const loading = <Box><Loader>Loading PDF...</Loader></Box>;
-
-        const nextButton = <Text element="div" modifier="marginMega center">
-            <Button modifier="sizeMega primary" onClick={this.onClickNext}>I have read this document</Button>
-        </Text>;
 
         return <Box spruceName="PdfStep">
             {eqWidth && eqWidth >= 640 &&
@@ -209,41 +185,39 @@ class PdfStep extends React.PureComponent<Props, State> {
                     <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(0.8)}>–</Button>
                 </Box>
             }
-            {eqWidth &&
-                <Box spruceName="PdfStep_document" style={{width: eqWidth}}>
-                    <Document
-                        file={file}
-                        loading={loading}
-                        onLoadSuccess={this.onDocumentLoad}
-                    >
-                        {loaded && pdf &&
-                            <WindowScroller onScroll={this.onScroll}>
-                                {({height, isScrolling, onChildScroll, scrollTop}: Object): Element<*> => {
-                                    // setting this.listHeight in render because WindowScroller.onResize() doesn't fire on initial render
-                                    this.listHeight = height;
-
-                                    return <List
-                                        autoHeight
-                                        height={height}
-                                        isScrolling={isScrolling}
-                                        onScroll={onChildScroll}
-                                        rowCount={pdf.numPages}
-                                        rowHeight={this.rowHeight}
-                                        overscanRowCount={3}
-                                        rowRenderer={this.rowRenderer}
-                                        onRowsRendered={this.onRowsRendered}
-                                        scrollTop={scrollTop}
-                                        width={Math.max(scaledWidth, eqWidth)}
-                                        ref={ref => this.virtualizedListRef = ref}
-                                        className="PdfStep_list"
-                                    />;
-                                }}
-                            </WindowScroller>
-                        }
-                    </Document>
+            <Box className="PdfStep_document">
+                <Document
+                    file={file}
+                    loading={null}
+                    onLoadSuccess={this.onLoadSuccess}
+                    onLoadError={this.onLoadError}
+                    onSourceError={this.onSourceError}
+                >
+                    {pdf &&
+                        <Box spruceName="PdfStep_page" style={{width, height}}>
+                            <Page
+                                pdf={pdf}
+                                pageNumber={page}
+                                width={width}
+                            />
+                        </Box>
+                    }
+                </Document>
+            </Box>
+            {loading && <Box><Loader>Loading PDF...</Loader></Box>}
+            {pdfError && <Text element="div" modifier="center">{pdfError}</Text>}
+            {pdf &&
+                <Box spruceName="PdfStep_navigation">
+                    <EnableButton modifier="sizeKilo secondary" onClick={this.onClickPrevPage} enabled={this.hasPrevPage()}>Prev</EnableButton>
+                    <Text spruceName="PdfStep_navigationText">Page {page} of {pdf.numPages}</Text>
+                    <EnableButton modifier="sizeKilo primary" onClick={this.onClickNextPage} enabled={this.hasNextPage()}>Next</EnableButton>
                 </Box>
             }
-            {loaded && nextButton}
+            {pdf && !this.hasNextPage() &&
+                <Text element="div" modifier="marginMega center">
+                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>
+                </Text>
+            }
         </Box>;
     }
 }

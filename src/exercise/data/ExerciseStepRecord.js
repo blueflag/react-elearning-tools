@@ -11,7 +11,8 @@ export default class ExerciseStepRecord extends Record({
     submitable: true,
     file: null,
     type: null,
-    passRate: 0
+    passRate: 0,
+    state: {}
 }) {
     constructor(props: Object): ExerciseStepRecord {
         super(props);
