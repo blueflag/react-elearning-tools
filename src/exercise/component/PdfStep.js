@@ -17,8 +17,8 @@ type Props = {
 };
 
 type State = {
-    pdf?: Object,
-    pdfError?: string,
+    pdf: ?Object,
+    pdfError: ?string,
     initialWidth: number,
     loading: boolean,
     scale: number,
@@ -48,6 +48,7 @@ class PdfStep extends React.PureComponent<Props, State> {
 
         this.state = {
             pdf: null,
+            pdfError: null,
             numPages: 0,
             loading: true,
             initialWidth: 0,
@@ -178,7 +179,7 @@ class PdfStep extends React.PureComponent<Props, State> {
         let {Loader} = this.props.components;
 
         return <Box spruceName="PdfStep">
-            {eqWidth >= 640 &&
+            {eqWidth && eqWidth >= 640 &&
                 <Box spruceName="PdfStep_zoom">
                     <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(1.2)}>+</Button>
                     <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(0.8)}>–</Button>
