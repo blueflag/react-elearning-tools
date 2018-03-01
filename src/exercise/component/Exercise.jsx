@@ -22,6 +22,7 @@ type Props = {
     onGoto: Function,
     onAnswer: Function,
     onSetSubmitable: Function,
+    onStepSetState: Function,
     onProgress: Function,
     steps: Object[],
     value: ExerciseRecord
@@ -50,6 +51,7 @@ class ModuleSteps extends React.Component<Props> {
             onGoto,
             onAnswer,
             onSetSubmitable,
+            onStepSetState,
             onProgress,
             value
         } = this.props;
@@ -75,6 +77,7 @@ class ModuleSteps extends React.Component<Props> {
                 onGoto,
                 onAnswer,
                 onSetSubmitable,
+                onStepSetState,
                 onProgress
             },
             components,
@@ -89,7 +92,7 @@ class ModuleSteps extends React.Component<Props> {
 
         return <Box>
             <Navigation {...childProps} />
-            <Box modifier="paddingTopMega">
+            <Box modifier="paddingTopKilo">
                 {renderableStep.render(childProps)}
             </Box>
         </Box>;
@@ -108,6 +111,7 @@ export default Some(ModuleSteps)
             onGoto: navigation.gotoStep,
             onAnswer: interaction.answer,
             onSetSubmitable: step.setSubmitable,
+            onStepSetState: step.setState,
             onProgress: navigation.progressStep
         }
     ))
