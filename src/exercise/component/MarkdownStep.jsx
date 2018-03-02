@@ -17,7 +17,7 @@ class MarkdownStep extends React.Component<Object> {
             <Box style={{paddingTop: '1rem'}} modifier="paddingMega marginRow" className="Typography">
                 <Markdown markup={file} />
             </Box>
-            <Box className="Document">
+            <Box>
                 <Button modifier="sizeMega primary" onClick={this.onClick}>I have read this document</Button>
             </Box>
         </Wrapper>;

@@ -5,7 +5,8 @@ import type {Element} from 'react';
 import {Document} from 'react-pdf/build/entry.webpack';
 import {Page} from 'react-pdf';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
-import {Button, Box, Text} from 'obtuse';
+import {Box, Text} from 'obtuse';
+import Button from 'stampy/lib/component/Button';
 
 type Props = {
     actions: Object,
@@ -22,14 +23,6 @@ type State = {
     loading: boolean,
     scale: number,
     pageRatios: Map<number,number>
-};
-
-const EnableButton = ({enabled, modifier = '', ...props}: Object): Element<*> => {
-    return <Button
-        modifier={enabled ? modifier : `${modifier} disabled`}
-        disabled={!enabled}
-        {...props}
-    />;
 };
 
 const PAGE_DEFAULT_COLUMN_MARGIN = 32;
@@ -207,9 +200,9 @@ class PdfStep extends React.PureComponent<Props, State> {
             {pdfError && <Text element="div" modifier="center">{pdfError}</Text>}
             {pdf &&
                 <Box spruceName="PdfStep_navigation">
-                    <EnableButton modifier="sizeKilo secondary" onClick={this.onClickPrevPage} enabled={this.hasPrevPage()}>Prev</EnableButton>
+                    <Button modifier="sizeKilo secondary" onClick={this.onClickPrevPage} disabled={!this.hasPrevPage()}>Prev</Button>
                     <Text spruceName="PdfStep_navigationText">Page {page} of {pdf.numPages}</Text>
-                    <EnableButton modifier="sizeKilo primary" onClick={this.onClickNextPage} enabled={this.hasNextPage()}>Next</EnableButton>
+                    <Button modifier="sizeKilo primary" onClick={this.onClickNextPage} disabled={!this.hasNextPage()}>Next</Button>
                 </Box>
             }
             {pdf && !this.hasNextPage() &&
