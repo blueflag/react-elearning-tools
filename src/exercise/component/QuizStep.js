@@ -4,7 +4,7 @@ import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import parseMarkdownQuiz from 'react-markdown-quiz/lib/parseMarkdownQuiz';
 import {Box} from 'obtuse';
-import {Button} from 'obtuse';
+import Button from './Button';
 import {Text} from 'obtuse';
 import {Wrapper} from 'obtuse';
 import Stopwatch from 'timer-stopwatch';
@@ -90,14 +90,14 @@ export default class QuizStep extends React.Component<Object, Object> {
         const {step} = this.props;
         const {answeredCount, quiz} = this.state;
         return <Wrapper>
-            <Box className="Document">
+            <Box>
                 <h3>Welcome To The Quiz.</h3>
                 <ul>
                     <li>You must select an answer for each question before you can submit.</li>
                     <li>{`Please note, you will need ${step.passRate} correct answers in order to pass this quiz. Good luck.`}</li>
                 </ul>
             </Box>
-            <Box className="Document">
+            <Box>
                 <Quiz onChange={this.onChange} quiz={quiz} />
                 {this.renderNextButton(answeredCount !== quiz.length || !step.submitable)}
             </Box>
