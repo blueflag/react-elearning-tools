@@ -6,7 +6,6 @@ import {Document} from 'react-pdf/build/entry.webpack';
 import {Page} from 'react-pdf';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Button, Box, Text} from 'obtuse';
-import 'react-virtualized/styles.css';
 
 type Props = {
     actions: Object,

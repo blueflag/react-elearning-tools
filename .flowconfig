@@ -11,4 +11,3 @@ module.system.node.resolve_dirname=src
 <PROJECT_ROOT>/scripts/.*
 <PROJECT_ROOT>/dist/.*
 <PROJECT_ROOT>/node_modules/toyota-style/.*
-<PROJECT_ROOT>/node_modules/react-virtualized/.*
