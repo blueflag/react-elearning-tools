@@ -4,7 +4,7 @@ import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import parseMarkdownQuiz from 'react-markdown-quiz/lib/parseMarkdownQuiz';
 import {Box} from 'obtuse';
-import Button from './Button';
+import Button from 'stampy/lib/component/Button';
 import {Text} from 'obtuse';
 import {Wrapper} from 'obtuse';
 import Stopwatch from 'timer-stopwatch';
