@@ -92,7 +92,7 @@ class ModuleSteps extends React.Component<Props> {
 
         return <Box>
             <Navigation {...childProps} />
-            <Box modifier="paddingTopKilo">
+            <Box modifier="paddingRowKilo">
                 {renderableStep.render(childProps)}
             </Box>
         </Box>;
