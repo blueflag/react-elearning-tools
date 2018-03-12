@@ -26,16 +26,17 @@
     "test-all": "yarn lint && yarn flow"
   },
   "devDependencies": {
+    "@blueflag/proto-blueflag-test": "^0.10.0",
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.0",
     "babel-preset-blueflag": "^0.3.0",
     "babel-register": "^6.23.0",
     "dotenv": "4.0.0",
-    "@blueflag/proto-blueflag-test": "^0.10.0",
     "proxyquire": "^1.7.10",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "webpack": "^3.10.0"
   },
   "dependencies": {
     "flow-bin": "0.54",
@@ -45,7 +46,7 @@
     "obtuse": "^0.6.1",
     "pipwerks-scorm-api-wrapper": "^0.1.2",
     "react-markdown-quiz": "^0.5.1",
-    "react-pdf": "^2.1.7",
+    "react-pdf": "v2.5.3",
     "react-redux": "^5.0.6",
     "react-showdown": "^1.6.0",
     "redux-actions": "^2.2.1",
@@ -54,6 +55,7 @@
   },
   "peerDependencies": {
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "webpack": "^3.10.0"
   }
 }
