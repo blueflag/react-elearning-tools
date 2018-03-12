@@ -191,6 +191,7 @@ class PdfStep extends React.PureComponent<Props, State> {
                                 pdf={pdf}
                                 pageNumber={page}
                                 width={width}
+                                renderMode="svg"
                             />
                         </Box>
                     }
