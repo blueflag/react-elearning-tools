@@ -67,7 +67,7 @@ export default class QuizStep extends React.Component<Object, Object> {
             const answeredCount = payload.reduce((count, item) => item.answer ? count + 1 : count, 0);
             const score = payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
             
-            // For this
+            // The progression is defined by the number of the questions and the sumbit button
             actions.onProgress(100 * (answeredCount/(quiz.length + 1)));
 
             this.setState({
