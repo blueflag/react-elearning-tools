@@ -14,7 +14,8 @@ type Props = {
     components?: Object,
     context: Function,
     scorm: {
-        masteryScore: number
+        masteryScore: number,
+        navigationToggle: boolean
     },
     [key: string]: *
 };
@@ -69,8 +70,10 @@ export default function ExerciseModule(props: Props): Element<*> {
             return step;
         });
 
+
     return <Exercise
         steps={steps}
+        scorm={props.scorm}
         components={props.components}
     />;
 }
