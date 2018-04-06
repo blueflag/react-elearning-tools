@@ -17,22 +17,27 @@ export default class QuizStep extends React.Component<Object, Object> {
             quiz: null,
             answeredCount: 0,
             score: 0,
+            progress: 0,
             payload: null,
             timer: new Stopwatch()
         };
     }
     componentWillMount(){
-        this.state.timer.start();
-        this.setState({
-            quiz: this.getQuizSample(this.props)
-        });
+        this.setupQuiz(this.props);
     }
     componentWillReceiveProps(nextProps: Object) {
         if(nextProps.quiz !== this.props.quiz) {
+            this.setupQuiz(nextProps);
+        }
+    }
+    setupQuiz(thisProps: Object){
+        const {actions} = this.props;
+        if(thisProps.step.progress !== 100){
             this.state.timer.start();
             this.setState({
-                quiz: this.getQuizSample(nextProps)
+                quiz: this.getQuizSample(thisProps)
             });
+            actions.onProgress(0);
         }
     }
     seedRandom = (seed: number): number => {
@@ -58,11 +63,11 @@ export default class QuizStep extends React.Component<Object, Object> {
     onChange = (payload: Object) => {
         const {actions, step} = this.props;
         const {quiz} = this.state;
-        if(step.submitable){
+        if(step.progress < 100){
             const answeredCount = payload.reduce((count, item) => item.answer ? count + 1 : count, 0);
             const score = payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
 
-            actions.onProgress(100 / quiz.length + 1 * answeredCount);
+            actions.onProgress(95 * ((1 * answeredCount)/quiz.length));
 
             this.setState({
                 answeredCount,
@@ -80,7 +85,6 @@ export default class QuizStep extends React.Component<Object, Object> {
             time: time
         };
 
-        actions.onSetSubmitable(false);
         actions.onScore(this.state.score);
         actions.onAnswer(batch);
         actions.onProgress(100);
@@ -91,7 +95,7 @@ export default class QuizStep extends React.Component<Object, Object> {
         const {answeredCount, quiz} = this.state;
         return <Wrapper>
             <Box>
-                <h3>Welcome To The Quiz.</h3>
+                <h3>Welcome To the {step.name}.</h3>
                 <ul>
                     <li>You must select an answer for each question before you can submit.</li>
                     <li>{`Please note, you will need ${step.passRate} correct answers in order to pass this quiz. Good luck.`}</li>
@@ -99,14 +103,14 @@ export default class QuizStep extends React.Component<Object, Object> {
             </Box>
             <Box>
                 <Quiz onChange={this.onChange} quiz={quiz} />
-                {this.renderNextButton(answeredCount !== quiz.length || !step.submitable)}
+                {this.renderNextButton(answeredCount !== quiz.length)}
             </Box>
         </Wrapper>;
     }
 
     renderNextButton = (disabled: boolean): ?Element<*> => {
         return <Text element="div" modifier="marginMega center">
-            <Button modifier="sizeMega primary " disabled={disabled} onClick={this.onClick}>{this.props.step.submitable ? "Submit Answers" : "Submitted"}</Button>
+            <Button modifier="sizeMega primary " disabled={disabled} onClick={this.onClick}>Submit Answers</Button>
         </Text>;
     }
 }
