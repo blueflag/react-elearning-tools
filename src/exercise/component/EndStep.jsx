@@ -55,14 +55,14 @@ class End extends React.Component<Object> {
         const {value} = this.props;
         const {description = 'You have passed the learning Module.'} = this.props;
         const {failDescription = 'Unfortunately, you have not passed all of the requirements for this training.'} = this.props;
-        const {failDescription2 = 'To gain completion, please re-attempt this module by clicking on the "Back to previous page" button located on the bottom left of this screen. This will take you to the Course Page where you can click on the "Go to Content" button, enabling you to re-launch the module.'} = this.props;
+        const {failDescriptionExtended = 'To gain completion, please re-attempt this module by clicking on the "Back to previous page" button located on the bottom left of this screen. This will take you to the Course Page where you can click on the "Go to Content" button, enabling you to re-launch the module.'} = this.props;
         const assessableSteps = value.steps.filter(ii => ii.assess);
-
+        const {result} = this.didPass(this.props);
         return <Wrapper modifier="small">
             <Box modifier="marginTopGiga">
                 <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props).result ? "Congratulations!" : "Module Failed"}</Text>
-                <Text modifier="block center marginGiga">{this.didPass(this.props).result ? description : failDescription}</Text>
-                <Text modifier="block center marginGiga">{this.didPass(this.props).result ? null : failDescription2}</Text>
+                <Text modifier="block center marginGiga">{result ? description : failDescription}</Text>
+                {!result && <Text modifier="block center marginGiga">{failDescriptionExtended}</Text>}
             </Box>
             <table className="Table">
                 <tbody>

@@ -66,8 +66,9 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(step.progress < 100){
             const answeredCount = payload.reduce((count, item) => item.answer ? count + 1 : count, 0);
             const score = payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
-
-            actions.onProgress(95 * ((1 * answeredCount)/quiz.length));
+            
+            // For this
+            actions.onProgress(100 * (answeredCount/(quiz.length + 1)));
 
             this.setState({
                 answeredCount,
@@ -95,7 +96,7 @@ export default class QuizStep extends React.Component<Object, Object> {
         const {answeredCount, quiz} = this.state;
         return <Wrapper>
             <Box>
-                <h3>Welcome To the {step.name}.</h3>
+                <h3>Welcome to {step.name}.</h3>
                 <ul>
                     <li>You must select an answer for each question before you can submit.</li>
                     <li>{`Please note, you will need ${step.passRate} correct answers in order to pass this quiz. Good luck.`}</li>
