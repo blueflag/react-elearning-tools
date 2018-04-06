@@ -55,7 +55,7 @@ class End extends React.Component<Object> {
         const {value} = this.props;
         const {description = 'You have passed the learning Module.'} = this.props;
         const {failDescription = 'Unfortunately, you have not passed all of the requirements for this training.'} = this.props;
-        const {failDescriptionExtended = 'To gain successful completion, please re-attempt this Quiz by clicking on the "Back to previous page" button located on the bottom left of this screen. This will take you to the Course Page where you can click on the "Go to Content" button, enabling you to re-launch the Quiz.'} = this.props;
+        const {failDescriptionExtended = 'To gain successful completion, please re-attempt this Module by clicking on the "Back to previous page" button located on the bottom left of this screen. This will take you to the Course Page where you can click on the "Go to Content" button, enabling you to re-launch the Module.'} = this.props;
         const assessableSteps = value.steps.filter(ii => ii.assess);
         const {result} = this.didPass(this.props);
         return <Wrapper modifier="small">
