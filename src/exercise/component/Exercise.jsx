@@ -13,6 +13,7 @@ const {meta, navigation, interaction, step} = ExerciseActions.exercise;
 
 type Props = {
     addSteps: Function,
+    scorm: Object,
     components: Object,
     navigation: ComponentType<*>,
     onNext: Function,
@@ -21,7 +22,6 @@ type Props = {
     onPrevious: Function,
     onGoto: Function,
     onAnswer: Function,
-    onSetSubmitable: Function,
     onStepSetState: Function,
     onProgress: Function,
     steps: Object[],
@@ -42,6 +42,7 @@ class ModuleSteps extends React.Component<Props> {
     }
     render(): ?Element<*> {
         let {
+            scorm,
             components = {},
             navigation: Navigation,
             onNext,
@@ -50,7 +51,6 @@ class ModuleSteps extends React.Component<Props> {
             onPrevious,
             onGoto,
             onAnswer,
-            onSetSubmitable,
             onStepSetState,
             onProgress,
             value
@@ -76,10 +76,10 @@ class ModuleSteps extends React.Component<Props> {
                 onPrevious,
                 onGoto,
                 onAnswer,
-                onSetSubmitable,
                 onStepSetState,
                 onProgress
             },
+            scorm,
             components,
             step,
             value
@@ -110,7 +110,6 @@ export default Some(ModuleSteps)
             onPrevious: navigation.previousStep,
             onGoto: navigation.gotoStep,
             onAnswer: interaction.answer,
-            onSetSubmitable: step.setSubmitable,
             onStepSetState: step.setState,
             onProgress: navigation.progressStep
         }

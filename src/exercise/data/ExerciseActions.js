@@ -8,7 +8,6 @@ export default createActions({
             ADD_STEPS: undefined
         },
         STEP: {
-            SET_SUBMITABLE: undefined,
             SET_STATE: undefined
         },
         INTERACTION: {
