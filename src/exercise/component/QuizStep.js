@@ -1,5 +1,6 @@
 //@flow
 import React from 'react';
+import {fromJS, Map} from 'immutable';
 import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import parseMarkdownQuiz from 'react-markdown-quiz/lib/parseMarkdownQuiz';
@@ -44,8 +45,11 @@ export default class QuizStep extends React.Component<Object, Object> {
         var x = Math.sin(seed++) * 10000;
         return x - Math.floor(x);
     }
+    getRandomInt(min: number, max: number) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
     getQuizSample = (data: Object): Object[] =>  {
-        const TODAY = (new Date()).getDate();
+        const randNum = this.getRandomInt(1,300);
         const {quiz, questions} = data;
         var batch = parseMarkdownQuiz(quiz);
         var number = questions ? questions : batch.length;
@@ -53,7 +57,7 @@ export default class QuizStep extends React.Component<Object, Object> {
             .map((value: Object, index: number): Object => {
                 return {
                     value: value,
-                    sorter: this.seedRandom(TODAY + this.seedRandom(TODAY + index))
+                    sorter: this.seedRandom(randNum + this.seedRandom(randNum + index))
                 };
             })
             .sort((aa, bb) => aa.sorter - bb.sorter)
@@ -94,6 +98,7 @@ export default class QuizStep extends React.Component<Object, Object> {
     render(): Element<*> {
         const {step} = this.props;
         const {answeredCount, quiz} = this.state;
+        console.log(this.props)
         return <Wrapper>
             <Box>
                 <h3>Welcome to {step.name}.</h3>

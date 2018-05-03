@@ -40,6 +40,7 @@ class ModuleSteps extends React.Component<Props> {
             addSteps(steps);
         }
     }
+
     render(): ?Element<*> {
         let {
             scorm,
@@ -91,13 +92,15 @@ class ModuleSteps extends React.Component<Props> {
         }
 
         return <Box>
-            <Navigation {...childProps} />
+            
             <Box modifier="paddingRowKilo">
                 {renderableStep.render(childProps)}
             </Box>
         </Box>;
     }
 }
+
+//<Navigation {...childProps} />
 
 export default Some(ModuleSteps)
     .map(connect(

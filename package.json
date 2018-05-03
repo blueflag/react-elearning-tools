@@ -46,7 +46,7 @@
     "obtuse": "^0.6.1",
     "pipwerks-scorm-api-wrapper": "^0.1.2",
     "react-markdown-quiz": "^0.5.1",
-    "react-pdf": "v2.5.3",
+    "react-pdf": "^3.0.4",
     "react-redux": "^5.0.6",
     "react-showdown": "^1.6.0",
     "redux-actions": "^2.2.1",

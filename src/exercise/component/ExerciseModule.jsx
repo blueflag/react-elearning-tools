@@ -1,6 +1,7 @@
 //@flow
 import React from 'react';
 import type {Element} from 'react';
+import {Map, List, fromJS} from 'immutable';
 import CoverStep from './CoverStep';
 import EndStep from './EndStep';
 import Exercise from './Exercise';
@@ -21,7 +22,6 @@ type Props = {
 };
 
 export default function ExerciseModule(props: Props): Element<*> {
-
     function getRender(step: Object, file: *): * {
         switch (step.type) {
             case 'video':
@@ -59,12 +59,23 @@ export default function ExerciseModule(props: Props): Element<*> {
         }
     }
 
+    function selectQuizFile(file: Array<string>){
+        var num = Math.floor(Math.random() * Math.floor(file.length));
+        console.log(num,file[num])
+        return file[num]
+    }
 
     const steps = props.steps
         .map((step: Object): Object => {
             let file;
             if(step.file) {
                 file = props.context(`./${step.file}`);
+            } else {
+                if(step.fileOneOf && step.type === 'quiz'){
+                    const mainFile = selectQuizFile(step.fileOneOf);
+                    step.file = mainFile
+                    file = props.context(`./${step.file}`);
+                }
             }
             step.render = getRender(step, file);
             return step;

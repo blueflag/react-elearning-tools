@@ -2,7 +2,7 @@
 import React from 'react';
 import type {Element} from 'react';
 
-import {Document} from 'react-pdf/build/entry.webpack';
+import {Document} from 'react-pdf';
 import {Page} from 'react-pdf';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Box, Text} from 'obtuse';
@@ -177,6 +177,18 @@ class PdfStep extends React.PureComponent<Props, State> {
                     <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(0.8)}>–</Button>
                 </Box>
             }
+            {pdf &&
+                <Box spruceName="PdfStep_navigation">
+                    <Button modifier="sizeKilo secondary" onClick={this.onClickPrevPage} disabled={!this.hasPrevPage()}>Prev</Button>
+                    <Text spruceName="PdfStep_navigationText">Page {page} of {pdf.numPages}</Text>
+                    <Button modifier="sizeKilo primary" onClick={this.onClickNextPage} disabled={!this.hasNextPage()}>Next</Button>
+                </Box>
+            }
+            {pdf && !this.hasNextPage() &&
+                <Text element="div" modifier="marginMega center">
+                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>
+                </Text>
+            }
             <Box className="PdfStep_document">
                 <Document
                     file={file}
@@ -199,18 +211,6 @@ class PdfStep extends React.PureComponent<Props, State> {
             </Box>
             {loading && <Box><Loader>Loading PDF...</Loader></Box>}
             {pdfError && <Text element="div" modifier="center">{pdfError}</Text>}
-            {pdf &&
-                <Box spruceName="PdfStep_navigation">
-                    <Button modifier="sizeKilo secondary" onClick={this.onClickPrevPage} disabled={!this.hasPrevPage()}>Prev</Button>
-                    <Text spruceName="PdfStep_navigationText">Page {page} of {pdf.numPages}</Text>
-                    <Button modifier="sizeKilo primary" onClick={this.onClickNextPage} disabled={!this.hasNextPage()}>Next</Button>
-                </Box>
-            }
-            {pdf && !this.hasNextPage() &&
-                <Text element="div" modifier="marginMega center">
-                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>
-                </Text>
-            }
         </Box>;
     }
 }
