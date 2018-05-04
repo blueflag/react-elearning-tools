@@ -20,10 +20,13 @@ export default function ElearningReducer(state: ExerciseRecord, {type, payload}:
                 .setIn(currentStep.concat('score'), payload)
             ;
 
+        case 'EXERCISE/NAVIGATION/END_STEP':
+            return state
+                .update('step', state.steps.size-1);
+
         case 'EXERCISE/NAVIGATION/NEXT_STEP':
             return state
-                .update('step', step => Math.min(state.steps.size - 1, step + 1))
-            ;
+                .update('step', step => Math.min(state.steps.size - 1, step + 1));
 
         case 'EXERCISE/NAVIGATION/PREVIOUS_STEP':
             return state

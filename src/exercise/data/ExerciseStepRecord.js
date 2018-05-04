@@ -7,7 +7,7 @@ export default class ExerciseStepRecord extends Record({
     pathname: null,
     assess: true,
     progress: 0,
-    score: null,
+    score: 0,
     file: null,
     group: null,
     fileOneOf: null,

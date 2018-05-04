@@ -33,6 +33,7 @@ class PdfStep extends React.PureComponent<Props, State> {
     constructor(props: Props) {
         super(props);
 
+
         let {page} = this.props.step.state;
         props.actions.onStepSetState({
             page: page || 1
@@ -66,6 +67,12 @@ class PdfStep extends React.PureComponent<Props, State> {
             .map(pageNumber => pdf.getPage(pageNumber));
 
         let setPdfState = (values: Object[]) => {
+            var {step, actions} = this.props;
+            if(step.progress === 100 && step.state.page === pdf.numPages){
+                actions.onStepSetState({
+                    page: 1
+                });
+            }
             this.setState({
                 pdf,
                 loading: false,
@@ -184,11 +191,6 @@ class PdfStep extends React.PureComponent<Props, State> {
                     <Button modifier="sizeKilo primary" onClick={this.onClickNextPage} disabled={!this.hasNextPage()}>Next</Button>
                 </Box>
             }
-            {pdf && !this.hasNextPage() &&
-                <Text element="div" modifier="marginMega center">
-                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>
-                </Text>
-            }
             <Box className="PdfStep_document">
                 <Document
                     file={file}
@@ -203,12 +205,17 @@ class PdfStep extends React.PureComponent<Props, State> {
                                 pdf={pdf}
                                 pageNumber={page}
                                 width={width}
-                                renderMode="svg"
+                                renderMode="canvas"
                             />
                         </Box>
                     }
                 </Document>
             </Box>
+            {pdf && !this.hasNextPage() &&
+                <Text element="div" modifier="marginMega center">
+                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>
+                </Text>
+            }
             {loading && <Box><Loader>Loading PDF...</Loader></Box>}
             {pdfError && <Text element="div" modifier="center">{pdfError}</Text>}
         </Box>;

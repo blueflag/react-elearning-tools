@@ -17,6 +17,7 @@ type Props = {
     components: Object,
     navigation: ComponentType<*>,
     onNext: Function,
+    onEnd: Function,
     onScore: Function,
     onFinish: Function,
     onPrevious: Function,
@@ -47,6 +48,7 @@ class ModuleSteps extends React.Component<Props> {
             components = {},
             navigation: Navigation,
             onNext,
+            onEnd,
             onScore,
             onFinish,
             onPrevious,
@@ -72,6 +74,7 @@ class ModuleSteps extends React.Component<Props> {
         const childProps = {
             actions: {
                 onNext,
+                onEnd,
                 onScore,
                 onFinish,
                 onPrevious,
@@ -92,7 +95,7 @@ class ModuleSteps extends React.Component<Props> {
         }
 
         return <Box>
-            
+            <div style={{display: "none"}}><Navigation {...childProps} /></div>
             <Box modifier="paddingRowKilo">
                 {renderableStep.render(childProps)}
             </Box>
@@ -100,7 +103,6 @@ class ModuleSteps extends React.Component<Props> {
     }
 }
 
-//<Navigation {...childProps} />
 
 export default Some(ModuleSteps)
     .map(connect(
@@ -108,6 +110,7 @@ export default Some(ModuleSteps)
         {
             addSteps: meta.addSteps,
             onNext: navigation.nextStep,
+            onEnd: navigation.endStep,
             onScore: interaction.score,
             onFinish: interaction.finish,
             onPrevious: navigation.previousStep,

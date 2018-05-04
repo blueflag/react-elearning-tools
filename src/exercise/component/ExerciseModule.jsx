@@ -1,7 +1,6 @@
 //@flow
 import React from 'react';
 import type {Element} from 'react';
-import {Map, List, fromJS} from 'immutable';
 import CoverStep from './CoverStep';
 import EndStep from './EndStep';
 import Exercise from './Exercise';
@@ -59,10 +58,10 @@ export default function ExerciseModule(props: Props): Element<*> {
         }
     }
 
-    function selectQuizFile(file: Array<string>){
+    function selectQuizFile(file: Array<string>): * {
         var num = Math.floor(Math.random() * Math.floor(file.length));
-        console.log(num,file[num])
-        return file[num]
+        console.log(num,file[num]);
+        return file[num];
     }
 
     const steps = props.steps
@@ -73,7 +72,7 @@ export default function ExerciseModule(props: Props): Element<*> {
             } else {
                 if(step.fileOneOf && step.type === 'quiz'){
                     const mainFile = selectQuizFile(step.fileOneOf);
-                    step.file = mainFile
+                    step.file = mainFile;
                     file = props.context(`./${step.file}`);
                 }
             }

@@ -45,6 +45,7 @@ export default createActions({
 
         },
         NAVIGATION: {
+            END_STEP: undefined,
             NEXT_STEP: undefined,
             PREVIOUS_STEP: undefined,
             GOTO_STEP: undefined,

@@ -1,6 +1,5 @@
 //@flow
 import React from 'react';
-import {fromJS, Map} from 'immutable';
 import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
 import parseMarkdownQuiz from 'react-markdown-quiz/lib/parseMarkdownQuiz';
@@ -10,6 +9,7 @@ import {Text} from 'obtuse';
 import {Wrapper} from 'obtuse';
 import Stopwatch from 'timer-stopwatch';
 import moment from 'moment';
+import {TableCell} from 'goose-css';
 
 export default class QuizStep extends React.Component<Object, Object> {
     constructor(props: Object) {
@@ -18,8 +18,10 @@ export default class QuizStep extends React.Component<Object, Object> {
             quiz: null,
             answeredCount: 0,
             score: 0,
-            progress: 0,
+            gotoNumber: 0,
+            resultPass: null,
             payload: null,
+            viewResults: false,
             timer: new Stopwatch()
         };
     }
@@ -45,12 +47,12 @@ export default class QuizStep extends React.Component<Object, Object> {
         var x = Math.sin(seed++) * 10000;
         return x - Math.floor(x);
     }
-    getRandomInt(min: number, max: number) {
+    getRandomInt = (min: number, max: number): number => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    getQuizSample = (data: Object): Object[] =>  {
+    getQuizSample = (props: Object): Object[] =>  {
         const randNum = this.getRandomInt(1,300);
-        const {quiz, questions} = data;
+        const {quiz, questions} = props;
         var batch = parseMarkdownQuiz(quiz);
         var number = questions ? questions : batch.length;
         return batch
@@ -82,38 +84,136 @@ export default class QuizStep extends React.Component<Object, Object> {
         }
     }
     onClick = () => {
-        const {actions} = this.props;
+        const {actions, scorm, step} = this.props;
+        
         this.state.timer.stop;
         var time = moment(this.state.timer.ms).format("mm:ss");
         var batch = {
             answers: this.state.payload,
             time: time
         };
-
         actions.onScore(this.state.score);
         actions.onAnswer(batch);
-        actions.onProgress(100);
-        actions.onNext();
+        if(scorm.assessEachQuiz){
+            var result = this.state.score >= step.passRate;
+            var filtered = this.props.value.steps.filter((aa: Object): * => {
+                return aa.group === this.props.step.group;
+            });
+            var gotoNumber;
+            this.props.value.steps.filter((aa: Object, bb: number): * => {
+                var filteredJS  = filtered.get(0).toJS();
+                if(filteredJS.name === aa.name){
+                    gotoNumber = bb;
+                }
+            });
+            this.setState({
+                viewResults: true,
+                resultPass: result,
+                gotoNumber: gotoNumber
+            });
+            if(step.singleAttempt && !result){
+                actions.onEnd();
+            }
+        } else {
+            actions.onProgress(100);
+            actions.onNext();
+        }
+    }
+    goBack = () =>{
+        const {actions} = this.props;
+        actions.onProgress(0);
+        actions.onGoto(this.state.gotoNumber);
+    }
+    onFinish = () => {
+        this.props.actions.onProgress(100);
+        this.props.actions.onNext();
     }
     render(): Element<*> {
         const {step} = this.props;
         const {answeredCount, quiz} = this.state;
-        console.log(this.props)
-        return <Wrapper>
-            <Box>
-                <h3>Welcome to {step.name}.</h3>
-                <ul>
-                    <li>You must select an answer for each question before you can submit.</li>
-                    <li>{`Please note, you will need ${step.passRate} correct answers in order to pass this quiz. Good luck.`}</li>
-                </ul>
-            </Box>
-            <Box>
-                <Quiz onChange={this.onChange} quiz={quiz} />
-                {this.renderNextButton(answeredCount !== quiz.length)}
-            </Box>
-        </Wrapper>;
+        if(!this.state.viewResults){
+            return <Wrapper>
+                <Box>
+                    <h3>Welcome to {step.name}.</h3>
+                    <ul>
+                        <li>You must select an answer for each question before you can submit.</li>
+                        <li>{`Please note, you will need ${step.passRate} correct answers in order to pass this quiz. Good luck.`}</li>
+                    </ul>
+                </Box>
+                <Box>
+                    <Quiz onChange={this.onChange} quiz={quiz} />
+                    {this.renderNextButton(answeredCount !== quiz.length)}
+                </Box>
+            </Wrapper>;
+        } else {
+            return <Wrapper>
+                <Box>
+                    <Text element="h1" modifier="block sizeGiga marginGiga center">
+                    Quiz Review
+                    </Text>
+                    {this.renderReviewPage()}
+                </Box>
+            </Wrapper>;
+        }
     }
-
+    renderReviewPage = (): ?Element<*> => {
+        if(this.state.resultPass){
+            return <Box>
+                <Text element="div" modifier="marginMega center">
+                   Well done, you have passed this quiz.
+                    <br/>
+                   Please proceed to the next section.
+                </Text>
+                <Text element="div" modifier="marginMega center">
+                    <Button modifier="sizeMega primary " onClick={this.onFinish}>
+                        Proceed onward
+                    </Button>
+                </Text>
+            </Box>;
+        } else {
+            return <Box>
+                <Text element="div" modifier="marginMega center">
+                   Unfortunately, you have not passed the quiz for this section.
+                    <br/>
+                   Please review before trying the quiz again.
+                </Text>
+                {this.renderReference()}
+                <Text element="div" modifier="marginMega center">
+                    <Button modifier="sizeMega primary " onClick={this.goBack}>
+                        Try again
+                    </Button>
+                </Text>
+            </Box>;
+        }
+    }
+    renderReference = (): ?Element<*> =>{
+        if(this.props.scorm.reference){        
+            var list = this.state.payload.map((ii: Object, key: number): ?Element<*> => {
+                if(!ii.correct){
+                    return <tr className="Table_row Table_row-reference"  key={key}>
+                        <TableCell modifier="padding header 50">
+                            {ii.title}
+                        </TableCell>
+                        <TableCell modifier="padding ">
+                            {ii.refer}
+                        </TableCell>
+                    </tr>;
+                }
+            });
+            return <Text element="div" modifier="marginMega center">
+                <Text element="h1" modifier="block sizeGiga marginGiga center">
+                    Incorrect Question/s & Recommendation
+                </Text>
+                <table className="Table">
+                    <tbody>
+                        {list}
+                    </tbody>
+                </table>
+            </Text>;
+        } else {
+            return null;
+        }
+    }
     renderNextButton = (disabled: boolean): ?Element<*> => {
         return <Text element="div" modifier="marginMega center">
             <Button modifier="sizeMega primary " disabled={disabled} onClick={this.onClick}>Submit Answers</Button>
