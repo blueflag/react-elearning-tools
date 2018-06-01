@@ -17,11 +17,14 @@ type Props = {
     components: Object,
     navigation: ComponentType<*>,
     onNext: Function,
+    onEnd: Function,
     onScore: Function,
     onFinish: Function,
     onPrevious: Function,
     onGoto: Function,
     onAnswer: Function,
+    onSetResetPrevStep: Function,
+    onStepSetQuiz: Function,
     onStepSetState: Function,
     onProgress: Function,
     steps: Object[],
@@ -40,17 +43,31 @@ class ModuleSteps extends React.Component<Props> {
             addSteps(steps);
         }
     }
+
+    renderMenuIcon(): ?Element<*> {
+        return <svg viewBox="12 16 22 16" width="25" height="25" fill="white">
+            <path d="M13,18.5c0,0.275,0.225,0.5,0.5,0.5h21c0.275,0,0.5-0.225,0.5-0.5v-3c0-0.275-0.225-0.5-0.5-0.5h-21
+        c-0.275,0-0.5,0.225-0.5,0.5V18.5z M13,25.5c0,0.275,0.225,0.5,0.5,0.5h21c0.275,0,0.5-0.225,0.5-0.5v-3c0-0.275-0.225-0.5-0.5-0.5
+        h-21c-0.275,0-0.5,0.225-0.5,0.5V25.5z M13,32.5c0,0.275,0.225,0.5,0.5,0.5h21c0.275,0,0.5-0.225,0.5-0.5v-3
+        c0-0.275-0.225-0.5-0.5-0.5h-21c-0.275,0-0.5,0.225-0.5,0.5V32.5z"
+            />
+        </svg>;
+    }
+
     render(): ?Element<*> {
         let {
             scorm,
             components = {},
             navigation: Navigation,
             onNext,
+            onEnd,
             onScore,
             onFinish,
             onPrevious,
             onGoto,
             onAnswer,
+            onSetResetPrevStep,
+            onStepSetQuiz,
             onStepSetState,
             onProgress,
             value
@@ -64,6 +81,7 @@ class ModuleSteps extends React.Component<Props> {
         components = {
             Loader: ({children}) => children || "Loading...",
             Tick: () => "✔",
+            MenuIcon: () => this.renderMenuIcon(),
             ...components
         };
 
@@ -71,11 +89,14 @@ class ModuleSteps extends React.Component<Props> {
         const childProps = {
             actions: {
                 onNext,
+                onEnd,
                 onScore,
                 onFinish,
                 onPrevious,
                 onGoto,
                 onAnswer,
+                onSetResetPrevStep,
+                onStepSetQuiz,
                 onStepSetState,
                 onProgress
             },
@@ -92,12 +113,13 @@ class ModuleSteps extends React.Component<Props> {
 
         return <Box>
             <Navigation {...childProps} />
-            <Box modifier="paddingRowKilo">
+            <Box modifier="marginTop6">
                 {renderableStep.render(childProps)}
             </Box>
         </Box>;
     }
 }
+
 
 export default Some(ModuleSteps)
     .map(connect(
@@ -105,11 +127,14 @@ export default Some(ModuleSteps)
         {
             addSteps: meta.addSteps,
             onNext: navigation.nextStep,
+            onEnd: navigation.endStep,
             onScore: interaction.score,
             onFinish: interaction.finish,
             onPrevious: navigation.previousStep,
             onGoto: navigation.gotoStep,
             onAnswer: interaction.answer,
+            onSetResetPrevStep: meta.setReset,
+            onStepSetQuiz: step.setQuiz,
             onStepSetState: step.setState,
             onProgress: navigation.progressStep
         }

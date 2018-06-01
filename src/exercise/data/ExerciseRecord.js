@@ -6,6 +6,7 @@ import ExerciseStepRecord from './ExerciseStepRecord';
 export default class ExerciseRecord extends Record({
     pathname: null,
     step: 0,
+    resetPreviousStep: false,
     steps: List()
 }) {
     constructor(props: Object): ExerciseRecord {

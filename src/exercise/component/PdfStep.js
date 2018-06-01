@@ -2,7 +2,7 @@
 import React from 'react';
 import type {Element} from 'react';
 
-import {Document} from 'react-pdf/build/entry.webpack';
+import {Document} from 'react-pdf';
 import {Page} from 'react-pdf';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Box, Text} from 'obtuse';
@@ -10,6 +10,7 @@ import Button from 'stampy/lib/component/Button';
 
 type Props = {
     actions: Object,
+    value: Object,
     components: Object,
     eqWidth: ?number,
     file: string,
@@ -32,6 +33,7 @@ class PdfStep extends React.PureComponent<Props, State> {
 
     constructor(props: Props) {
         super(props);
+
 
         let {page} = this.props.step.state;
         props.actions.onStepSetState({
@@ -66,6 +68,13 @@ class PdfStep extends React.PureComponent<Props, State> {
             .map(pageNumber => pdf.getPage(pageNumber));
 
         let setPdfState = (values: Object[]) => {
+            var {actions, value} = this.props;
+            if(value.resetPreviousStep){
+                actions.onStepSetState({
+                    page: 1
+                });
+                actions.onSetResetPrevStep(false);
+            }
             this.setState({
                 pdf,
                 loading: false,
@@ -177,6 +186,13 @@ class PdfStep extends React.PureComponent<Props, State> {
                     <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(0.8)}>–</Button>
                 </Box>
             }
+            {pdf &&
+                <Box spruceName="PdfStep_navigation">
+                    <Button modifier="sizeKilo secondary" onClick={this.onClickPrevPage} disabled={!this.hasPrevPage()}>Prev</Button>
+                    <Text spruceName="PdfStep_navigationText">Page {page} of {pdf.numPages}</Text>
+                    <Button modifier="sizeKilo primary" onClick={this.onClickNextPage} disabled={!this.hasNextPage()}>Next</Button>
+                </Box>
+            }
             <Box className="PdfStep_document">
                 <Document
                     file={file}
@@ -191,26 +207,19 @@ class PdfStep extends React.PureComponent<Props, State> {
                                 pdf={pdf}
                                 pageNumber={page}
                                 width={width}
-                                renderMode="svg"
+                                renderMode="canvas"
                             />
                         </Box>
                     }
                 </Document>
             </Box>
-            {loading && <Box><Loader>Loading PDF...</Loader></Box>}
-            {pdfError && <Text element="div" modifier="center">{pdfError}</Text>}
-            {pdf &&
-                <Box spruceName="PdfStep_navigation">
-                    <Button modifier="sizeKilo secondary" onClick={this.onClickPrevPage} disabled={!this.hasPrevPage()}>Prev</Button>
-                    <Text spruceName="PdfStep_navigationText">Page {page} of {pdf.numPages}</Text>
-                    <Button modifier="sizeKilo primary" onClick={this.onClickNextPage} disabled={!this.hasNextPage()}>Next</Button>
-                </Box>
-            }
             {pdf && !this.hasNextPage() &&
                 <Text element="div" modifier="marginMega center">
                     <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>
                 </Text>
             }
+            {loading && <Box><Loader>Loading PDF...</Loader></Box>}
+            {pdfError && <Text element="div" modifier="center">{pdfError}</Text>}
         </Box>;
     }
 }
