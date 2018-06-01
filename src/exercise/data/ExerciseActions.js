@@ -5,10 +5,12 @@ import * as scorm from '../../scorm';
 export default createActions({
     EXERCISE: {
         META: {
-            ADD_STEPS: undefined
+            ADD_STEPS: undefined,
+            SET_RESET: undefined
         },
         STEP: {
-            SET_STATE: undefined
+            SET_STATE: undefined,
+            SET_QUIZ: undefined
         },
         INTERACTION: {
             SCORE: undefined,

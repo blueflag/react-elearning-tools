@@ -12,6 +12,7 @@ export default class ExerciseStepRecord extends Record({
     group: null,
     fileOneOf: null,
     type: null,
+    quizRecord: null,
     passRate: 0,
     state: {}
 }) {

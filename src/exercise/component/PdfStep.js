@@ -10,6 +10,7 @@ import Button from 'stampy/lib/component/Button';
 
 type Props = {
     actions: Object,
+    value: Object,
     components: Object,
     eqWidth: ?number,
     file: string,
@@ -67,11 +68,12 @@ class PdfStep extends React.PureComponent<Props, State> {
             .map(pageNumber => pdf.getPage(pageNumber));
 
         let setPdfState = (values: Object[]) => {
-            var {step, actions} = this.props;
-            if(step.progress === 100 && step.state.page === pdf.numPages){
+            var {actions, value} = this.props;
+            if(value.resetPreviousStep){
                 actions.onStepSetState({
                     page: 1
                 });
+                actions.onSetResetPrevStep(false);
             }
             this.setState({
                 pdf,

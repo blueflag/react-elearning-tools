@@ -23,6 +23,8 @@ type Props = {
     onPrevious: Function,
     onGoto: Function,
     onAnswer: Function,
+    onSetResetPrevStep: Function,
+    onStepSetQuiz: Function,
     onStepSetState: Function,
     onProgress: Function,
     steps: Object[],
@@ -54,6 +56,8 @@ class ModuleSteps extends React.Component<Props> {
             onPrevious,
             onGoto,
             onAnswer,
+            onSetResetPrevStep,
+            onStepSetQuiz,
             onStepSetState,
             onProgress,
             value
@@ -80,6 +84,8 @@ class ModuleSteps extends React.Component<Props> {
                 onPrevious,
                 onGoto,
                 onAnswer,
+                onSetResetPrevStep,
+                onStepSetQuiz,
                 onStepSetState,
                 onProgress
             },
@@ -95,8 +101,8 @@ class ModuleSteps extends React.Component<Props> {
         }
 
         return <Box>
-            <div style={{display: "none"}}><Navigation {...childProps} /></div>
-            <Box modifier="paddingRowKilo">
+            <Navigation {...childProps} />
+            <Box modifier="marginTop6">
                 {renderableStep.render(childProps)}
             </Box>
         </Box>;
@@ -116,6 +122,8 @@ export default Some(ModuleSteps)
             onPrevious: navigation.previousStep,
             onGoto: navigation.gotoStep,
             onAnswer: interaction.answer,
+            onSetResetPrevStep: meta.setReset,
+            onStepSetQuiz: step.setQuiz,
             onStepSetState: step.setState,
             onProgress: navigation.progressStep
         }

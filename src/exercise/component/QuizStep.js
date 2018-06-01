@@ -85,15 +85,26 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     onClick = () => {
         const {actions, scorm, step} = this.props;
-        
+        const {payload} = this.state;
         this.state.timer.stop;
+
+        var quizFilter = [];
         var time = moment(this.state.timer.ms).format("mm:ss");
         var batch = {
-            answers: this.state.payload,
+            answers: payload,
             time: time
         };
         actions.onScore(this.state.score);
         actions.onAnswer(batch);
+        payload.map((aa: Object): * => {
+            if(!aa.correct){
+                var bb = {
+                    tt: aa.title,
+                    rr: aa.refer
+                };
+                quizFilter.push(bb);
+            }
+        });
         if(scorm.assessEachQuiz){
             var result = this.state.score >= step.passRate;
             var filtered = this.props.value.steps.filter((aa: Object): * => {
@@ -111,20 +122,32 @@ export default class QuizStep extends React.Component<Object, Object> {
                 resultPass: result,
                 gotoNumber: gotoNumber
             });
-            if(step.singleAttempt && !result){
+            if(scorm.singleAttempt && !result){
+                actions.onStepSetQuiz(quizFilter);
                 actions.onEnd();
             }
         } else {
+            actions.onStepSetQuiz(quizFilter);
             actions.onProgress(100);
             actions.onNext();
         }
     }
-    goBack = () =>{
-        const {actions} = this.props;
+    goBack = () => {
+        const {actions,value} = this.props;
+        actions.onSetResetPrevStep(true);
         actions.onProgress(0);
-        actions.onGoto(this.state.gotoNumber);
+        if(this.state.gotoNumber === value.step){
+            this.setState({viewResults: false});
+            this.setupQuiz(this.props);
+        } else {
+            actions.onGoto(this.state.gotoNumber);
+        }
+    }
+    printPage = () => {
+        window.print();
     }
     onFinish = () => {
+        this.setState({viewResults: false});
         this.props.actions.onProgress(100);
         this.props.actions.onNext();
     }
@@ -182,6 +205,9 @@ export default class QuizStep extends React.Component<Object, Object> {
                     <Button modifier="sizeMega primary " onClick={this.goBack}>
                         Try again
                     </Button>
+                    <Button modifier="sizeMega primary " onClick={this.printPage}>
+                        Print page
+                    </Button>
                 </Text>
             </Box>;
         }
@@ -192,7 +218,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 if(!ii.correct){
                     return <tr className="Table_row Table_row-reference"  key={key}>
                         <TableCell modifier="padding header 50">
-                            {ii.title}
+                            <div className="Markdown" dangerouslySetInnerHTML={{__html: ii.title}}/>
                         </TableCell>
                         <TableCell modifier="padding ">
                             {ii.refer}
@@ -201,7 +227,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 }
             });
             return <Text element="div" modifier="marginMega center">
-                <Text element="h1" modifier="block sizeGiga marginGiga center">
+                <Text element="h2" modifier="block sizeMega marginGiga center">
                     Incorrect Question/s & Recommendation
                 </Text>
                 <table className="Table">
@@ -216,7 +242,8 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     renderNextButton = (disabled: boolean): ?Element<*> => {
         return <Text element="div" modifier="marginMega center">
-            <Button modifier="sizeMega primary " disabled={disabled} onClick={this.onClick}>Submit Answers</Button>
+            <Button modifier="sizeMega primary " disabled={disabled} onClick={this.onClick}>Submit Answers
+            </Button>
         </Text>;
     }
 }

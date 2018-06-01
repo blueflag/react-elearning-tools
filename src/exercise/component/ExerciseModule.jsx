@@ -60,7 +60,6 @@ export default function ExerciseModule(props: Props): Element<*> {
 
     function selectQuizFile(file: Array<string>): * {
         var num = Math.floor(Math.random() * Math.floor(file.length));
-        console.log(num,file[num]);
         return file[num];
     }
 
