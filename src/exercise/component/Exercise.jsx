@@ -44,6 +44,16 @@ class ModuleSteps extends React.Component<Props> {
         }
     }
 
+    renderMenuIcon(): ?Element<*> {
+        return <svg viewBox="12 16 22 16" width="25" height="25" fill="white">
+            <path d="M13,18.5c0,0.275,0.225,0.5,0.5,0.5h21c0.275,0,0.5-0.225,0.5-0.5v-3c0-0.275-0.225-0.5-0.5-0.5h-21
+        c-0.275,0-0.5,0.225-0.5,0.5V18.5z M13,25.5c0,0.275,0.225,0.5,0.5,0.5h21c0.275,0,0.5-0.225,0.5-0.5v-3c0-0.275-0.225-0.5-0.5-0.5
+        h-21c-0.275,0-0.5,0.225-0.5,0.5V25.5z M13,32.5c0,0.275,0.225,0.5,0.5,0.5h21c0.275,0,0.5-0.225,0.5-0.5v-3
+        c0-0.275-0.225-0.5-0.5-0.5h-21c-0.275,0-0.5,0.225-0.5,0.5V32.5z"
+            />
+        </svg>;
+    }
+
     render(): ?Element<*> {
         let {
             scorm,
@@ -71,6 +81,7 @@ class ModuleSteps extends React.Component<Props> {
         components = {
             Loader: ({children}) => children || "Loading...",
             Tick: () => "✔",
+            MenuIcon: () => this.renderMenuIcon(),
             ...components
         };
 

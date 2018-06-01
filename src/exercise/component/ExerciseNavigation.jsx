@@ -34,7 +34,7 @@ export default class ExerciseNavigation extends React.Component<Props> {
 
         return <div className="ExerciseNavigationBox">
             <div className="ExerciseNavigationIcon" onClick={this.onToggle}>
-                <Text modifier="sizeMega">
+                <Text modifier="sizeMega" className="NavIcon">
                     <MenuIcon /> 
                 </Text>
                 <Text modifier="sizeHecto menuText">
