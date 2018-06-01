@@ -14,16 +14,21 @@ export default function ElearningReducer(state: ExerciseRecord, {type, payload}:
                 // })
             ;
 
+        case 'EXERCISE/META/SET_RESET':
+            return state
+                .set('resetPreviousStep', payload);
 
         case 'EXERCISE/INTERACTION/SCORE':
             return state
-                .setIn(currentStep.concat('score'), payload)
-            ;
+                .setIn(currentStep.concat('score'), payload);
+
+        case 'EXERCISE/NAVIGATION/END_STEP':
+            return state
+                .set('step', state.steps.size-1);
 
         case 'EXERCISE/NAVIGATION/NEXT_STEP':
             return state
-                .update('step', step => Math.min(state.steps.size - 1, step + 1))
-            ;
+                .update('step', step => Math.min(state.steps.size - 1, step + 1));
 
         case 'EXERCISE/NAVIGATION/PREVIOUS_STEP':
             return state
@@ -44,6 +49,10 @@ export default function ElearningReducer(state: ExerciseRecord, {type, payload}:
             return state
                 .updateIn(currentStep.concat('state'), (existing) => ({...existing, ...payload}))
             ;
+
+        case 'EXERCISE/STEP/SET_QUIZ':
+            return state
+                .setIn(currentStep.concat('quizRecord'), payload);
 
         default:
             return state;

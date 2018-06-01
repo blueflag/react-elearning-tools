@@ -3,6 +3,7 @@ import React from 'react';
 import type {Element} from 'react';
 import {Text, Badge, Box, Wrapper} from 'obtuse';
 import {TableCell} from 'goose-css';
+import Button from 'stampy/lib/component/Button';
 
 class End extends React.Component<Object> {
     constructor(props: Object) {
@@ -51,6 +52,66 @@ class End extends React.Component<Object> {
 
         return batch;
     }
+    printPage = () => {
+        window.print();
+    }
+    checkReview = (): ?Element<*> => {
+        const {scorm} = this.props;
+        const {result} = this.didPass(this.props);
+        if(scorm.assessEachQuiz){
+            if(scorm.singleAttempt){
+                if(scorm.reference && !result){
+                    return this.renderReview();
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            if(scorm.reference && !result){
+                return this.renderReview();
+            } else {
+                return null;
+            }
+        }
+    }
+    renderReview = (): ?Element<*> => {
+        const {value} = this.props;
+        var table = value.steps
+            .filter(aa => aa.quizRecord)
+            .map((ii: Object, key: number): ?Element<*> => {
+                var list = ii.quizRecord.map((dd: Object, ee: number): ?Element<*> => {
+                    return <tr className="Table_row Table_row-reference Table_row-borders"  key={ee}>
+                        <TableCell modifier="padding header 50">
+                            <div className="Markdown" dangerouslySetInnerHTML={{__html: dd.tt}}/>
+                        </TableCell>
+                        <TableCell modifier="padding ">
+                            {dd.rr}
+                        </TableCell>
+                    </tr>;
+                });
+                return <table className="Table marginBottom4" key={key}>
+                    <tbody>
+                        <tr className="Table_row Table_row-reference">
+                            <TableCell modifier="padding header">
+                                {ii.name}
+                            </TableCell>
+                        </tr>
+                        {list}
+                    </tbody>
+                </table>;
+            });
+        return <Text element="div" modifier="marginMega center">
+            <Button modifier="sizeMega primary " onClick={this.printPage}>
+                Print page
+            </Button>
+            <Text element="h2" modifier="block sizeMega marginGiga center">
+                Incorrect Question/s & Recommendation
+            </Text>
+            {table}
+        </Text>;
+    }
     render(): Element<*> {
         const {value} = this.props;
         const {description = 'You have passed the learning Module.'} = this.props;
@@ -64,28 +125,30 @@ class End extends React.Component<Object> {
                 <Text modifier="block center marginGiga">{result ? description : failDescription}</Text>
                 {!result && <Text modifier="block center marginGiga">{failDescriptionExtended}</Text>}
             </Box>
-            <table className="Table">
-                <tbody>
-                    {assessableSteps
-                        .map((item: Object, key: number): Element<"tr"> => {
-                            const {progress, name, passRate, score} = item;
-                            const complete = (passRate > 0) ? item.pass() : progress === 100;
+            <Box modifier="borderBottom">
+                <table className="Table ">
+                    <tbody>
+                        {assessableSteps
+                            .map((item: Object, key: number): Element<"tr"> => {
+                                const {progress, name, passRate, score} = item;
+                                const complete = (passRate > 0) ? item.pass() : progress === 100;
 
-                            const completeModifier = complete ? 'positive' : 'negative';
-
-                            return <tr className="Table_row"  key={key}>
-                                <TableCell modifier="padding header">{name} </TableCell>
-                                <TableCell modifier="padding">{passRate > 0 && <span>Your Score: {score}</span>}</TableCell>
-                                <TableCell modifier="padding">{passRate > 0 && <span>Required: {passRate}</span>}</TableCell>
-                                {passRate > 0
-                                    ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
-                                    : <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
-                                }
-                            </tr>;
-                        })
-                        .toJS()}
-                </tbody>
-            </table>
+                                const completeModifier = complete ? 'positive' : 'negative';
+                                return <tr className="Table_row"  key={key}>
+                                    <TableCell modifier="padding header">{name} </TableCell>
+                                    <TableCell modifier="padding">{passRate > 0 && <span>Your Score: {score}</span>}</TableCell>
+                                    <TableCell modifier="padding">{passRate > 0 && <span>Required: {passRate}</span>}</TableCell>
+                                    {passRate > 0 && score > 0
+                                        ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
+                                        : <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
+                                    }
+                                </tr>;
+                            })
+                            .toJS()}
+                    </tbody>
+                </table>
+            </Box>
+            {this.checkReview()}
         </Wrapper>;
     }
 
