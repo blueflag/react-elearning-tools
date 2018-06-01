@@ -15,7 +15,7 @@ type Props = {
     context: Function,
     scorm: {
         masteryScore: number,
-        navigationToggle: boolean
+        navigationLock: boolean
     },
     [key: string]: *
 };

@@ -49,14 +49,14 @@ export default class ExerciseNavigation extends React.Component<Props> {
                         const completeCheck = (complete || previousComplete);
 
                         const modifier = String()
-                            .concat(complete && !scorm.navigationToggle ? 'complete' : '')
+                            .concat(complete && !scorm.navigationLock ? 'complete' : '')
                             .concat(value.step === index ? ' active' : '')
-                            .concat(previousComplete && !scorm.navigationToggle ? ' current' : '');
+                            .concat(previousComplete && !scorm.navigationLock ? ' current' : '');
 
                         return <Box
                             key={index}
                             modifier={modifier}
-                            onClick={completeCheck && !scorm.navigationToggle ? () => actions.onGoto(index) : null}
+                            onClick={completeCheck && !scorm.navigationLock ? () => actions.onGoto(index) : null}
                             spruceName="ExerciseNavigation_step"
                         >
                             {step.name}
