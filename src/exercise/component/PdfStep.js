@@ -1,7 +1,6 @@
 //@flow
 import React from 'react';
 import type {Element} from 'react';
-
 import {Document} from 'react-pdf';
 import {Page} from 'react-pdf';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
