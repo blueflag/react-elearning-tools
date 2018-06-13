@@ -58,7 +58,14 @@ class PdfStep extends React.PureComponent<Props, State> {
                 initialWidth: Math.min(nextProps.eqWidth - PAGE_DEFAULT_COLUMN_MARGIN, PAGE_DEFAULT_MAX_WIDTH)
             });
         }
+        if(nextProps.file !== this.props.file) {
+            let {page} = nextProps.step.state;
+            this.props.actions.onStepSetState({
+                page: page || 1
+            });
+        }
     }
+
 
     onLoadSuccess = (pdf: Object) => {
 

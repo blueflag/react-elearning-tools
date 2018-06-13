@@ -206,11 +206,18 @@ export default class QuizStep extends React.Component<Object, Object> {
                     <Button modifier="sizeMega primary " onClick={this.goBack}>
                         Try again
                     </Button>
-                    <Button modifier="sizeMega primary " onClick={this.printPage}>
-                        Print page
-                    </Button>
+                    {this.renderPrintButton()}
                 </Text>
             </Box>;
+        }
+    }
+    renderPrintButton = (): ?Element<*> =>{
+        if(this.props.scorm.reference){ 
+            return <Button modifier="sizeMega primary " onClick={this.printPage}>
+                    Print page
+            </Button>;
+        } else {
+            return null;
         }
     }
     renderReference = (): ?Element<*> =>{
