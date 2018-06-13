@@ -1,7 +1,6 @@
 //@flow
 import React from 'react';
 import type {Element} from 'react';
-import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Box, Text} from 'obtuse';
 import Button from 'stampy/lib/component/Button';
 
@@ -14,8 +13,7 @@ type Props = {
 };
 
 type State = {
-    pdf: ?Object,
-    loading: boolean
+    pdfOpened: boolean
 };
 
 class PdfStepMobile extends React.PureComponent<Props, State> {
@@ -29,8 +27,6 @@ class PdfStepMobile extends React.PureComponent<Props, State> {
         });
 
         this.state = {
-            pdf: null,
-            loading: true,
             pdfOpened: false
         };
     }
@@ -62,7 +58,7 @@ class PdfStepMobile extends React.PureComponent<Props, State> {
         return <Box spruceName="PdfStep">
             <Box className="PdfStep_document">
                 <Text element="p" modifier="block center">
-                    The module has detected that you are using a mobile device. <br/>You can view the PDF document by clicking on the button below. <br/> Once you have read the document, please navigate back to this page to continue the module.
+                    We have detected that you are using a mobile device. <br/>You can view the PDF document by clicking on the button below. <br/> Once you have read the document, please navigate back to this page to continue the module.
                 </Text>
             </Box>
             <Text element="div" modifier="marginMega center">
@@ -74,7 +70,7 @@ class PdfStepMobile extends React.PureComponent<Props, State> {
         </Box>;
     }
 
-    renderNextButton(): Element<*> {
+    renderNextButton(): ?Element<*> {
         if(this.state.pdfOpened){
             return <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>;
         } else {
@@ -83,4 +79,4 @@ class PdfStepMobile extends React.PureComponent<Props, State> {
     }
 }
 
-export default ElementQueryHock()(PdfStepMobile);
+export default PdfStepMobile;

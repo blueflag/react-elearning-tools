@@ -13,7 +13,11 @@ type Props = {
     scorm: Object
 };
 
-export default class ExerciseNavigation extends React.Component<Props> {
+type State = {
+    toggle: boolean
+};
+
+export default class ExerciseNavigation extends React.Component<Props, State> {
     element: ?HTMLElement;
 
     constructor(props: Object) {
@@ -53,7 +57,7 @@ export default class ExerciseNavigation extends React.Component<Props> {
         const {value, scorm} = this.props;
         const {Tick, MenuIcon} = this.props.components;
         const activePageName = value.steps.getIn([value.step,'name']);
-        const displayClass = this.state.toggle ? null : "displayNone";
+        const displayClass = this.state.toggle ? "" : "displayNone";
 
         return <div className="ExerciseNavigationBox" ref={elem => this.element = elem}>
             <div className="ExerciseNavigationIcon" onClick={this.onToggle}>
