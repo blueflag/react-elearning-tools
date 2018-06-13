@@ -44,13 +44,13 @@ export default class ExerciseNavigation extends React.Component<Props> {
         });
     }
 
-    onGoto(index){
+    onGoto = (index: number) => {
         this.onToggle();
         this.props.actions.onGoto(index);
     }
 
     render(): Element<*> {
-        const {value, actions, scorm} = this.props;
+        const {value, scorm} = this.props;
         const {Tick, MenuIcon} = this.props.components;
         const activePageName = value.steps.getIn([value.step,'name']);
         const displayClass = this.state.toggle ? null : "displayNone";
