@@ -15,7 +15,7 @@ type Props = {
     file: string,
     step: Object
 };
-
+ 
 type State = {
     pdf: ?Object,
     pdfError: ?string,
@@ -62,6 +62,10 @@ class PdfStep extends React.PureComponent<Props, State> {
             let {page} = nextProps.step.state;
             this.props.actions.onStepSetState({
                 page: page || 1
+            });
+
+            this.setState({
+                loading: true
             });
         }
     }
