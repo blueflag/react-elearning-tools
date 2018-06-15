@@ -23,6 +23,7 @@ type Props = {
 };
 
 export default function ExerciseModule(props: Props): Element<*> {
+
     function getRender(step: Object, file: *): * {
         let mobileDetect = new MobileDetect(window.navigator.userAgent);
         switch (step.type) {
@@ -85,7 +86,7 @@ export default function ExerciseModule(props: Props): Element<*> {
             step.render = getRender(step, file);
             return step;
         });
-
+    
 
     return <Exercise
         steps={steps}
