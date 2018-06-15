@@ -46,7 +46,7 @@ class ModuleSteps extends React.Component<Props> {
 
     componentWillReceiveProps(nextProps: Object) {
         if(nextProps.value.step !== this.props.value.step){
-            window.scroll(0, 0)   
+            window.scroll(0, 0);   
         }
     }
 
