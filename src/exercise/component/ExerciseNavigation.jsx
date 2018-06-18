@@ -13,12 +13,33 @@ type Props = {
     scorm: Object
 };
 
-export default class ExerciseNavigation extends React.Component<Props> {
+type State = {
+    toggle: boolean
+};
+
+export default class ExerciseNavigation extends React.Component<Props, State> {
+    element: ?HTMLElement;
+
     constructor(props: Object) {
         super(props);
         this.state = {
             toggle: false
         };
+    }
+    componentWillMount() {
+        if (typeof window !== 'undefined') {
+            window.addEventListener("click", this.closeDropdown, false);
+        }
+    }
+    componentWillUnmount() {
+        window.removeEventListener("click", this.closeDropdown, false);
+    }
+    closeDropdown: Function = (ee: Event) => {
+        if(this.state.toggle  && this.element instanceof window.HTMLElement && !this.element.contains(ee.target)) {
+            this.setState({
+                toggle: false
+            });
+        }
     }
     onToggle = () => {
         const {toggle} = this.state;
@@ -26,13 +47,19 @@ export default class ExerciseNavigation extends React.Component<Props> {
             toggle: !toggle
         });
     }
+
+    onGoto = (index: number) => {
+        this.onToggle();
+        this.props.actions.onGoto(index);
+    }
+
     render(): Element<*> {
-        const {value, actions, scorm} = this.props;
+        const {value, scorm} = this.props;
         const {Tick, MenuIcon} = this.props.components;
         const activePageName = value.steps.getIn([value.step,'name']);
-        const displayClass = this.state.toggle ? null : "displayNone";
+        const displayClass = this.state.toggle ? "" : "displayNone";
 
-        return <div className="ExerciseNavigationBox">
+        return <div className="ExerciseNavigationBox" ref={elem => this.element = elem}>
             <div className="ExerciseNavigationIcon" onClick={this.onToggle}>
                 <Text modifier="sizeMega" className="NavIcon">
                     <MenuIcon /> 
@@ -56,7 +83,7 @@ export default class ExerciseNavigation extends React.Component<Props> {
                         return <Box
                             key={index}
                             modifier={modifier}
-                            onClick={completeCheck && !scorm.navigationLock ? () => actions.onGoto(index) : null}
+                            onClick={completeCheck && !scorm.navigationLock ? () => this.onGoto(index) : null}
                             spruceName="ExerciseNavigation_step"
                         >
                             {step.name}

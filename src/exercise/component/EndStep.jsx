@@ -103,9 +103,11 @@ class End extends React.Component<Object> {
                 </table>;
             });
         return <Text element="div" modifier="marginMega center">
-            <Button modifier="sizeMega primary " onClick={this.printPage}>
-                Print page
-            </Button>
+            <Text element="div" modifier="marginGiga">
+                <Button modifier="sizeMega primary " onClick={this.printPage}>
+                    Print page
+                </Button>
+            </Text>
             <Text element="h2" modifier="block sizeMega marginGiga center">
                 Incorrect Question/s & Recommendation
             </Text>

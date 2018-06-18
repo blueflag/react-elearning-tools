@@ -1,11 +1,13 @@
 //@flow
 import React from 'react';
 import type {Element} from 'react';
+import MobileDetect from 'mobile-detect';
 import CoverStep from './CoverStep';
 import EndStep from './EndStep';
 import Exercise from './Exercise';
 import MarkdownStep from './MarkdownStep';
 import PdfStep from './PdfStep';
+import PdfStepMobile from './PdfStepMobile';
 import QuizStep from './QuizStep';
 import VideoStep from './VideoStep';
 
@@ -21,13 +23,19 @@ type Props = {
 };
 
 export default function ExerciseModule(props: Props): Element<*> {
+
     function getRender(step: Object, file: *): * {
+        let mobileDetect = new MobileDetect(window.navigator.userAgent);
         switch (step.type) {
             case 'video':
                 return (childProps) => <VideoStep {...childProps} file={file}/>;
 
             case 'document':
-                return (childProps) => <PdfStep {...childProps} file={file}/>;
+                if(mobileDetect.mobile() && !mobileDetect.tablet()){
+                    return (childProps) => <PdfStepMobile {...childProps} file={file}/>;
+                } else {
+                    return (childProps) => <PdfStep {...childProps} file={file}/>;
+                }
 
             case 'markdown':
                 return (childProps) => <MarkdownStep {...childProps} file={file}/>;
@@ -78,7 +86,7 @@ export default function ExerciseModule(props: Props): Element<*> {
             step.render = getRender(step, file);
             return step;
         });
-
+    
 
     return <Exercise
         steps={steps}

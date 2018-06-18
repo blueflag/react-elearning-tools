@@ -27,13 +27,18 @@ export default class VideoStep extends React.Component<Object, Object> {
     componentWillReceiveProps(nextProps: Object) {
         if(nextProps.file !== this.props.file) {
             this.setState({
-                complete: false
+                complete: false,
+                progress: 0
             });
+            
         }
     }
     onReset = () => {
         this.videoLoad();
-        this.setState({complete: false});
+        this.setState({
+            complete: false,
+            progress: 0
+        });
     }
 
     videoLoad = () => {
@@ -65,7 +70,7 @@ export default class VideoStep extends React.Component<Object, Object> {
         </Overlay>;
 
         return <Box className="VideoStep">
-            <VideoPlayer autoPlay className="VideoStep_videoPlayer" videoRef={(VideoPlayer: *) => { this.videoRef = VideoPlayer; }} src={file} onChange={this.onChange} complete={this.state.complete} >
+            <VideoPlayer className="VideoStep_videoPlayer" videoRef={(VideoPlayer: *) => { this.videoRef = VideoPlayer; }} src={file} onChange={this.onChange} complete={this.state.complete} >
                 {this.state.complete && nextButton}
             </VideoPlayer>
         </Box>;

@@ -85,7 +85,7 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     onClick = () => {
         const {actions, scorm, step} = this.props;
-        const {payload} = this.state;
+        const {payload,score} = this.state;
         this.state.timer.stop;
 
         var quizFilter = [];
@@ -94,7 +94,8 @@ export default class QuizStep extends React.Component<Object, Object> {
             answers: payload,
             time: time
         };
-        actions.onScore(this.state.score);
+        var result = score >= step.passRate;
+        actions.onScore(score);
         actions.onAnswer(batch);
         payload.map((aa: Object): * => {
             if(!aa.correct){
@@ -106,7 +107,6 @@ export default class QuizStep extends React.Component<Object, Object> {
             }
         });
         if(scorm.assessEachQuiz){
-            var result = this.state.score >= step.passRate;
             var filtered = this.props.value.steps.filter((aa: Object): * => {
                 return aa.group === this.props.step.group;
             });
@@ -127,8 +127,10 @@ export default class QuizStep extends React.Component<Object, Object> {
                 actions.onEnd();
             }
         } else {
+            if(result){
+                actions.onProgress(100);
+            }
             actions.onStepSetQuiz(quizFilter);
-            actions.onProgress(100);
             actions.onNext();
         }
     }
@@ -157,7 +159,6 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(!this.state.viewResults){
             return <Wrapper>
                 <Box>
-                    <h3>Welcome to {step.name}.</h3>
                     <ul>
                         <li>You must select an answer for each question before you can submit.</li>
                         <li>{`Please note, you will need ${step.passRate} correct answers in order to pass this quiz. Good luck.`}</li>
@@ -182,7 +183,7 @@ export default class QuizStep extends React.Component<Object, Object> {
     renderReviewPage = (): ?Element<*> => {
         if(this.state.resultPass){
             return <Box>
-                <Text element="div" modifier="marginMega center">
+                <Text element="div" modifier="marginGiga center">
                    Well done, you have passed this quiz.
                     <br/>
                    Please proceed to the next section.
@@ -195,7 +196,7 @@ export default class QuizStep extends React.Component<Object, Object> {
             </Box>;
         } else {
             return <Box>
-                <Text element="div" modifier="marginMega center">
+                <Text element="div" modifier="marginGiga center">
                    Unfortunately, you have not passed the quiz for this section.
                     <br/>
                    Please review before trying the quiz again.
@@ -205,11 +206,18 @@ export default class QuizStep extends React.Component<Object, Object> {
                     <Button modifier="sizeMega primary " onClick={this.goBack}>
                         Try again
                     </Button>
-                    <Button modifier="sizeMega primary " onClick={this.printPage}>
-                        Print page
-                    </Button>
+                    {this.renderPrintButton()}
                 </Text>
             </Box>;
+        }
+    }
+    renderPrintButton = (): ?Element<*> =>{
+        if(this.props.scorm.reference){ 
+            return <Button modifier="sizeMega primary " onClick={this.printPage}>
+                    Print page
+            </Button>;
+        } else {
+            return null;
         }
     }
     renderReference = (): ?Element<*> =>{
@@ -227,7 +235,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 }
             });
             return <Text element="div" modifier="marginMega center">
-                <Text element="h2" modifier="block sizeMega marginGiga center">
+                <Text element="h2" modifier="block sizeMega marginGiga marginGigaTop center">
                     Incorrect Question/s & Recommendation
                 </Text>
                 <table className="Table">

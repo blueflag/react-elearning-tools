@@ -26,7 +26,7 @@ class CoverStep extends React.Component<Props> {
 
         return <Wrapper modifier="small">
             <Box modifier="paddingRowMega">
-                {file && <img src={file} alt={title} style={{width: '100%'}} />}
+                {file && <Box modifier="marginBottomMega"><img src={file} alt={title} style={{width: '100%'}} /></Box>}
                 <Text element="h1" modifier="block sizeGiga marginGiga center">{title}</Text>
                 <Text element="p" modifier="block">{description}</Text>
                 <Box modifier="marginMega" style={{textAlign: 'center'}}>

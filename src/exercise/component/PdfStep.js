@@ -1,7 +1,6 @@
 //@flow
 import React from 'react';
 import type {Element} from 'react';
-
 import {Document} from 'react-pdf';
 import {Page} from 'react-pdf';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
@@ -16,7 +15,7 @@ type Props = {
     file: string,
     step: Object
 };
-
+ 
 type State = {
     pdf: ?Object,
     pdfError: ?string,
@@ -59,7 +58,18 @@ class PdfStep extends React.PureComponent<Props, State> {
                 initialWidth: Math.min(nextProps.eqWidth - PAGE_DEFAULT_COLUMN_MARGIN, PAGE_DEFAULT_MAX_WIDTH)
             });
         }
+        if(nextProps.file !== this.props.file) {
+            let {page} = nextProps.step.state;
+            this.props.actions.onStepSetState({
+                page: page || 1
+            });
+
+            this.setState({
+                loading: true
+            });
+        }
     }
+
 
     onLoadSuccess = (pdf: Object) => {
 
@@ -193,7 +203,7 @@ class PdfStep extends React.PureComponent<Props, State> {
                     <Button modifier="sizeKilo primary" onClick={this.onClickNextPage} disabled={!this.hasNextPage()}>Next</Button>
                 </Box>
             }
-            <Box className="PdfStep_document">
+            <Box className="PdfStep_document" modifier="marginBottomMega">
                 <Document
                     file={file}
                     loading={null}
