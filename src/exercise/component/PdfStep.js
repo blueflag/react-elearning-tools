@@ -203,7 +203,7 @@ class PdfStep extends React.PureComponent<Props, State> {
                     <Button modifier="sizeKilo primary" onClick={this.onClickNextPage} disabled={!this.hasNextPage()}>Next</Button>
                 </Box>
             }
-            <Box className="PdfStep_document">
+            <Box className="PdfStep_document" modifier="marginBottomMega">
                 <Document
                     file={file}
                     loading={null}

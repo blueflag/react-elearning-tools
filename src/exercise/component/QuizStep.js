@@ -183,7 +183,7 @@ export default class QuizStep extends React.Component<Object, Object> {
     renderReviewPage = (): ?Element<*> => {
         if(this.state.resultPass){
             return <Box>
-                <Text element="div" modifier="marginMega center">
+                <Text element="div" modifier="marginGiga center">
                    Well done, you have passed this quiz.
                     <br/>
                    Please proceed to the next section.
@@ -196,7 +196,7 @@ export default class QuizStep extends React.Component<Object, Object> {
             </Box>;
         } else {
             return <Box>
-                <Text element="div" modifier="marginMega center">
+                <Text element="div" modifier="marginGiga center">
                    Unfortunately, you have not passed the quiz for this section.
                     <br/>
                    Please review before trying the quiz again.
