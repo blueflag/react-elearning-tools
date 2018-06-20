@@ -121,7 +121,6 @@ class PdfStep extends React.PureComponent<Props, State> {
             return;
         }
 
-        var that = this;
         Promise
             .all(promises)
             .then(setPdfState)
