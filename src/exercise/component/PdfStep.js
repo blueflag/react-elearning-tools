@@ -20,7 +20,7 @@ type State = {
     pdf: ?Object,
     pdfError: ?string,
     initialWidth: number,
-    landscape: boolean,
+    isFirstPageLandscape: boolean,
     loading: boolean,
     scale: number,
     pageRatios: Map<number,number>
@@ -44,9 +44,9 @@ class PdfStep extends React.PureComponent<Props, State> {
             pdf: null,
             pdfError: null,
             numPages: 0,
-            landscape: false,
             loading: true,
             initialWidth: 0,
+            isFirstPageLandscape: false,
             scale: 1,
             pageRatios: new Map()
         };
@@ -57,7 +57,7 @@ class PdfStep extends React.PureComponent<Props, State> {
         // eqWidth is always undefined on first render and exists on second render
         if(!this.state.initialWidth && nextProps.eqWidth) {
             this.setState({
-                initialWidth: Math.min(nextProps.eqWidth - PAGE_DEFAULT_COLUMN_MARGIN, PAGE_DEFAULT_MAX_WIDTH)
+                initialWidth: nextProps.eqWidth - PAGE_DEFAULT_COLUMN_MARGIN
             });
         }
         if(nextProps.file !== this.props.file) {
@@ -87,20 +87,33 @@ class PdfStep extends React.PureComponent<Props, State> {
                 });
                 actions.onSetResetPrevStep(false);
             }
+
+            let isFirstPageLandscape = false;
+
+            let pageRatios = values
+                .filter(ii => ii)
+                .reduce(
+                    (pageRatios: Map<number,number>, page: Object, index: number): Map<number,number> => {
+                        /* eslint-disable no-unused-vars */
+                        let [x,y,w,h] = page.pageInfo.view;
+                        let isPageLandscape = page.pageInfo.rotate % 180 === 90;
+
+                        if(index === 0) {
+                            isFirstPageLandscape = isPageLandscape;                          
+                        }
+
+                        var ratio = isPageLandscape ? w/h : h/w;
+                        pageRatios.set(page.pageIndex + 1, ratio);
+                        return pageRatios;
+                    },
+                    new Map()
+                );
+
             this.setState({
                 pdf,
                 loading: false,
-                pageRatios: values
-                    .filter(ii => ii)
-                    .reduce(
-                        (pageRatios: Map<number,number>, page: Object): Map<number,number> => {
-                            /* eslint-disable no-unused-vars */
-                            let [x,y,w,h] = page.pageInfo.view;
-                            pageRatios.set(page.pageIndex + 1, h/w);
-                            return pageRatios;
-                        },
-                        new Map()
-                    )
+                pageRatios,
+                isFirstPageLandscape
             });
         };
 
@@ -112,28 +125,8 @@ class PdfStep extends React.PureComponent<Props, State> {
         Promise
             .all(promises)
             .then(setPdfState)
-            .then(() => {
-                setTimeout(function() {
-                    that.checkPdfSpecs();
-                }, 50);
-            })
             .catch(() => {});
     };
-
-    checkPdfSpecs(){
-        var specs = document.getElementById("pdfCanvas");
-        if(specs && specs.clientWidth > specs.clientHeight){
-            this.setState({
-                landscape: true,
-                scale: 1.2
-            });
-        } else {
-            this.setState({
-                landscape: false,
-                scale: 1
-            });
-        }
-    }
 
     onLoadError = (error: Object) => {
         this.setState({
@@ -156,18 +149,26 @@ class PdfStep extends React.PureComponent<Props, State> {
         });
     };
 
-    scaledWidth = () => this.state.initialWidth * this.state.scale;
+    clampedInitialWidth = (): number => {
+        let {initialWidth, isFirstPageLandscape} = this.state;
+        var maxWidth = isFirstPageLandscape
+            ? PAGE_DEFAULT_MAX_WIDTH * 1.2
+            : PAGE_DEFAULT_MAX_WIDTH;
+
+        return Math.min(initialWidth, maxWidth);
+    };
+
+    scaledWidth = () => this.clampedInitialWidth() * this.state.scale;
 
     scaledHeight = (): number => {
         let {
-            initialWidth,
             pageRatios,
             scale
         } = this.state;
 
         let {page} = this.props.step.state;
         let ratio = pageRatios.get(page) || 1;
-        return initialWidth * scale * ratio;
+        return this.clampedInitialWidth() * scale * ratio;
     };
 
     hasNextPage = () => this.state.pdf && this.props.step.state.page < this.state.pdf.numPages;
@@ -203,22 +204,20 @@ class PdfStep extends React.PureComponent<Props, State> {
     };
 
     render(): Element<*> {
-        const {loading, pdf, pdfError, landscape} = this.state;
+        const {loading, pdf, pdfError} = this.state;
         const {eqWidth, file} = this.props;
         const {page} = this.props.step.state;
 
         let width = this.scaledWidth();
-        let height = landscape ? "auto" : this.scaledHeight();
+        let height = this.scaledHeight();
 
         let {Loader} = this.props.components;
 
         return <Box spruceName="PdfStep">
-            {eqWidth && eqWidth >= 640 &&
-                <Box spruceName="PdfStep_zoom">
-                    <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(1.2)}>+</Button>
-                    <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(0.8)}>–</Button>
-                </Box>
-            }
+            <Box spruceName="PdfStep_zoom">
+                <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(1.2)}>+</Button>
+                <Button spruceName="PdfStep_zoomButton" onClick={this.zoom(0.8)}>–</Button>
+            </Box>
             {pdf &&
                 <Box spruceName="PdfStep_navigation">
                     <Button modifier="sizeKilo secondary" onClick={this.onClickPrevPage} disabled={!this.hasPrevPage()}>Prev</Button>
@@ -236,14 +235,12 @@ class PdfStep extends React.PureComponent<Props, State> {
                 >
                     {pdf &&
                         <Box spruceName="PdfStep_page" style={{width, height}}>
-                            <div id="pdfCanvas">
-                                <Page
-                                    pdf={pdf}
-                                    pageNumber={page}
-                                    width={width}
-                                    renderMode="canvas"
-                                />
-                            </div>
+                            <Page
+                                pdf={pdf}
+                                pageNumber={page}
+                                width={width}
+                                renderMode="canvas"
+                            />
                         </Box>
                     }
                 </Document>
