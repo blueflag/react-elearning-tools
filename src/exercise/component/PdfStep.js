@@ -20,6 +20,7 @@ type State = {
     pdf: ?Object,
     pdfError: ?string,
     initialWidth: number,
+    landscape: boolean,
     loading: boolean,
     scale: number,
     pageRatios: Map<number,number>
@@ -43,6 +44,7 @@ class PdfStep extends React.PureComponent<Props, State> {
             pdf: null,
             pdfError: null,
             numPages: 0,
+            landscape: false,
             loading: true,
             initialWidth: 0,
             scale: 1,
@@ -106,11 +108,32 @@ class PdfStep extends React.PureComponent<Props, State> {
             return;
         }
 
+        var that = this;
         Promise
             .all(promises)
             .then(setPdfState)
+            .then(() => {
+                setTimeout(function() {
+                    that.checkPdfSpecs();
+                }, 50);
+            })
             .catch(() => {});
     };
+
+    checkPdfSpecs(){
+        var specs = document.getElementById("pdfCanvas");
+        if(specs && specs.clientWidth > specs.clientHeight){
+            this.setState({
+                landscape: true,
+                scale: 1.2
+            });
+        } else {
+            this.setState({
+                landscape: false,
+                scale: 1
+            });
+        }
+    }
 
     onLoadError = (error: Object) => {
         this.setState({
@@ -180,12 +203,12 @@ class PdfStep extends React.PureComponent<Props, State> {
     };
 
     render(): Element<*> {
-        const {loading, pdf, pdfError} = this.state;
+        const {loading, pdf, pdfError, landscape} = this.state;
         const {eqWidth, file} = this.props;
         const {page} = this.props.step.state;
 
         let width = this.scaledWidth();
-        let height = this.scaledHeight();
+        let height = landscape ? "auto" : this.scaledHeight();
 
         let {Loader} = this.props.components;
 
@@ -213,12 +236,14 @@ class PdfStep extends React.PureComponent<Props, State> {
                 >
                     {pdf &&
                         <Box spruceName="PdfStep_page" style={{width, height}}>
-                            <Page
-                                pdf={pdf}
-                                pageNumber={page}
-                                width={width}
-                                renderMode="canvas"
-                            />
+                            <div id="pdfCanvas">
+                                <Page
+                                    pdf={pdf}
+                                    pageNumber={page}
+                                    width={width}
+                                    renderMode="canvas"
+                                />
+                            </div>
                         </Box>
                     }
                 </Document>
