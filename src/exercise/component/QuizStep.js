@@ -35,6 +35,7 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     setupQuiz(thisProps: Object){
         const {actions} = this.props;
+        actions.onSetResetPrevStep(false);
         if(thisProps.step.progress !== 100){
             this.state.timer.start();
             this.setState({
