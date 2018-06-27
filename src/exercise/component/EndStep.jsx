@@ -115,7 +115,7 @@ class End extends React.Component<Object> {
         </Text>;
     }
     render(): Element<*> {
-        const {value} = this.props;
+        const {value, scorm, isMobile} = this.props;
         const {description = 'You have passed the learning Module.'} = this.props;
         const {failDescription = 'Unfortunately, you have not passed all of the requirements for this training.'} = this.props;
         const {failDescriptionExtended = 'To gain successful completion, please re-attempt this Module by clicking on the "Back to previous page" button located on the bottom left of this screen. This will take you to the Course Page where you can click on the "Go to Content" button, enabling you to re-launch the Module.'} = this.props;
@@ -132,17 +132,18 @@ class End extends React.Component<Object> {
                     <tbody>
                         {assessableSteps
                             .map((item: Object, key: number): Element<"tr"> => {
-                                const {progress, name, passRate, score} = item;
+                                const {progress, name, passRate, score, type, file} = item;
                                 const complete = (passRate > 0) ? item.pass() : progress === 100;
-
                                 const completeModifier = complete ? 'positive' : 'negative';
+                                const downloadPDFButton = (type === "document" && scorm.downloadPDF && !isMobile) ? this.renderDocumentHeader(name,file) : null; 
                                 return <tr className="Table_row"  key={key}>
                                     <TableCell modifier="padding header">{name} </TableCell>
+                                    <TableCell modifier="padding">{downloadPDFButton}</TableCell>
                                     <TableCell modifier="padding">{passRate > 0 && <span>Your Score: {score}</span>}</TableCell>
                                     <TableCell modifier="padding">{passRate > 0 && <span>Required: {passRate}</span>}</TableCell>
                                     {passRate > 0 && score > 0
-                                        ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
-                                        : <TableCell modifier="padding"><Badge modifier={`${completeModifier} solo`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
+                                        ? <TableCell modifier="padding"><Badge modifier={`${completeModifier} bounded`}>{complete ? 'Passed' : 'Failed'}</Badge></TableCell>
+                                        : <TableCell modifier="padding"><Badge modifier={`${completeModifier} bounded`}>{complete ? 'Complete': 'Incomplete'}</Badge></TableCell>
                                     }
                                 </tr>;
                             })
@@ -152,6 +153,11 @@ class End extends React.Component<Object> {
             </Box>
             {this.checkReview()}
         </Wrapper>;
+    }
+
+    renderDocumentHeader(name: string, file: string): Element<*>{
+        let download = `./${file}`;
+        return <a href={download} target="_blank" className="Button Button-secondary ">Download PDF</a>;
     }
 
 }
