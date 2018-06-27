@@ -7,7 +7,6 @@ import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Box, Text} from 'obtuse';
 import Button from 'stampy/lib/component/Button';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
-import browser from 'browser-detect';
 
 type Props = {
     actions: Object,
@@ -74,17 +73,11 @@ class PdfStep extends React.PureComponent<Props, State> {
     }
 
     onRenderSuccess(){
-        let result = browser();
-        let isIE = result.name === "ie" || result.name === "edge";
         document
             .querySelectorAll(".react-pdf__Page a")
             .forEach((elem: *) => {
-                if(isIE) {
-                    elem.href = elem.href.replace("https://", "http://");
-                    elem.target = "_blank";
-                } else {
-                    elem.target = "_blank";
-                }
+                elem.href = elem.href.replace("https://", "http://");
+                elem.target = "_blank";
             });
     }
 
