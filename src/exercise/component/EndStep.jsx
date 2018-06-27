@@ -132,12 +132,12 @@ class End extends React.Component<Object> {
                     <tbody>
                         {assessableSteps
                             .map((item: Object, key: number): Element<"tr"> => {
-                                const {progress, name, passRate, score} = item;
+                                const {progress, name, passRate, score, type, file} = item;
                                 const complete = (passRate > 0) ? item.pass() : progress === 100;
-
                                 const completeModifier = complete ? 'positive' : 'negative';
+                                const headerPDF = (type !== "document") ? name : this.renderDocumentHeader(name,file);
                                 return <tr className="Table_row"  key={key}>
-                                    <TableCell modifier="padding header">{name} </TableCell>
+                                    <TableCell modifier="padding header">{headerPDF} </TableCell>
                                     <TableCell modifier="padding">{passRate > 0 && <span>Your Score: {score}</span>}</TableCell>
                                     <TableCell modifier="padding">{passRate > 0 && <span>Required: {passRate}</span>}</TableCell>
                                     {passRate > 0 && score > 0
@@ -152,6 +152,16 @@ class End extends React.Component<Object> {
             </Box>
             {this.checkReview()}
         </Wrapper>;
+    }
+
+    renderDocumentHeader(name: string, file: string): Element<*>{
+        var {DownloadIcon} = this.props.components;
+        return <div>
+                <Text modifier="sizeMega" className="NavIcon">
+                    <DownloadIcon/>
+                </Text>
+                test!
+            </div>
     }
 
 }

@@ -60,6 +60,15 @@ class ModuleSteps extends React.Component<Props> {
         </svg>;
     }
 
+    renderDownloadIcon(): ?Element<*> {
+        return <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" xml:space="preserve" viewBox="12 16 22 16" width="25" height="25">
+            <path d="M84.2,1032c0,6.8-5.5,12.2-12.2,12.2s-12.2-5.5-12.2-12.2s5.5-12.2,12.2-12.2S84.2,1025.2,84.2,1032z M81,1032
+            c0-5-4-9-9-9s-9,4-9,9s4,9,9,9S81,1037,81,1032z M77.8,1031.4l-5.6,7.4c-0.1,0.2-0.3,0.1-0.4,0l-5.6-7.4c-0.1-0.2-0.1-0.4,0.1-0.4
+            H69v-4.5c0-0.3,0.2-0.5,0.5-0.5h5c0.3,0,0.5,0.2,0.5,0.5v4.5h2.7C77.9,1031,77.9,1031.3,77.8,1031.4z"
+            />
+        </svg>;
+    }
+
     render(): ?Element<*> {
         let {
             scorm,
@@ -88,6 +97,7 @@ class ModuleSteps extends React.Component<Props> {
             Loader: ({children}) => children || "Loading...",
             Tick: () => "✔",
             MenuIcon: () => this.renderMenuIcon(),
+            DownloadIcon: () => this.renderDownloadIcon(),
             ...components
         };
 
