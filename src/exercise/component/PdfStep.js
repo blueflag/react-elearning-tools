@@ -77,20 +77,15 @@ class PdfStep extends React.PureComponent<Props, State> {
         let result = browser();
         let isIE = result.name === "ie" || result.name === "edge";
         document
-        .querySelectorAll(".react-pdf__Page a")
-        .forEach((elem) => {
-            if(isIE) { // havent tested this either
-                elem.href = elem.href.replace("https://", "http://");
-                elem.target = "_blank";
-            } else {
-                elem.target = "_blank";
-            }
-        });
-        if(isIE){
-            document.querySelectorAll(".react-pdf__Page a").forEach((elem) => elem.href = elem.href.replace("https://", "http://"));
-        } else {
-            document.querySelectorAll(".react-pdf__Page a").forEach(elem => elem.target = "_blank");
-        }
+            .querySelectorAll(".react-pdf__Page a")
+            .forEach((elem: *) => {
+                if(isIE) {
+                    elem.href = elem.href.replace("https://", "http://");
+                    elem.target = "_blank";
+                } else {
+                    elem.target = "_blank";
+                }
+            });
     }
 
     onLoadSuccess = (pdf: Object) => {
