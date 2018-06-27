@@ -6,6 +6,7 @@ import {Page} from 'react-pdf';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Box, Text} from 'obtuse';
 import Button from 'stampy/lib/component/Button';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
 
 type Props = {
     actions: Object,
@@ -33,7 +34,6 @@ class PdfStep extends React.PureComponent<Props, State> {
 
     constructor(props: Props) {
         super(props);
-
 
         let {page} = this.props.step.state;
         props.actions.onStepSetState({
@@ -72,9 +72,16 @@ class PdfStep extends React.PureComponent<Props, State> {
         }
     }
 
+    onRenderSuccess(){
+        document
+            .querySelectorAll(".react-pdf__Page a")
+            .forEach((elem: *) => {
+                elem.href = elem.href.replace("https://", "http://");
+                elem.target = "_blank";
+            });
+    }
 
     onLoadSuccess = (pdf: Object) => {
-
         const promises = Array
             .from({length: pdf.numPages}, (vv, ii) => ii + 1)
             .map(pageNumber => pdf.getPage(pageNumber));
@@ -85,7 +92,6 @@ class PdfStep extends React.PureComponent<Props, State> {
                 actions.onStepSetState({
                     page: 1
                 });
-                actions.onSetResetPrevStep(false);
             }
 
             let isFirstPageLandscape = false;
@@ -238,6 +244,7 @@ class PdfStep extends React.PureComponent<Props, State> {
                                 pdf={pdf}
                                 pageNumber={page}
                                 width={width}
+                                onRenderSuccess={this.onRenderSuccess}
                                 renderMode="canvas"
                             />
                         </Box>
