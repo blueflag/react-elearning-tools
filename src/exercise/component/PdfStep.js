@@ -76,8 +76,11 @@ class PdfStep extends React.PureComponent<Props, State> {
         document
             .querySelectorAll(".react-pdf__Page a")
             .forEach((elem: *) => {
-                elem.href = elem.href.replace("https://", "http://");
-                elem.target = "_blank";
+                elem.addEventListener('click', function(event) {
+                    window.alert("PLEASEEEE GET ME!!!")
+                    window.open(elem.href, "_blank");
+                    event.preventDefault();
+                });
             });
     }
 
