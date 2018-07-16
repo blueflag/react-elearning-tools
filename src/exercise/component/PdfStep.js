@@ -73,15 +73,16 @@ class PdfStep extends React.PureComponent<Props, State> {
     }
 
     onRenderSuccess(){
-        document
-            .querySelectorAll(".react-pdf__Page a")
-            .forEach((elem: *) => {
-                elem.addEventListener('click', function(event) {
-                    window.alert("PLEASEEEE GET ME!!!")
-                    window.open(elem.href, "_blank");
+        var links = document.querySelectorAll(".react-pdf__Page a");
+        for(var i = 0; i < links.length; i++) {
+            var elem = links[i];
+            if (elem.addEventListener){
+                elem.addEventListener('click', function (event: *) {
                     event.preventDefault();
+                    window.open(event.target.href);
                 });
-            });
+            }
+        }
     }
 
     onLoadSuccess = (pdf: Object) => {
