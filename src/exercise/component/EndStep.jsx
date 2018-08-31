@@ -157,7 +157,7 @@ class End extends React.Component<Object> {
 
     renderDocumentHeader(name: string, file: string): Element<*>{
         let download = `./${file}`;
-        return <a href={download} target="_blank" className="Button Button-secondary ">Download PDF</a>;
+        return <a href={download} target="_blank" rel="noopener noreferrer" className="Button Button-secondary ">Download PDF</a>;
     }
 
 }
