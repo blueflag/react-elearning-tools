@@ -34,8 +34,8 @@
     "babel-register": "^6.23.0",
     "dotenv": "4.0.0",
     "proxyquire": "^1.7.10",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "react": "16.0.0",
+    "react-dom": "16.0.0",
     "redux": "^3.7.2",
     "webpack": "^3.10.0"
   },
