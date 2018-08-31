@@ -26,12 +26,13 @@ export default function ExerciseModule(props: Props): Element<*> {
 
     function getRender(step: Object, file: *): * {
         let mobileDetect = new MobileDetect(window.navigator.userAgent);
+        let isMobile = mobileDetect.mobile() && !mobileDetect.tablet();
         switch (step.type) {
             case 'video':
                 return (childProps) => <VideoStep {...childProps} file={file}/>;
 
             case 'document':
-                if(mobileDetect.mobile() && !mobileDetect.tablet()){
+                if(isMobile){
                     return (childProps) => <PdfStepMobile {...childProps} file={file}/>;
                 } else {
                     return (childProps) => <PdfStep {...childProps} file={file}/>;
@@ -49,6 +50,7 @@ export default function ExerciseModule(props: Props): Element<*> {
             case 'assessment':
                 return (childProps) => <EndStep
                     {...childProps}
+                    isMobile={isMobile}
                     masteryScore={props.scorm.masteryScore}
                     passRate={step.passRate}
                     description={step.description}
