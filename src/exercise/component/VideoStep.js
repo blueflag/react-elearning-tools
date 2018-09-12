@@ -54,14 +54,13 @@ export default class VideoStep extends React.Component<Object, Object> {
                 actions.onProgress(progress);
             }
         }
-        if(progress === 100) {
+        if(progress > 98) {
             this.setState({complete: true});
         }
     }
 
     render(): Element<*> {
         const {file} = this.props;
-
         const nextButton = <Overlay modifier="marginMega">
             <OverlayContent className="VideoStep_overlayContent">
                 <Button modifier="sizeMega primary" className="VideoStep_button" onClick={this.onReset}>Watch Again</Button>
