@@ -7,6 +7,7 @@ import PlayerHock from '../hock/PlayerHock';
 import {Button} from 'obtuse';
 import SpruceClassName from 'stampy/lib/util/SpruceClassName';
 import ProgressBar from './ProgressBar';
+import Fullscreen from '../util/Fullscreen';
 
 type Props = {
     autoPlay?: boolean,
@@ -58,17 +59,9 @@ class VideoPlayer extends React.PureComponent<Props> {
         } else {
             this.props.onPause();
         }
-        if(nextProps.complete && browser().name === "ie"){
+        if(nextProps.complete){
             this.props.onPause();
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
+            Fullscreen.exit();
         }
     }
 
@@ -144,20 +137,22 @@ class VideoPlayer extends React.PureComponent<Props> {
             >
                 Sorry, your browser does not support embedded videos. <a href={src}>Download Instead</a>
             </video>
-            <div className="VideoPlayer_controls" style={{display: browser().name === "ie" ? "none" : "block"}}>
-                {this.renderControl(onMute, muted, IconMute, IconUnmute, 'right')}
-                {this.renderControl(onFullscreen, fullscreen, IconUnfullscreen, IconFullscreen, 'right')}
-                {this.renderControl(onPlayPause, paused, IconPlay, IconPause)}
-                <span className="VideoPlayer_control">{durationString}</span>
-                <ProgressBar
-                    progressRef={this.props.progressRef}
-                    onScrub={onScrub}
-                    bars={[
-                        {color: '#9c9c9c', value: buffered / 100},
-                        {color: '#eb2136', value: currentPercentage / 100}
-                    ]}
-                />
-            </div>
+            {browser().name !== "ie" &&
+                <div className="VideoPlayer_controls">
+                    {this.renderControl(onMute, muted, IconMute, IconUnmute, 'right')}
+                    {this.renderControl(onFullscreen, fullscreen, IconUnfullscreen, IconFullscreen, 'right')}
+                    {this.renderControl(onPlayPause, paused, IconPlay, IconPause)}
+                    <span className="VideoPlayer_control">{durationString}</span>
+                    <ProgressBar
+                        progressRef={this.props.progressRef}
+                        onScrub={onScrub}
+                        bars={[
+                            {color: '#9c9c9c', value: buffered / 100},
+                            {color: '#eb2136', value: currentPercentage / 100}
+                        ]}
+                    />
+                </div>
+            }
         </div>;
     }
     setRef = (VideoPlayer: *) => {
