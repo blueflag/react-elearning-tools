@@ -196,6 +196,8 @@ export default Hock({
                     mainRef={this.getMainRef}
                     videoRef={this.getVideoRef}
                     progressRef={this.getProgressRef}
+                    onPause={this.onPause}
+                    onPlay={this.onPlay}
                     onPlayPause={this.onPlayPause}
                     onScrub={this.onScrub}
                     onFullscreen={this.onFullscreen}
