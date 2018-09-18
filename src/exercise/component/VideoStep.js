@@ -49,7 +49,7 @@ export default class VideoStep extends React.Component<Object, Object> {
         const {step, actions} = this.props;
         var progress = Math.floor(currentPercentage);
         if(progress > 98){
-            progress = 100
+            progress = 100;
         }
         if(progress !== this.state.progress) {
             this.setState({progress});
