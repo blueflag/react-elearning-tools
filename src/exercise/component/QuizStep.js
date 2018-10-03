@@ -156,8 +156,8 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     render(): Element<*> {
         const {step} = this.props;
-        const {answeredCount, quiz} = this.state;
-        if(!this.state.viewResults){
+        const {answeredCount, quiz, viewResults} = this.state;
+        if(!viewResults && quiz){
             return <Wrapper>
                 <Box>
                     <ul>
