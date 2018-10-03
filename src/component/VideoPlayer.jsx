@@ -102,6 +102,15 @@ class VideoPlayer extends React.PureComponent<Props> {
             }
         });
 
+        const hide = browser().name === "ie";
+
+        const controlClasses = SpruceClassName({
+            name: 'VideoPlayer_controls',
+            modifier: {
+                hide
+            }
+        });
+
         var dd = moment.duration(duration, 'seconds');
         var tt = moment.duration(currentTime, 'seconds');
         var durationString = `${this.renderTime(tt)} / ${this.renderTime(dd)}`;
@@ -122,11 +131,10 @@ class VideoPlayer extends React.PureComponent<Props> {
             }
         }
         
-        return <div ref={this.props.mainRef} className={classes}  tabIndex="0">
+        return <div ref={this.props.mainRef} className={classes} onClick={onPlayPause} tabIndex="0">
             {children}
             <video
                 fullscreen
-                onClick={onPlayPause}
                 autoPlay={autoPlay}
                 className="VideoPlayer_video"
                 ref={this.setRef}
@@ -137,22 +145,20 @@ class VideoPlayer extends React.PureComponent<Props> {
             >
                 Sorry, your browser does not support embedded videos. <a href={src}>Download Instead</a>
             </video>
-            {browser().name !== "ie" &&
-                <div className="VideoPlayer_controls">
-                    {this.renderControl(onMute, muted, IconMute, IconUnmute, 'right')}
-                    {this.renderControl(onFullscreen, fullscreen, IconUnfullscreen, IconFullscreen, 'right')}
-                    {this.renderControl(onPlayPause, paused, IconPlay, IconPause)}
-                    <span className="VideoPlayer_control">{durationString}</span>
-                    <ProgressBar
-                        progressRef={this.props.progressRef}
-                        onScrub={onScrub}
-                        bars={[
-                            {color: '#9c9c9c', value: buffered / 100},
-                            {color: '#eb2136', value: currentPercentage / 100}
-                        ]}
-                    />
-                </div>
-            }
+            <div className={controlClasses}>
+                {this.renderControl(onMute, muted, IconMute, IconUnmute, 'right')}
+                {this.renderControl(onFullscreen, fullscreen, IconUnfullscreen, IconFullscreen, 'right')}
+                {this.renderControl(onPlayPause, paused, IconPlay, IconPause)}
+                <span className="VideoPlayer_control">{durationString}</span>
+                <ProgressBar
+                    progressRef={this.props.progressRef}
+                    onScrub={onScrub}
+                    bars={[
+                        {color: '#9c9c9c', value: buffered / 100},
+                        {color: '#eb2136', value: currentPercentage / 100}
+                    ]}
+                />
+            </div>
         </div>;
     }
     setRef = (VideoPlayer: *) => {
@@ -160,9 +166,11 @@ class VideoPlayer extends React.PureComponent<Props> {
         this.props.videoRef(VideoPlayer);
     }
     renderControl(onClick?: Function, bool?: boolean, TrueIcon: Object, FalseIcon: Object, modifier?: string): Element<*> {
-        return <div className={SpruceClassName({name: "VideoPlayer_control", modifier})} onClick={onClick} >
-            {bool ? <TrueIcon/> : <FalseIcon/>}
-        </div>;
+        if(browser().name !== "ie"){
+            return <div className={SpruceClassName({name: "VideoPlayer_control", modifier})} onClick={onClick} >
+                {bool ? <TrueIcon/> : <FalseIcon/>}
+            </div>;
+        }
     }
     renderTime(duration: Object): string {
         return this.renderPadded(duration.minutes()) + ':' + this.renderPadded(duration.seconds());
