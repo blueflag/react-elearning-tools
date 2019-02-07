@@ -87,7 +87,7 @@ export default class ExerciseNavigation extends React.Component<Props, State> {
                             spruceName="ExerciseNavigation_step"
                         >
                             {step.name}
-                            {complete && <Text> <Tick /></Text>}
+                            {complete && <Text> </Text>}
                         </Box>;
                     })
                     .toJS()}
