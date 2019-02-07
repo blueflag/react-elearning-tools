@@ -55,7 +55,7 @@ export default class ExerciseNavigation extends React.Component<Props, State> {
 
     render(): Element<*> {
         const {value, scorm} = this.props;
-        const {Tick, MenuIcon} = this.props.components;
+        const {MenuIcon} = this.props.components;
         const activePageName = value.steps.getIn([value.step,'name']);
         const displayClass = this.state.toggle ? "" : "displayNone";
 
@@ -87,7 +87,7 @@ export default class ExerciseNavigation extends React.Component<Props, State> {
                             spruceName="ExerciseNavigation_step"
                         >
                             {step.name}
-                            {complete && <Text> <Tick /></Text>}
+                            {complete && <Text> </Text>}
                         </Box>;
                     })
                     .toJS()}
