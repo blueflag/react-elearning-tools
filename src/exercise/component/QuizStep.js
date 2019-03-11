@@ -227,7 +227,7 @@ export default class QuizStep extends React.Component<Object, Object> {
             var checkList = [];
             var list = this.state.payload.map((ii: Object, key: number): ?Element<*> => {
                 if(!ii.correct){
-                    checkList.push(ii)
+                    checkList.push(ii);
                     return <tr className="Table_row Table_row-reference"  key={key}>
                         <TableCell modifier="padding header 50">
                             <div className="Markdown" dangerouslySetInnerHTML={{__html: ii.title}}/>
@@ -239,7 +239,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 }
             });
             if(checkList.length <= 0){
-                return null
+                return null;
             }
             return <Text element="div" modifier="marginMega center">
                 <Text element="h2" modifier="block sizeMega marginGiga marginGigaTop center">
