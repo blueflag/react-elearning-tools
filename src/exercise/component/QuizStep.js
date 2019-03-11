@@ -189,6 +189,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                     <br/>
                    Please proceed to the next section.
                 </Text>
+                {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
                     <Button modifier="sizeMega primary " onClick={this.onFinish}>
                         Proceed onward
@@ -222,19 +223,24 @@ export default class QuizStep extends React.Component<Object, Object> {
         }
     }
     renderReference = (): ?Element<*> =>{
-        if(this.props.scorm.reference){        
+        if(this.props.scorm.reference){
+            var checkList = [];
             var list = this.state.payload.map((ii: Object, key: number): ?Element<*> => {
                 if(!ii.correct){
+                    checkList.push(ii);
                     return <tr className="Table_row Table_row-reference"  key={key}>
                         <TableCell modifier="padding header 50">
                             <div className="Markdown" dangerouslySetInnerHTML={{__html: ii.title}}/>
                         </TableCell>
                         <TableCell modifier="padding ">
-                            {ii.refer}
+                            <div className="Markdown" dangerouslySetInnerHTML={{__html: ii.refer}}/>
                         </TableCell>
                     </tr>;
                 }
             });
+            if(checkList.length <= 0){
+                return null;
+            }
             return <Text element="div" modifier="marginMega center">
                 <Text element="h2" modifier="block sizeMega marginGiga marginGigaTop center">
                     Incorrect Question/s & Recommendation
