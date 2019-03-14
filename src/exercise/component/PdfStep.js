@@ -1,7 +1,7 @@
 //@flow
 import React from 'react';
 import type {Element} from 'react';
-import {Document} from 'react-pdf';
+import {Document} from 'react-pdf/dist/entry.webpack';
 import {Page} from 'react-pdf';
 import ElementQueryHock from 'stampy/lib/hock/ElementQueryHock';
 import {Box, Text} from 'obtuse';
@@ -16,7 +16,7 @@ type Props = {
     file: string,
     step: Object
 };
- 
+
 type State = {
     pdf: ?Object,
     pdfError: ?string,
@@ -109,7 +109,7 @@ class PdfStep extends React.PureComponent<Props, State> {
                         let isPageLandscape = page.pageInfo.rotate % 180 === 90;
 
                         if(index === 0) {
-                            isFirstPageLandscape = isPageLandscape;                          
+                            isFirstPageLandscape = isPageLandscape;
                         }
 
                         var ratio = isPageLandscape ? w/h : h/w;
