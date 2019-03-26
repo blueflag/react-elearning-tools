@@ -68,8 +68,7 @@ export default class VideoStep extends React.Component<Object, Object> {
         </Overlay>;
 
         return <Box className="VideoStep">
-            <VideoPlayer className="VideoStep_videoPlayer" videoRef={(VideoPlayer: *) => { this.videoRef = VideoPlayer; }} src={file}
-            onChange={this.onChange} complete={this.state.complete} >
+            <VideoPlayer className="VideoStep_videoPlayer" videoRef={(VideoPlayer: *) => { this.videoRef = VideoPlayer; }} src={file} onChange={this.onChange} complete={this.state.complete} >
                 {this.state.complete && nextButton}
             </VideoPlayer>
         </Box>;
