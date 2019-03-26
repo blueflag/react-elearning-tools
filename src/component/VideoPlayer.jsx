@@ -19,6 +19,7 @@ type Props = {
     currentPercentage: number,
     currentTime: number,
     duration?: number,
+    ended?: boolean,
     fullscreen?: boolean,
     iconFullscreen: *,
     iconMute: *,
@@ -32,6 +33,7 @@ type Props = {
     progressRef: Function,
     onFullscreen?: Function,
     onMute?: Function,
+    onEnded?: Function,
     onPlay?: Function,
     onPause?: Function,
     onPlayPause?: Function,
@@ -62,7 +64,9 @@ class VideoPlayer extends React.PureComponent<Props> {
         }
         if(nextProps.complete){
             this.props.onPause();
-            Fullscreen.exit();
+            if(Fullscreen.active()){
+                Fullscreen.exit();
+            }
         }
     }
 
@@ -76,6 +80,7 @@ class VideoPlayer extends React.PureComponent<Props> {
             currentTime,
             className,
             duration,
+            ended,
             fullscreen,
             iconFullscreen: IconFullscreen,
             iconMute: IconMute,
@@ -84,6 +89,7 @@ class VideoPlayer extends React.PureComponent<Props> {
             iconUnfullscreen: IconUnfullscreen,
             iconUnmute: IconUnmute,
             muted,
+            onEnded,
             onFullscreen,
             onMute,
             onPlayPause,
@@ -131,7 +137,7 @@ class VideoPlayer extends React.PureComponent<Props> {
                 }
             }
         }
-        
+
         return <div ref={this.props.mainRef} className={classes} onClick={onPlayPause} tabIndex="0">
             {children}
             <video

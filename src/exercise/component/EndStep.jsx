@@ -87,7 +87,7 @@ class End extends React.Component<Object> {
                             <div className="Markdown" dangerouslySetInnerHTML={{__html: dd.tt}}/>
                         </TableCell>
                         <TableCell modifier="padding ">
-                            {dd.rr}
+                            <div className="Markdown" dangerouslySetInnerHTML={{__html: dd.rr}}/>
                         </TableCell>
                     </tr>;
                 });

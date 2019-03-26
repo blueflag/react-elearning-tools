@@ -31,6 +31,7 @@ type State = {
     progress: ?ElementRef<*>,
     component: *,
     fullscreen?: boolean,
+    ended?: boolean,
     muted?: boolean,
     dragging?: boolean,
     paused: boolean,
@@ -51,6 +52,7 @@ export default Hock({
                 player: null,
                 component: null,
                 progress: null,
+                ended: false,
                 paused: !props.autoPlay
             };
         }
@@ -77,6 +79,7 @@ export default Hock({
             const {player, progress, component} = this.state;
             if(player && progress && component) {
                 player.addEventListener('loadedmetadata', this.onLoadMetaData);
+                player.addEventListener("ended", this.onEnded);
             }
         }
         onLoadMetaData = () => {
@@ -127,6 +130,12 @@ export default Hock({
                 player.muted = !player.muted;
                 this.setState({muted: player.muted});
             }
+        }
+        onEnded = () => {
+            this.props.onChange({
+                ...this.state,
+                ended: true
+            });
         }
         onScrub = (ee: Object) => {
             if(this.state.progress) {
