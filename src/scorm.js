@@ -35,15 +35,14 @@ export function setStatus(value: string): Maybe<string> {
 export function suspendData(): Object {
     let data = SCORM.get('cmi.suspend_data');
     try {
-        return JSON.parse(pako.inflate(data, { to: 'string' }));
+        return JSON.parse(pako.inflate(data, {to: 'string'}));
     } catch(e) {
         return {};
     }
 }
 
 export function setSuspendData(value: *): Maybe<string> {
-    var encoded = pako.deflate(JSON.stringify(value), { to: 'string' });
-    console.log(encoded.length,encoded)
+    var encoded = pako.deflate(JSON.stringify(value), {to: 'string'});
     return Perhaps(SCORM.set('cmi.suspend_data', encoded));
 }
 
