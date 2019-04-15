@@ -162,7 +162,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 <Box>
                     <ul>
                         <li>You must select an answer for each question before you can submit.</li>
-                        <li>{`Please note, you will need ${step.passRate} correct answers in order to pass this quiz. Good luck.`}</li>
+                        <li>{`Please note, you will need ${step.passRate} correct answer(s) in order to pass this quiz. Good luck!`}</li>
                     </ul>
                 </Box>
                 <Box>

@@ -26,11 +26,7 @@ export default class VideoStep extends React.Component<Object, Object> {
     }
     componentWillReceiveProps(nextProps: Object) {
         if(nextProps.file !== this.props.file) {
-            this.setState({
-                complete: false,
-                progress: 0
-            });
-            
+            this.onReset();
         }
     }
     onReset = () => {
@@ -45,21 +41,21 @@ export default class VideoStep extends React.Component<Object, Object> {
         this.videoRef.load();
     }
 
-    onChange = ({currentPercentage}: Object) => {
+    onChange = ({currentPercentage, ended}: Object) => {
         const {step, actions} = this.props;
         var progress = Math.floor(currentPercentage);
-        if(progress > 98){
+        if(ended) {
             progress = 100;
+            this.setState({complete: true});
         }
+
         if(progress !== this.state.progress) {
             this.setState({progress});
             if(step.progress < progress) {
                 actions.onProgress(progress);
             }
         }
-        if(progress === 100) {
-            this.setState({complete: true});
-        }
+
     }
 
     render(): Element<*> {

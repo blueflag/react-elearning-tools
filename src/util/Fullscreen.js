@@ -35,7 +35,7 @@ export default {
     },
     request: function (element: Object) {
         if (element.requestFullscreen) {
-            this.requestFullscreen();
+            element.requestFullscreen();
         } else if (element.webkitRequestFullscreen) {
             element.webkitRequestFullscreen();
         } else if (element.mozRequestFullScreen) {
