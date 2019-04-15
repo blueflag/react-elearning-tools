@@ -1,6 +1,7 @@
 //@flow
 import {SCORM} from 'pipwerks-scorm-api-wrapper';
 import {Perhaps, Maybe} from 'fronads';
+import pako from 'pako';
 
 export function initialize(): boolean {
     return Perhaps(SCORM.init());
@@ -34,14 +35,15 @@ export function setStatus(value: string): Maybe<string> {
 export function suspendData(): Object {
     let data = SCORM.get('cmi.suspend_data');
     try {
-        return JSON.parse(data);
+        return JSON.parse(pako.inflate(data, {to: 'string'}));
     } catch(e) {
         return {};
     }
 }
 
 export function setSuspendData(value: *): Maybe<string> {
-    return Perhaps(SCORM.set('cmi.suspend_data', JSON.stringify(value)));
+    var encoded = pako.deflate(JSON.stringify(value), {to: 'string'});
+    return Perhaps(SCORM.set('cmi.suspend_data', encoded));
 }
 
 export function interaction(): string {
