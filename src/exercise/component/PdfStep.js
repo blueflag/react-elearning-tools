@@ -257,7 +257,7 @@ class PdfStep extends React.PureComponent<Props, State> {
             </Box>
             {pdf && !this.hasNextPage() &&
                 <Text element="div" modifier="marginMega center">
-                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>
+                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this Document</Button>
                 </Text>
             }
             {loading && <Box><Loader>Loading PDF...</Loader></Box>}

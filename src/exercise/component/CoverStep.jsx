@@ -30,7 +30,7 @@ class CoverStep extends React.Component<Props> {
                 <Text element="h1" modifier="block sizeGiga marginGiga center">{title}</Text>
                 <Text element="p" modifier="block">{description}</Text>
                 <Box modifier="marginMega" style={{textAlign: 'center'}}>
-                    <Button modifier="sizeMega primary" onClick={this.onClick}>Begin the module</Button>
+                    <Button modifier="sizeMega primary" onClick={this.onClick}>Begin the Module</Button>
                 </Box>
             </Box>
         </Wrapper>;

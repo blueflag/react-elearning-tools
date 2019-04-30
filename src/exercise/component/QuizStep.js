@@ -192,7 +192,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
                     <Button modifier="sizeMega primary " onClick={this.onFinish}>
-                        Proceed onward
+                        Proceed Onward
                     </Button>
                 </Text>
             </Box>;
@@ -206,7 +206,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
                     <Button modifier="sizeMega primary " onClick={this.goBack}>
-                        Try again
+                        Try Again
                     </Button>
                     {this.renderPrintButton()}
                 </Text>
@@ -216,7 +216,7 @@ export default class QuizStep extends React.Component<Object, Object> {
     renderPrintButton = (): ?Element<*> =>{
         if(this.props.scorm.reference){ 
             return <Button modifier="sizeMega primary " onClick={this.printPage}>
-                    Print page
+                    Print Page
             </Button>;
         } else {
             return null;

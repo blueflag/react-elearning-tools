@@ -105,7 +105,7 @@ class End extends React.Component<Object> {
         return <Text element="div" modifier="marginMega center">
             <Text element="div" modifier="marginGiga">
                 <Button modifier="sizeMega primary " onClick={this.printPage}>
-                    Print page
+                    Print Page
                 </Button>
             </Text>
             <Text element="h2" modifier="block sizeMega marginGiga center">

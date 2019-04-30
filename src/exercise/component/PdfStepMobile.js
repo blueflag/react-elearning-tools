@@ -72,7 +72,7 @@ class PdfStepMobile extends React.PureComponent<Props, State> {
 
     renderNextButton(): ?Element<*> {
         if(this.state.pdfOpened){
-            return <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>;
+            return <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this Document</Button>;
         } else {
             return null;
         }
