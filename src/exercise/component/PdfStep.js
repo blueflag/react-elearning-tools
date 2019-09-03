@@ -217,6 +217,8 @@ class PdfStep extends React.PureComponent<Props, State> {
         const {eqWidth, file} = this.props;
         const {page} = this.props.step.state;
 
+        const {CheckIcon} = this.props.components;
+
         let width = this.scaledWidth();
         let height = this.scaledHeight();
 
@@ -257,7 +259,9 @@ class PdfStep extends React.PureComponent<Props, State> {
             </Box>
             {pdf && !this.hasNextPage() &&
                 <Text element="div" modifier="marginMega center">
-                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>I have read this document</Button>
+                    <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>
+                        <CheckIcon /> I have read this document.
+                    </Button>
                 </Text>
             }
             {loading && <Box><Loader>Loading PDF...</Loader></Box>}
