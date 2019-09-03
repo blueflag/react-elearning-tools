@@ -33,6 +33,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.23.0",
     "dotenv": "4.0.0",
+    "flow-typed": "^2.6.1",
     "proxyquire": "^1.7.10",
     "react": "16.0.0",
     "react-dom": ">=16.0.1",

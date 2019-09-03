@@ -42,7 +42,7 @@ class End extends React.Component<Object> {
 
         if(passableSteps.size !== 0) {
             result = completed && passed;
-            score = scoreFilter.reduce(add);   
+            score = scoreFilter.reduce(add);
         }
 
         var batch = {
@@ -105,7 +105,7 @@ class End extends React.Component<Object> {
         return <Text element="div" modifier="marginMega center">
             <Text element="div" modifier="marginGiga">
                 <Button modifier="sizeMega primary " onClick={this.printPage}>
-                    Print page
+                    Print Page
                 </Button>
             </Text>
             <Text element="h2" modifier="block sizeMega marginGiga center">
@@ -135,7 +135,7 @@ class End extends React.Component<Object> {
                                 const {progress, name, passRate, score, type, file} = item;
                                 const complete = (passRate > 0) ? item.pass() : progress === 100;
                                 const completeModifier = complete ? 'positive' : 'negative';
-                                const downloadPDFButton = (type === "document" && scorm.downloadPDF && !isMobile) ? this.renderDocumentHeader(name,file) : null; 
+                                const downloadPDFButton = (type === "document" && scorm.downloadPDF && !isMobile) ? this.renderDocumentHeader(name,file) : null;
                                 return <tr className="Table_row"  key={key}>
                                     <TableCell modifier="padding header">{name} </TableCell>
                                     <TableCell modifier="padding">{downloadPDFButton}</TableCell>

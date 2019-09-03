@@ -73,7 +73,7 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(step.progress < 100){
             const answeredCount = payload.reduce((count, item) => item.answer ? count + 1 : count, 0);
             const score = payload.reduce((count, item) => item.correct ? count + 1 : count, 0);
-            
+
             // The progression is defined by the number of the questions and the sumbit button
             actions.onProgress(100 * (answeredCount/(quiz.length + 1)));
 
@@ -192,7 +192,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
                     <Button modifier="sizeMega primary " onClick={this.onFinish}>
-                        Proceed onward
+                        Proceed Onward
                     </Button>
                 </Text>
             </Box>;
@@ -206,7 +206,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
                     <Button modifier="sizeMega primary " onClick={this.goBack}>
-                        Try again
+                        Try Again
                     </Button>
                     {this.renderPrintButton()}
                 </Text>
@@ -214,9 +214,9 @@ export default class QuizStep extends React.Component<Object, Object> {
         }
     }
     renderPrintButton = (): ?Element<*> =>{
-        if(this.props.scorm.reference){ 
+        if(this.props.scorm.reference){
             return <Button modifier="sizeMega primary " onClick={this.printPage}>
-                    Print page
+                Print Page
             </Button>;
         } else {
             return null;

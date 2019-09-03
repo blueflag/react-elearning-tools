@@ -13,12 +13,15 @@ class MarkdownStep extends React.Component<Object> {
     }
     render(): Element<*> {
         const {file} = this.props;
+        const {CheckIcon} = this.props.components;
         return <Wrapper modifier="small">
             <Box style={{paddingTop: '1rem'}} modifier="paddingMega marginRow" className="Typography">
                 <Markdown markup={file} />
             </Box>
             <Box>
-                <Button modifier="sizeMega primary" onClick={this.onClick}>I have read this document</Button>
+                <Button modifier="sizeMega primary" onClick={this.onClick}>
+                    <CheckIcon /> I have read this document.
+                </Button>
             </Box>
         </Wrapper>;
     }
