@@ -18,7 +18,7 @@ class MarkdownStep extends React.Component<Object> {
                 <Markdown markup={file} />
             </Box>
             <Box>
-                <Button modifier="sizeMega primary" onClick={this.onClick}>I have read this document</Button>
+                <Button modifier="sizeMega primary" onClick={this.onClick}>I have read this Document</Button>
             </Box>
         </Wrapper>;
     }
