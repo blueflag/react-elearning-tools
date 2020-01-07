@@ -11,7 +11,6 @@ import {Wrapper} from 'obtuse';
 import Stopwatch from 'timer-stopwatch';
 import moment from 'moment';
 import {TableCell} from 'goose-css';
-import {fromJS} from 'immutable';
 
 export default class QuizStep extends React.Component<Object, Object> {
     constructor(props: Object) {
