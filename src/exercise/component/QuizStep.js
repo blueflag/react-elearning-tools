@@ -43,35 +43,28 @@ export default class QuizStep extends React.Component<Object, Object> {
             const quizData = this.getQuizSample(thisProps);
             const answers = fromJS(quizData).map((question: *): * => {
                 var referText = null;
-                if(question.get('refer')){
-                    var referTo = question.get('refer').split('Refer To: ');
+                if(question.refer){
+                    var referTo = question.refer.split('Refer To: ');
                     referText = referTo[1];
                 }
-                return Map({
-                    title: question.get('title'),
-                    hash: question.get('hash'),
+                return {
+                    title: question.title,
+                    hash: question.hash,
                     refer: referText,
                     correct: false,
-                    correctAnswer: this.renderCorrectAnswer(question.get('hash'),question.get('answers')),
+                    correctAnswer: this.renderCorrectAnswer(question.hash,question.answers),
                     answer: null
-                });
+                };
             });
             this.setState({
                 quiz: this.getQuizSample(thisProps),
-                payload: answers.toJS()
+                payload: answers
             });
             actions.onProgress(0);
         }
     }
     renderCorrectAnswer = (hash: *,answers: *): * => {
-        var data = [];
-        answers.map((item: *): * => {
-            var test = (checkHash(item) === hash) ? item : null;
-            if(test){
-                data.push(test);
-            }
-        });
-        return data[0];
+        return answers.find(item => checkHash(item) === hash);
     }
     seedRandom = (seed: number): number => {
         var x = Math.sin(seed++) * 10000;
