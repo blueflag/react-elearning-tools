@@ -41,7 +41,7 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(thisProps.step.progress !== 100){
             this.state.timer.start();
             const quizData = this.getQuizSample(thisProps);
-            const answers = fromJS(quizData).map((question: *): * => {
+            const answers = quizData.map((question: *): * => {
                 var referText = null;
                 if(question.refer){
                     var referTo = question.refer.split('Refer To: ');
