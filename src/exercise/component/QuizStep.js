@@ -41,7 +41,7 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(thisProps.step.progress !== 100){
             this.state.timer.start();
             const quizData = this.getQuizSample(thisProps);
-            const answers = fromJS(quizData).map((question,key) => {
+            const answers = fromJS(quizData).map((question: *): * => {
                 var referText = null;
                 if(question.get('refer')){
                     var referTo = question.get('refer').split('Refer To: ');
@@ -63,9 +63,9 @@ export default class QuizStep extends React.Component<Object, Object> {
             actions.onProgress(0);
         }
     }
-    renderCorrectAnswer = (hash,answers) => {
+    renderCorrectAnswer = (hash: *,answers: *): * => {
         var data = [];
-        answers.map((item,key) => {
+        answers.map((item: *): * => {
             var test = (checkHash(item) === hash) ? item : null;
             if(test){
                 data.push(test);
