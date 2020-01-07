@@ -2,6 +2,7 @@
 import React from 'react';
 import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
+import checkHash from 'react-markdown-quiz/lib/checkHash';
 import parseMarkdownQuiz from 'react-markdown-quiz/lib/parseMarkdownQuiz';
 import {Box} from 'obtuse';
 import Button from 'stampy/lib/component/Button';
@@ -38,11 +39,31 @@ export default class QuizStep extends React.Component<Object, Object> {
         actions.onSetResetPrevStep(false);
         if(thisProps.step.progress !== 100){
             this.state.timer.start();
+            const quizData = this.getQuizSample(thisProps);
+            const answers = quizData.map((question: *): * => {
+                var referText = null;
+                if(question.refer){
+                    var referTo = question.refer.split('Refer To: ');
+                    referText = referTo[1];
+                }
+                return {
+                    title: question.title,
+                    hash: question.hash,
+                    refer: referText,
+                    correct: false,
+                    correctAnswer: this.renderCorrectAnswer(question.hash,question.answers),
+                    answer: null
+                };
+            });
             this.setState({
-                quiz: this.getQuizSample(thisProps)
+                quiz: this.getQuizSample(thisProps),
+                payload: answers
             });
             actions.onProgress(0);
         }
+    }
+    renderCorrectAnswer = (hash: *,answers: *): * => {
+        return answers.find(item => checkHash(item) === hash);
     }
     seedRandom = (seed: number): number => {
         var x = Math.sin(seed++) * 10000;
@@ -160,10 +181,10 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(!viewResults && quiz){
             return <Wrapper>
                 <Box>
-                    <ul>
+                    {!this.props.scorm.passThrough && <ul>
                         <li>You must select an answer for each question before you can submit.</li>
                         <li>{`Please note, you will need ${step.passRate} correct answer(s) in order to pass this quiz. Good luck!`}</li>
-                    </ul>
+                    </ul>}
                 </Box>
                 <Box>
                     <Quiz onChange={this.onChange} quiz={quiz} />
@@ -185,9 +206,8 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(this.state.resultPass){
             return <Box>
                 <Text element="div" modifier="marginGiga center">
-                   Well done, you have passed this quiz.
-                    <br/>
-                   Please proceed to the next section.
+                    {!this.props.scorm.passThrough && <Text>Well done, you have passed this quiz.<br/>Please proceed to the next section.</Text>}
+                    {this.props.scorm.passThrough && 'Please proceed to the next section.'}
                 </Text>
                 {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
@@ -256,8 +276,9 @@ export default class QuizStep extends React.Component<Object, Object> {
         }
     }
     renderNextButton = (disabled: boolean): ?Element<*> => {
+        const check = this.props.scorm.passThrough ? false : disabled;
         return <Text element="div" modifier="marginMega center">
-            <Button modifier="sizeMega primary " disabled={disabled} onClick={this.onClick}>Submit Answers
+            <Button modifier="sizeMega primary " disabled={check} onClick={this.onClick}>Submit Answers
             </Button>
         </Text>;
     }
