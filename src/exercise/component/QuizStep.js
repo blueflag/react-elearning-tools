@@ -2,6 +2,7 @@
 import React from 'react';
 import type {Element} from 'react';
 import Quiz from 'react-markdown-quiz/lib/Quiz';
+import checkHash from 'react-markdown-quiz/lib/checkHash';
 import parseMarkdownQuiz from 'react-markdown-quiz/lib/parseMarkdownQuiz';
 import {Box} from 'obtuse';
 import Button from 'stampy/lib/component/Button';
@@ -10,6 +11,7 @@ import {Wrapper} from 'obtuse';
 import Stopwatch from 'timer-stopwatch';
 import moment from 'moment';
 import {TableCell} from 'goose-css';
+import {fromJS, Map} from 'immutable';
 
 export default class QuizStep extends React.Component<Object, Object> {
     constructor(props: Object) {
@@ -38,11 +40,38 @@ export default class QuizStep extends React.Component<Object, Object> {
         actions.onSetResetPrevStep(false);
         if(thisProps.step.progress !== 100){
             this.state.timer.start();
+            const quizData = this.getQuizSample(thisProps);
+            const answers = fromJS(quizData).map((question,key) => {
+                var referText = null;
+                if(question.get('refer')){
+                    var referTo = question.get('refer').split('Refer To: ');
+                    referText = referTo[1];
+                }
+                return Map({
+                    title: question.get('title'),
+                    hash: question.get('hash'),
+                    refer: referText,
+                    correct: false,
+                    correctAnswer: this.renderCorrectAnswer(question.get('hash'),question.get('answers')),
+                    answer: null
+                });
+            });
             this.setState({
-                quiz: this.getQuizSample(thisProps)
+                quiz: this.getQuizSample(thisProps),
+                payload: answers.toJS()
             });
             actions.onProgress(0);
         }
+    }
+    renderCorrectAnswer = (hash,answers) => {
+        var data = [];
+        answers.map((item,key) => {
+            var test = (checkHash(item) === hash) ? item : null;
+            if(test){
+                data.push(test);
+            }
+        });
+        return data[0];
     }
     seedRandom = (seed: number): number => {
         var x = Math.sin(seed++) * 10000;
@@ -160,10 +189,10 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(!viewResults && quiz){
             return <Wrapper>
                 <Box>
-                    <ul>
+                    {!this.props.scorm.passThrough && <ul>
                         <li>You must select an answer for each question before you can submit.</li>
                         <li>{`Please note, you will need ${step.passRate} correct answer(s) in order to pass this quiz. Good luck!`}</li>
-                    </ul>
+                    </ul>}
                 </Box>
                 <Box>
                     <Quiz onChange={this.onChange} quiz={quiz} />
@@ -185,9 +214,8 @@ export default class QuizStep extends React.Component<Object, Object> {
         if(this.state.resultPass){
             return <Box>
                 <Text element="div" modifier="marginGiga center">
-                   Well done, you have passed this quiz.
-                    <br/>
-                   Please proceed to the next section.
+                    {!this.props.scorm.passThrough && <Text>Well done, you have passed this quiz.<br/>Please proceed to the next section.</Text>}
+                    {this.props.scorm.passThrough && 'Please proceed to the next section.'}
                 </Text>
                 {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
@@ -256,8 +284,9 @@ export default class QuizStep extends React.Component<Object, Object> {
         }
     }
     renderNextButton = (disabled: boolean): ?Element<*> => {
+        const check = this.props.scorm.passThrough ? false : disabled;
         return <Text element="div" modifier="marginMega center">
-            <Button modifier="sizeMega primary " disabled={disabled} onClick={this.onClick}>Submit Answers
+            <Button modifier="sizeMega primary " disabled={check} onClick={this.onClick}>Submit Answers
             </Button>
         </Text>;
     }
