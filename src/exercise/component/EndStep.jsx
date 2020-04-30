@@ -123,7 +123,6 @@ class End extends React.Component<Object> {
         const {result} = this.didPass(this.props);
         return <Wrapper modifier="small">
             <Box modifier="marginTopGiga">
-                <Text modifier="block center sizeGiga marginGiga">{this.didPass(this.props).result ? "Congratulations!" : "Module Failed"}</Text>
                 <Text modifier="block center marginGiga">{result ? description : failDescription}</Text>
                 {!result && <Text modifier="block center marginGiga">{failDescriptionExtended}</Text>}
             </Box>
