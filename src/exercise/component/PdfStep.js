@@ -25,6 +25,9 @@ type State = {
     pageRatios: Map<number,number>
 };
 
+const PAGE_DEFAULT_COLUMN_MARGIN = 32;
+const PAGE_DEFAULT_MAX_WIDTH = 1024;
+
 class PdfStep extends React.PureComponent<Props, State> {
 
     constructor(props: Props) {
@@ -57,19 +60,27 @@ class PdfStep extends React.PureComponent<Props, State> {
         }
     }
 
-    onRenderSuccess(){
-        var links = document.querySelectorAll(".react-pdf__Page a");
-        for(var i = 0; i < links.length; i++) {
-            var elem = links[i];
-            if (elem.addEventListener){
-                elem.addEventListener('click', function (event: *) {
-                    event.preventDefault();
-                    window.open(event.target.href);
-                });
-            }
-        }
-    }
+    clampedInitialWidth = (): number => {
+        let {initialWidth, isFirstPageLandscape} = this.state;
+        var maxWidth = isFirstPageLandscape
+            ? PAGE_DEFAULT_MAX_WIDTH * 1.2
+            : PAGE_DEFAULT_MAX_WIDTH;
 
+        return Math.min(initialWidth, maxWidth);
+    };
+
+    scaledWidth = () => this.clampedInitialWidth() * this.state.scale;
+
+    scaledHeight = (): number => {
+        let {
+            pageRatios,
+            scale
+        } = this.state;
+
+        let {page} = this.props.step.state;
+        let ratio = pageRatios.get(page) || 1;
+        return this.clampedInitialWidth() * scale * ratio;
+    };
 
     onClickNextStep = () => {
         const {actions} = this.props;
@@ -83,6 +94,11 @@ class PdfStep extends React.PureComponent<Props, State> {
         const {page} = this.props.step.state;
 
         const {CheckIcon} = this.props.components;
+
+        let width = this.scaledWidth();
+        let height = this.scaledHeight();
+
+        console.log(width,height);
 
         let {Loader} = this.props.components;
 
