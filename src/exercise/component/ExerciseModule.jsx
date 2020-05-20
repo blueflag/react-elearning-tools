@@ -88,7 +88,7 @@ export default function ExerciseModule(props: Props): Element<*> {
             step.render = getRender(step, file);
             return step;
         });
-    
+
 
     return <Exercise
         steps={steps}

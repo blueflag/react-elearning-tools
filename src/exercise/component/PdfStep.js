@@ -98,8 +98,6 @@ class PdfStep extends React.PureComponent<Props, State> {
         let width = this.scaledWidth();
         let height = this.scaledHeight();
 
-        console.log(width,height);
-
         let {Loader} = this.props.components;
 
         return <Box spruceName="PdfStep">

@@ -144,7 +144,7 @@ class ModuleSteps extends React.Component<Props> {
 
         return <Box>
             <Navigation {...childProps} />
-            <Box modifier="marginTop6">
+            <Box className="App">
                 {renderableStep.render(childProps)}
             </Box>
         </Box>;
