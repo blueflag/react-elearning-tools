@@ -56,9 +56,20 @@ export default Hock({
                 paused: !props.autoPlay
             };
         }
+        componentWillMount(){
+            document.addEventListener('fullscreenchange', this.exitFullscreen, false);
+            document.addEventListener('webkitfullscreenchange', this.exitFullscreen, false);
+            document.addEventListener('mozfullscreenchange', this.exitFullscreen, false);
+            document.addEventListener('MSFullscreenChange', this.exitFullscreen, false);
+        }
         componentWillUnmount() {
             clearInterval(this.bufferInterval);
+            document.removeEventListener('fullscreenchange', this.exitFullscreen, false);
+            document.removeEventListener('webkitfullscreenchange', this.exitFullscreen, false);
+            document.removeEventListener('mozfullscreenchange', this.exitFullscreen, false);
+            document.removeEventListener('MSFullscreenChange', this.exitFullscreen, false);
         }
+
         getProgressRef = (progress: ElementRef<*>) => {
             if(progress){
                 this.setState({progress}, this.startBuffer);
@@ -196,7 +207,12 @@ export default Hock({
                 }
             }
         }
-
+        exitFullscreen = () =>{
+            if (!Fullscreen.active()) {
+                Fullscreen.exit();
+                this.setState({fullscreen: false});
+            }
+        }
         render = (): Element<*> => {
             return (
                 <Component

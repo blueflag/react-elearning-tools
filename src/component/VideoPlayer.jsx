@@ -116,6 +116,7 @@ class VideoPlayer extends React.PureComponent<Props> {
             }
         });
 
+
         var dd = moment.duration(duration, 'seconds');
         var tt = moment.duration(currentTime, 'seconds');
         var durationString = `${this.renderTime(tt)} / ${this.renderTime(dd)}`;
