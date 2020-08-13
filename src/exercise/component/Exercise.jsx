@@ -25,6 +25,7 @@ type Props = {
     onAnswer: Function,
     onSetResetPrevStep: Function,
     onStepSetQuiz: Function,
+    onStepSetQuestions: Function,
     onStepSetState: Function,
     onProgress: Function,
     steps: Object[],
@@ -97,6 +98,7 @@ class ModuleSteps extends React.Component<Props> {
             onAnswer,
             onSetResetPrevStep,
             onStepSetQuiz,
+            onStepSetQuestions,
             onStepSetState,
             onProgress,
             value
@@ -128,6 +130,7 @@ class ModuleSteps extends React.Component<Props> {
                 onAnswer,
                 onSetResetPrevStep,
                 onStepSetQuiz,
+                onStepSetQuestions,
                 onStepSetState,
                 onProgress
             },
@@ -166,6 +169,7 @@ export default Some(ModuleSteps)
             onAnswer: interaction.answer,
             onSetResetPrevStep: meta.setReset,
             onStepSetQuiz: step.setQuiz,
+            onStepSetQuestions: step.setQuestions,
             onStepSetState: step.setState,
             onProgress: navigation.progressStep
         }

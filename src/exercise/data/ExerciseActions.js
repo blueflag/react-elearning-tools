@@ -10,7 +10,8 @@ export default createActions({
         },
         STEP: {
             SET_STATE: undefined,
-            SET_QUIZ: undefined
+            SET_QUIZ: undefined,
+            SET_QUESTIONS: undefined
         },
         INTERACTION: {
             SCORE: undefined,

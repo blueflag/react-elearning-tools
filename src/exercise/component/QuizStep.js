@@ -74,19 +74,26 @@ export default class QuizStep extends React.Component<Object, Object> {
     }
     getQuizSample = (props: Object): Object[] =>  {
         const randNum = this.getRandomInt(1,300);
-        const {quiz, questions} = props;
-        var batch = parseMarkdownQuiz(quiz);
-        var number = questions ? questions : batch.length;
-        return batch
-            .map((value: Object, index: number): Object => {
-                return {
-                    value: value,
-                    sorter: this.seedRandom(randNum + this.seedRandom(randNum + index))
-                };
-            })
-            .sort((aa, bb) => aa.sorter - bb.sorter)
-            .slice(0, number)
-            .map(index => index.value);
+        const {actions, quiz, questions} = props;
+        var questionsBatch;
+        if(props.questionsBatch){
+            questionsBatch = props.questionsBatch;
+        } else {
+            var batch = parseMarkdownQuiz(quiz);
+            var number = questions ? questions : batch.length;
+            questionsBatch = batch
+                .map((value: Object, index: number): Object => {
+                    return {
+                        value: value,
+                        sorter: this.seedRandom(randNum + this.seedRandom(randNum + index))
+                    };
+                })
+                .sort((aa, bb) => aa.sorter - bb.sorter)
+                .slice(0, number)
+                .map(index => index.value);
+            actions.onStepSetQuestions(questionsBatch);
+        }
+        return questionsBatch;
     }
     onChange = (payload: Object) => {
         const {actions, step} = this.props;
@@ -207,7 +214,7 @@ export default class QuizStep extends React.Component<Object, Object> {
             return <Box>
                 <Text element="div" modifier="marginGiga center">
                     {!this.props.scorm.passThrough && <Text>Well done, you have passed this quiz.<br/>Please proceed to the next section.</Text>}
-                    {this.props.scorm.passThrough && 'Please proceed to the next section.'}
+                    {this.props.scorm.passThrough && 'Please proceed to the next ∏section.'}
                 </Text>
                 {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
