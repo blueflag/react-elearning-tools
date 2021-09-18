@@ -160,7 +160,7 @@ class VideoPlayer extends React.PureComponent<Props> {
                     onScrub={onScrub}
                     bars={[
                         {color: '#9c9c9c', value: buffered / 100},
-                        {color: '#eb2136', value: currentPercentage / 100}
+                        {color: '#eb2136', className: 'currentProgress', value: currentPercentage / 100}
                     ]}
                 />
             </div>

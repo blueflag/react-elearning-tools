@@ -85,3 +85,9 @@ export function fail(value: string): string {
         .flatMap(() => score(value))
         .value();
 }
+
+export function incompleted(value: string): string {
+    return setStatus('incompleted')
+        .flatMap(() => score(value))
+        .value();
+}

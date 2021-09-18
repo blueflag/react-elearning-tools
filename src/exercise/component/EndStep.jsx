@@ -69,7 +69,7 @@ class End extends React.Component<Object> {
                 return null;
             }
         } else {
-            if(scorm.reference){
+            if(scorm.reference && !result){
                 return this.renderReview();
             } else {
                 return null;
@@ -124,7 +124,7 @@ class End extends React.Component<Object> {
         return <Wrapper modifier="small">
             <Box modifier="marginTopGiga">
                 <Text modifier="block center marginGiga">{result ? description : failDescription}</Text>
-                {!result && <Text modifier="block center marginGiga">{failDescriptionExtended}</Text>}
+                {(!result && !scorm.singleAttempt) && <Text modifier="block center marginGiga">{failDescriptionExtended}</Text>}
             </Box>
             <Box modifier="borderBottom paddingRowMega">
                 <table className="Table ">

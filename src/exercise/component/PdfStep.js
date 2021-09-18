@@ -103,11 +103,10 @@ class PdfStep extends React.PureComponent<Props, State> {
         return <Box spruceName="PdfStep">
             <Box className="PdfStep_document" modifier="marginBottomMega">
                 <iframe src={`viewer.html?file=${file}`} />
-
             </Box>
             <Text element="div" modifier="marginMega center">
                 <Button modifier="sizeMega primary" onClick={this.onClickNextStep}>
-                    <CheckIcon /> I have read this document.
+                    <CheckIcon /> <Box modifier="pdfButton">I have read this document.</Box>
                 </Button>
             </Text>
         </Box>;

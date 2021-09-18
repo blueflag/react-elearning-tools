@@ -23,11 +23,11 @@ type Props = {
 
 export default class ProgressBar extends React.Component<Props> {
     render(): Element<"div"> {
-        const {onScrub, bars, progressRef} = this.props;
+        const {onScrub, bars, progressRef, className} = this.props;
         return <div ref={progressRef} className="ProgressBar" onMouseDown={onScrub} style={StyleProgressBar}>
             {bars.map((bar, key) => <div
                 key={key}
-                className="ProgressBar_bar"
+                className={`ProgressBar_bar ${bar.className}`}
                 style={{
                     ...StyleProgressBar_bar,
                     backgroundColor: bar.color, width: `${bar.value * 100}%`

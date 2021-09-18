@@ -76,6 +76,7 @@ export default function ExerciseModule(props: Props): Element<*> {
     const steps = props.steps
         .map((step: Object): Object => {
             let file;
+            let questions = 0;
             if(step.file) {
                 file = props.context(`./${step.file}`);
             } else {
@@ -84,6 +85,9 @@ export default function ExerciseModule(props: Props): Element<*> {
                     step.file = mainFile;
                     file = props.context(`./${step.file}`);
                 }
+            }
+            if(step.questions){
+                questions = step.questions;
             }
             step.render = getRender(step, file);
             return step;

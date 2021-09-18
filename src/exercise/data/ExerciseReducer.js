@@ -54,6 +54,10 @@ export default function ElearningReducer(state: ExerciseRecord, {type, payload}:
             return state
                 .setIn(currentStep.concat('quizRecord'), payload);
 
+        case 'EXERCISE/STEP/SET_QUESTIONS':
+            return state
+                .setIn(currentStep.concat('questionsBatch'), payload);
+
         default:
             return state;
     }
