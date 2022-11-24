@@ -219,7 +219,7 @@ export default class QuizStep extends React.Component<Object, Object> {
                 {this.renderReference()}
                 <Text element="div" modifier="marginMega center">
                     <Button modifier="sizeMega primary " onClick={this.onFinish}>
-                        Proceed Onward
+                        Click Button to Confirm Completion
                     </Button>
                 </Text>
             </Box>;
